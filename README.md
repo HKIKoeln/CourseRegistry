@@ -1,5 +1,6 @@
 # CourseRegistry
 A web project to register and visualize higher education courses in the field of digital humanities
+
 The Code is based upon CakePHP and makes use of the Google API.
 
 
