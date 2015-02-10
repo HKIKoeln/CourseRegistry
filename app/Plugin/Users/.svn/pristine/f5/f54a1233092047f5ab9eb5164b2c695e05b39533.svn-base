@@ -1,0 +1,63 @@
+<div class="login_link">
+	<?php
+	if(empty($auth_user)) {
+		?>
+		<ul>
+			<li>
+				<?php
+				echo $this->Html->link('Login', array(
+					'controller' => 'users',
+					'action' => 'login'
+				));
+				?>
+			</li>
+			<?php
+			if(is_null(Configure::read('Users.allowRegistration')) OR Configure::read('Users.allowRegistration')) {
+				?>
+				<li>
+					<?php
+					echo $this->Html->link('Register', array(
+						'controller' => 'users',
+						'action' => 'register'
+					));
+					?>
+				</li>
+				<?php
+			}
+			?>
+		</ul>
+		<?php
+	}else{
+		?>
+		<p><?php echo 'Hello ' . $auth_user[Configure::read('Users.loginName')]; ?></p>
+		<ul>
+			<li>
+				<?php
+				echo $this->Html->link('Dashboard', array(
+					'controller' => 'users',
+					'action' => 'dashboard'
+				));
+				?>
+			</li>
+			<li>
+				<?php
+				echo $this->Html->link('Profile', array(
+					'controller' => 'users',
+					'action' => 'edit',
+					$auth_user['id']
+				));
+				?>
+			</li>
+			<li>
+				<?php
+				echo $this->Html->link('Log Out', array(
+					'controller' => 'users',
+					'action' => 'logout'
+				));
+				?>
+			</li>
+		</ul>
+		<?php
+	}
+	?>
+</div>

@@ -1,0 +1,283 @@
+
+$font_color: #666;
+$background_color: #ccc;
+$background_color_2: #f4f4f4;	/* for any kind of accentuation, eg. table rows */
+
+$link_color: #00265a;
+$link_hover_color: #005AD6;
+$menu_main_link_color: #00265a;
+$menu_main_link_hover_color: #005AD6;
+
+$border_color: #ccc;
+
+$header_font_color: #fff;
+$header_background_color: #003564;	/* DARIAH style */
+
+$content_background_color: #fff;
+$menu_background_color: #fff;
+
+$actions_link_color: #ac1313;
+$actions_link_hover_color: #c8a4a4;
+
+$menu_width: 236px;
+
+
+
+@import "mixins";
+@import "basics";
+
+/* Users plugin */
+@import "users";
+
+
+
+
+/* horizontal scrolling of oversize elements */
+.scroll_wrapper {
+	width: 100%;
+	overflow-x: auto;
+	clear:both;
+}
+
+
+
+/* layout */
+#container {
+	position: relative;
+}
+
+#header {
+	color: $header_font_color;
+	padding: 0;
+	background-color: $content_background_color;
+	margin-bottom: 2px;
+	position: relative;
+	overflow: hidden;
+	
+	@include clearfix;
+	
+	img {
+		margin: 15px 83px 12px 30px;
+		display: block;
+		float: left;
+	}
+	
+	h1 {
+		background-color: $header_background_color;
+		height: 61px;
+		margin: 0;
+		margin-left: $menu_width + 24px;
+		padding: 27px 50px 0;
+		border-left: 2px solid $background_color;
+		width: auto;
+		a {
+			color: $header_font_color;
+			text-decoration: none;
+		}
+	}
+}
+
+/* equal height fake column for menu & content - see http://css-tricks.com/fluid-width-equal-height-columns/ - the Nicolas Gallagher Method */
+$col_min_height: 400px;
+.columns, #menu, #content {
+	min-height: $col_min_height;
+}
+.columns {
+	position: relative;
+	z-index: 1;
+	width: 100%;
+	overflow: hidden;
+	
+	/* the menu's background - fake column */
+	&:before, &:after {
+		content: "";
+		position: absolute;
+		z-index: -1;
+		background-color: $menu_background_color;
+		height: 100%;
+		width: $menu_width + 24px;
+		left: 0;
+	}
+	&:after {
+		width: 100%;
+		left: $menu_width + 24px + 2px;
+	}
+	
+	#menu {
+		float: left;
+		position: relative;
+		width: $menu_width;
+		padding: 20px 12px;
+		@include clearfix;
+		min-height: $col_min_height - 30px;
+		
+		ul {
+			list-style: none;
+		}
+		
+		li {
+			margin: 0;
+			display: block;
+			font-weight: bold;
+			font-size: 17px;
+			padding-bottom: 1.9em;
+			&.filter {
+				
+				padding-bottom: 0.5em;
+				
+				@import "filter";
+			}
+			
+			/* li:hover - make secondary menus visible */
+			&:hover {
+				ul {
+					display: block;
+					
+					li {
+						display: block;
+						float: left;
+						font-size: 10px;
+						list-style: none;
+						margin: 0;
+						margin-top: 0.9em;
+						border-left: 2px solid $link_color;
+						padding: 0 0.5em;
+						&:first-child {
+							border: none;
+							padding-left: 0;
+						}
+						
+						a {
+							color: $actions_link_color;
+							&:hover {
+								color: $actions_link_hover_color;
+							}
+						}
+					}
+				}
+			}
+			
+			ul {
+				display: none;
+			}
+			
+			a {
+				text-decoration: none;
+				color: $menu_main_link_color;
+				&:hover {
+					color: $menu_main_link_hover_color
+				}
+			}
+		}
+	}
+	
+	#content {
+		padding: 10px 10px 20px;
+		background-color: $content_background_color;
+		margin-left: $menu_width + 24px + 2px;
+		overflow-x: hidden;
+		position: relative;
+		@include clearfix;
+		
+		
+		div#googleMap {
+			margin-bottom: 1.5em;
+			width:100%;
+			height:400px;
+		}
+		
+		.associations,
+		.filter,
+		.actions {
+			margin-bottom: 2em;
+			ul {
+				li {
+					padding: 0;
+					display: inline-block;
+					border-left: 2px solid $link_color;
+					padding: 0 0.8em 0 0.8em;
+					margin: 0;
+					font-size: 90%;
+					&:first-child {
+						border: none;
+						padding-left: 0;
+					}
+				}
+			}
+		}
+		.actions {
+			a {
+				color: $actions_link_color;
+				font-weight: bold;
+				&:hover {
+					color: $actions_link_hover_color;
+				}
+			}
+		}
+		
+		@import "content_tables";
+		@import "paging";
+		@import "forms";
+		
+		@include taxonomySelector;
+		
+		.course_details {
+			@include clearfix;
+			border: 1px solid #ccc;
+			padding: 8px;
+			font-size: 90%;
+		}
+	}
+}
+
+
+
+#footer {
+	text-align: left;
+	clear: both;
+	padding: 30px 50px 30px 50px;
+	background-color: $content_background_color;
+	margin-top: 2px;
+	
+	a {
+		color: #888;
+		font-size: bold;
+		&:hover {
+			color: #aaa;
+		}
+	}
+	
+	ul {
+		list-style: none;
+		margin: 0 0 1em;
+		@include clearfix;
+		
+		li {
+			float: left;
+			border-left: 2px solid #ccc;
+			padding: 0 15px;
+			margin: 2px 0;
+			&:first-child {
+				border: none;
+				padding-left: 0;
+			}
+		}
+	}
+}
+
+/* cake's default session flash output - there's also a #authMessage... */
+.message {
+	font-family: Monaco, Consolas, "Courier New", monospaced;
+	background: #ffcc00;
+	-moz-border-radius: 4px;
+	-webkit-border-radius: 4px;
+	border-radius: 4px;
+	padding: 8px 10px;
+	color: #000;
+	display: inline-block;
+	-moz-box-shadow: inset 0 1px 0 rgba(0, 0, 0, 0.25), 0 1px 0 rgba(255, 255, 255, 0.5);
+	-webkit-box-shadow: inset 0 1px 0 rgba(0, 0, 0, 0.25), 0 1px 0 rgba(255, 255, 255, 0.5);
+	box-shadow: inset 0 1px 0 rgba(0, 0, 0, 0.25), 0 1px 0 rgba(255, 255, 255, 0.5);
+	text-shadow: 0 1px 1px rgba(255, 255, 255, 0.8);
+	margin-bottom: 2em;
+}

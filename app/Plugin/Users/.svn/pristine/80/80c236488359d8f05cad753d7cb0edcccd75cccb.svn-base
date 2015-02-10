@@ -1,0 +1,5 @@
+<?php
+$filename = APP . 'Config' . DS . 'Users' . DS . 'bootstrap.php';
+if(file_exists($filename)) {
+    include($filename);
+}

@@ -1,0 +1,62 @@
+<?php
+
+App::uses('Component', 'Controller');
+
+class DefaultAuthComponent extends Component {
+	
+	
+	public $settings = array();
+	
+	
+	public function __construct(ComponentCollection $collection, $settings = array()) {
+		parent::__construct($collection, $settings);
+
+		$this->settings = Hash::merge($this->_defaults, $settings);
+	}
+	
+	protected $_defaults = array(
+		//'Security' => array(
+		//	'priority' => 1
+		//),
+		'Auth' => array(
+			'priority' => 2,
+			'loginAction' => array(
+				'controller' => 'users',
+				'action' => 'login',
+				'plugin' => 'users',
+				'admin' => false
+			),
+			'authError' => 'Please log in to access this location.',
+			'authenticate' => array(
+				'Form' => array(
+					'fields' => array(
+						'username' => 'email',
+						'password' => 'password'
+					),
+					'userModel' => 'Users.Users',
+					'scope' => array(
+						'Users.active' => 1,
+						'Users.email_verified' => 1
+					)
+				)
+			),
+			'loginRedirect' => '/',
+			//'loginRedirect' => array('action' => 'dashboard','controller' => 'users','plugin' => 'users'),
+			'logoutRedirect' => '/'
+		)
+	);
+	
+	
+	public function initialize(Controller $controller) {
+		if (Configure::read('Users.disableDefaultAuth') === true) {
+			return;
+		}
+		foreach($this->settings as $component => $settings) {
+			$controller->components[$component] = $settings;
+			$controller->{$component} = $controller->Components->load($component, $settings);
+			$controller->{$component}->initialize($controller);
+		}
+	}
+	
+}
+?>

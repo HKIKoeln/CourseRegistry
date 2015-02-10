@@ -1,0 +1,15 @@
+<div class="users_form">
+	<h2>Change your account's E-mail address</h2>
+	<?php
+	$opts  = array();
+	if(Configure::read('Users.loginName') == 'email') {
+		$opts['label'] = 'Old email';
+		echo '<p>Keep in mind, that your new email address will be the username you will log in with in future.</p>';
+	}
+	echo $this->Form->create($modelName);
+	echo $this->Form->input('new_email');
+	echo $this->Form->input(Configure::read('Users.loginName'), $opts);
+	echo $this->Form->input('password');
+	echo $this->Form->end('Submit');
+	?>
+</div>

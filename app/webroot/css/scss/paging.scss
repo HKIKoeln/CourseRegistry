@@ -1,0 +1,102 @@
+/** Paging **/
+
+$paging_font_color: $font_color;
+$paging_link_color: $link_color;
+$paging_color_hover: $link_hover_color;
+$paging_background: #fff;
+$paging_background_hover: $background_color_2;
+$paging_border_color: $border_color;
+
+.paging {
+	color: $paging_font_color;
+	border: 1px solid $paging_border_color;
+	-moz-border-radius: 4px;
+	-webkit-border-radius: 4px;
+	border-radius: 4px;
+	margin: 0 0 1.5em;
+	clear:both;
+	display: inline-block;
+	float:left;
+	
+	.current,
+	.disabled,
+	a {
+		color: $paging_link_color;
+		text-decoration: none;
+		display: inline-block;
+	}
+	
+	span {
+		display: inline-block;
+		padding: 5px 8px;
+		&:hover {
+			background: $paging_background_hover;
+		}
+	}
+	
+	.prev {
+		border-right: 1px solid $paging_border_color;
+		border-left: 1px solid $paging_border_color;
+		margin-right: 8px;
+	}
+	
+	.next {
+		border-left: 1px solid $paging_border_color;
+		border-right: 1px solid $paging_border_color;
+		margin-left: 8px;
+	}
+	
+	.disabled {
+		&:hover {
+			background: transparent;
+		}
+	}
+	
+	.current {
+		background: $paging_background_hover;
+		color: $paging_color_hover;
+	}
+}
+
+/* paging form */
+form.paging_limit {
+	float: left;
+	display: inline-block;
+	min-width: 40px;
+	margin: 0 0 1.5em 1.5em;
+	padding: 3px 2px 1px 10px;
+	border: 1px solid $paging_border_color;
+	-moz-border-radius: 4px;
+	-webkit-border-radius: 4px;
+	border-radius: 4px;
+	
+	div.input.select {
+		width: auto;
+		min-width: 0px;
+		margin: 0;
+		float: left;
+		label {
+			width: auto;
+			margin-right: 7px;
+			font-weight: normal;
+			display: block;
+			float: left;
+		}
+		select {
+			width: 48px;
+			margin: 0;
+			margin-top: -1px;
+			height: 20px;
+			display: block;
+			float: left;
+		}
+	}
+	div.submit {
+		margin: 0;
+		float: left;
+		input[type=submit] {
+			margin: -1px 0 0 5px;
+			padding: 2px;
+		}
+	}
+}

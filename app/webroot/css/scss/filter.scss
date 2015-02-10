@@ -1,0 +1,99 @@
+form, a {
+	margin-left: 15px;
+}
+a {
+	font-size: 11px;
+	text-decoration: underline;
+}
+form {
+	div.input {
+		padding-bottom: 0.5em;
+		label {
+			display: block;
+			width: 70px;
+			margin-right: 10px;
+			float: left;
+			font-size: 12px;
+		}
+		input {
+			display: block;
+			float: left;
+			width: 139px;
+		}
+		select {
+			-moz-border-radius: 2px;
+			-webkit-border-radius: 2px;
+			border-radius: 2px;
+			border: 1px solid #999;
+			color: $font_color;
+			padding: 1px;
+			width: 141px;
+			margin-top: -2px;
+			display: block;
+			float: left;
+		}
+		
+		@include clearfix;
+	}
+	input[type=submit] { 
+		font: bold 11px Arial, Sans-serif; 
+		-moz-border-radius: 3px;
+		-webkit-border-radius: 3px;
+		border-radius: 3px;
+		border: 1px solid #999;
+		background: $header_background_color; 
+		padding: 2px 3px; 
+		margin: 5px 50px 5px -1px;
+		color: #fff;
+		width: auto;
+		&:hover {
+			border: 1px solid #999;
+			background: #ccc; 
+			color: #666;
+			outline: none;
+			cursor:pointer;
+		}
+	}
+	p {
+		font-size: 12px;
+	}
+	p.taxonomy.selection {
+		font-size: 10px;
+		&:hover {
+			cursor: pointer;
+			text-decoration: underline;
+		}
+		
+		span {
+			font-weight: normal;
+		}
+	}
+	
+	div.taxonomy.keywords {
+		@include taxonomySelector;
+		
+		position: absolute;
+		z-index: 10000;
+		padding: 20px;
+		background-color: #fff;
+		width: 880px;
+		border: 3px solid #ccc;
+		border-radius: 10px;
+		/* experimental! (browser support?) column layout */
+		-webkit-column-count: 3; /* Chrome, Safari, Opera */
+		-moz-column-count: 3; /* Firefox */
+		column-count: 3;
+		
+		div.input.taxonomy.select {
+			label {margin-bottom: 15px;}
+			div.checkbox {
+				clear: both;
+				label, input {display: inline;}
+			}
+		}
+		button {
+			float: right;
+			margin: 10px 10px 0;
+		}
+	}
+}

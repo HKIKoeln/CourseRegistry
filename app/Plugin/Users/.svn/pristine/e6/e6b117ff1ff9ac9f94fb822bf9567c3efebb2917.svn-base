@@ -1,0 +1,25 @@
+<?php
+// set some defaults
+Configure::write('Users.allowRegistration', true);
+Configure::write('Users.adminConfirmRegistration', false);
+Configure::write('Users.disableDefaultAuth', false);
+Configure::write('Users.emailConfig', 'default');
+Configure::write('Users.securitySettings', array(
+	'blackHoleCallback' => 'blackHole',
+	'csrfCheck' => true
+));
+
+
+// not fully tested
+Configure::write('Users.loginName', 'email');	// alternatively: 'username'
+
+
+// not yet fully implemented
+//Configure::write('Users.showLogin', true);
+//Configure::write('Users.rememberMe', false);
+
+
+$filename = APP . 'Config' . DS . 'Users' . DS . 'bootstrap.php';
+if(file_exists($filename)) {
+    include($filename);
+}

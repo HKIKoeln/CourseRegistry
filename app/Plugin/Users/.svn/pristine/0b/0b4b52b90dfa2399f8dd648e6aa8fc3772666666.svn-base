@@ -1,0 +1,23 @@
+<div class="users_form">
+	<h2>Login</h2>
+	<?php
+	echo $this->Session->flash('auth');
+	
+	echo $this->Form->create($modelName, array('action' => 'login'));
+	
+	echo $this->Form->input('email');
+	echo $this->Form->input('password');
+
+	echo $this->Form->hidden('User.return_to', array('value' => $return_to));
+	
+	echo $this->Form->end('Log on');
+	?>
+	<ul>
+		<li>
+			<?php echo $this->Html->link('I forgot my password', array('action' => 'request_new_password')); ?>
+		</li>
+		<li>
+			<?php echo $this->Html->link('Register', array('action' => 'add')); ?>
+		</li>
+	</ul>
+</div>

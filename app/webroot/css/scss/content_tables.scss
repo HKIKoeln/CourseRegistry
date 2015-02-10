@@ -1,0 +1,84 @@
+/** Tables **/
+
+$table_font_color: #333;
+$table_border_color: $border_color;
+$table_header_border_color: #555;
+$table_header_background_color: $header_background_color;
+$table_nth_row_background_color: $background_color_2;
+
+
+table {
+	border-right:0;
+	color: #333;
+	width: 100%;
+	border: 1px solid $table_header_border_color;
+	border-spacing: 0px;	/* aka "cellspacing" */
+	border-collapse: collapse;	/* cellspacing for IE <= 7 */
+	margin-bottom: 1.5em;
+	
+	th {
+		border:0;
+		text-align: left;
+		vertical-align: middle;
+		padding:4px;
+		color: $background_color;
+		background-color: $table_header_background_color;
+		
+		a {
+			color: $background_color;
+			text-decoration: none;
+			display: block;
+			padding: 2px 4px;
+			&:hover {
+				color: $link_hover_color;
+			}
+		}
+		
+		a.asc:after {
+			content: ' ⇣';
+		}
+		
+		a.desc:after {
+			content: ' ⇡';
+		}
+	}
+	
+	tr {
+		&.even {	/* because two rows (one of them initially hidden) are a pair that shall appear in the same colours, both get the same classname "even"/"odd", :nth-child does not work here */
+			background: $table_nth_row_background_color;
+		}
+		&:nth-child(even) {
+			border-top: 1px solid #ccc;
+		}
+		td {
+			padding: 10px;
+			text-align: left;
+			vertical-align: middle;
+		}
+		&.mouseover {	/* dynamically hover the paired siblings using js, because CSS cannot select a previous sibling*/
+			background-color: #ddd;
+			cursor: pointer;
+		}
+		&.outdated{
+			background-color: #F27496;
+		}
+	}
+	
+	td.actions,
+	td.children {
+		text-align: left;
+		white-space: nowrap;
+		
+		a {
+			margin: 6px 6px;
+			padding: 0;
+			display: block;
+		}
+	}
+	td.actions a {
+		color: $actions_link_color;
+		&:hover {
+			color: $actions_link_hover_color;
+		}
+	}
+}

@@ -1,0 +1,78 @@
+/*
+Syntax error: Undefined variable: "$header_background_color".
+        on line 6 of css/scss/users.scss, in `loginLink'
+        from line 28 of css/scss/users.scss
+
+1: /* defined as a mixin to possibly include it somewhere else, where !important is not strong enough *\/
+2: @mixin loginLink {
+3: 	div.login_link {
+4: 		padding-bottom: 23px;
+5: 		margin-bottom: 20px;
+6: 		border-bottom: 2px solid $header_background_color;
+7: 		@include clearfix;
+8: 		
+9: 		p {
+10: 			font-weight: bold;
+11: 		}
+
+Backtrace:
+css/scss/users.scss:6:in `loginLink'
+css/scss/users.scss:28
+C:/Ruby193/lib/ruby/gems/1.9.1/gems/sass-3.2.13/lib/sass/script/variable.rb:49:in `_perform'
+C:/Ruby193/lib/ruby/gems/1.9.1/gems/sass-3.2.13/lib/sass/script/node.rb:40:in `perform'
+C:/Ruby193/lib/ruby/gems/1.9.1/gems/sass-3.2.13/lib/sass/script/list.rb:71:in `block in _perform'
+C:/Ruby193/lib/ruby/gems/1.9.1/gems/sass-3.2.13/lib/sass/script/list.rb:71:in `map'
+C:/Ruby193/lib/ruby/gems/1.9.1/gems/sass-3.2.13/lib/sass/script/list.rb:71:in `_perform'
+C:/Ruby193/lib/ruby/gems/1.9.1/gems/sass-3.2.13/lib/sass/script/node.rb:40:in `perform'
+C:/Ruby193/lib/ruby/gems/1.9.1/gems/sass-3.2.13/lib/sass/tree/visitors/perform.rb:298:in `visit_prop'
+C:/Ruby193/lib/ruby/gems/1.9.1/gems/sass-3.2.13/lib/sass/tree/visitors/base.rb:37:in `visit'
+C:/Ruby193/lib/ruby/gems/1.9.1/gems/sass-3.2.13/lib/sass/tree/visitors/perform.rb:100:in `visit'
+C:/Ruby193/lib/ruby/gems/1.9.1/gems/sass-3.2.13/lib/sass/tree/visitors/base.rb:53:in `block in visit_children'
+C:/Ruby193/lib/ruby/gems/1.9.1/gems/sass-3.2.13/lib/sass/tree/visitors/base.rb:53:in `map'
+C:/Ruby193/lib/ruby/gems/1.9.1/gems/sass-3.2.13/lib/sass/tree/visitors/base.rb:53:in `visit_children'
+C:/Ruby193/lib/ruby/gems/1.9.1/gems/sass-3.2.13/lib/sass/tree/visitors/perform.rb:109:in `block in visit_children'
+C:/Ruby193/lib/ruby/gems/1.9.1/gems/sass-3.2.13/lib/sass/tree/visitors/perform.rb:121:in `with_environment'
+C:/Ruby193/lib/ruby/gems/1.9.1/gems/sass-3.2.13/lib/sass/tree/visitors/perform.rb:108:in `visit_children'
+C:/Ruby193/lib/ruby/gems/1.9.1/gems/sass-3.2.13/lib/sass/tree/visitors/base.rb:37:in `block in visit'
+C:/Ruby193/lib/ruby/gems/1.9.1/gems/sass-3.2.13/lib/sass/tree/visitors/perform.rb:320:in `visit_rule'
+C:/Ruby193/lib/ruby/gems/1.9.1/gems/sass-3.2.13/lib/sass/tree/visitors/base.rb:37:in `visit'
+C:/Ruby193/lib/ruby/gems/1.9.1/gems/sass-3.2.13/lib/sass/tree/visitors/perform.rb:100:in `visit'
+C:/Ruby193/lib/ruby/gems/1.9.1/gems/sass-3.2.13/lib/sass/tree/visitors/perform.rb:268:in `block (3 levels) in visit_mixin'
+C:/Ruby193/lib/ruby/gems/1.9.1/gems/sass-3.2.13/lib/sass/tree/visitors/perform.rb:268:in `map'
+C:/Ruby193/lib/ruby/gems/1.9.1/gems/sass-3.2.13/lib/sass/tree/visitors/perform.rb:268:in `block (2 levels) in visit_mixin'
+C:/Ruby193/lib/ruby/gems/1.9.1/gems/sass-3.2.13/lib/sass/tree/visitors/perform.rb:121:in `with_environment'
+C:/Ruby193/lib/ruby/gems/1.9.1/gems/sass-3.2.13/lib/sass/tree/visitors/perform.rb:268:in `block in visit_mixin'
+C:/Ruby193/lib/ruby/gems/1.9.1/gems/sass-3.2.13/lib/sass/tree/visitors/perform.rb:70:in `perform_arguments'
+C:/Ruby193/lib/ruby/gems/1.9.1/gems/sass-3.2.13/lib/sass/tree/visitors/perform.rb:263:in `visit_mixin'
+C:/Ruby193/lib/ruby/gems/1.9.1/gems/sass-3.2.13/lib/sass/tree/visitors/base.rb:37:in `visit'
+C:/Ruby193/lib/ruby/gems/1.9.1/gems/sass-3.2.13/lib/sass/tree/visitors/perform.rb:100:in `visit'
+C:/Ruby193/lib/ruby/gems/1.9.1/gems/sass-3.2.13/lib/sass/tree/visitors/base.rb:53:in `block in visit_children'
+C:/Ruby193/lib/ruby/gems/1.9.1/gems/sass-3.2.13/lib/sass/tree/visitors/base.rb:53:in `map'
+C:/Ruby193/lib/ruby/gems/1.9.1/gems/sass-3.2.13/lib/sass/tree/visitors/base.rb:53:in `visit_children'
+C:/Ruby193/lib/ruby/gems/1.9.1/gems/sass-3.2.13/lib/sass/tree/visitors/perform.rb:109:in `block in visit_children'
+C:/Ruby193/lib/ruby/gems/1.9.1/gems/sass-3.2.13/lib/sass/tree/visitors/perform.rb:121:in `with_environment'
+C:/Ruby193/lib/ruby/gems/1.9.1/gems/sass-3.2.13/lib/sass/tree/visitors/perform.rb:108:in `visit_children'
+C:/Ruby193/lib/ruby/gems/1.9.1/gems/sass-3.2.13/lib/sass/tree/visitors/base.rb:37:in `block in visit'
+C:/Ruby193/lib/ruby/gems/1.9.1/gems/sass-3.2.13/lib/sass/tree/visitors/perform.rb:128:in `visit_root'
+C:/Ruby193/lib/ruby/gems/1.9.1/gems/sass-3.2.13/lib/sass/tree/visitors/base.rb:37:in `visit'
+C:/Ruby193/lib/ruby/gems/1.9.1/gems/sass-3.2.13/lib/sass/tree/visitors/perform.rb:100:in `visit'
+C:/Ruby193/lib/ruby/gems/1.9.1/gems/sass-3.2.13/lib/sass/tree/visitors/perform.rb:7:in `visit'
+C:/Ruby193/lib/ruby/gems/1.9.1/gems/sass-3.2.13/lib/sass/tree/root_node.rb:20:in `render'
+C:/Ruby193/lib/ruby/gems/1.9.1/gems/sass-3.2.13/lib/sass/engine.rb:315:in `_render'
+C:/Ruby193/lib/ruby/gems/1.9.1/gems/sass-3.2.13/lib/sass/engine.rb:262:in `render'
+C:/Ruby193/lib/ruby/gems/1.9.1/gems/sass-3.2.13/lib/sass/plugin/compiler.rb:362:in `update_stylesheet'
+C:/Ruby193/lib/ruby/gems/1.9.1/gems/sass-3.2.13/lib/sass/plugin/compiler.rb:203:in `block in update_stylesheets'
+C:/Ruby193/lib/ruby/gems/1.9.1/gems/sass-3.2.13/lib/sass/plugin/compiler.rb:201:in `each'
+C:/Ruby193/lib/ruby/gems/1.9.1/gems/sass-3.2.13/lib/sass/plugin/compiler.rb:201:in `update_stylesheets'
+C:/Ruby193/lib/ruby/gems/1.9.1/gems/sass-3.2.13/lib/sass/plugin/compiler.rb:283:in `block in watch'
+C:/Ruby193/lib/ruby/gems/1.9.1/gems/sass-3.2.13/vendor/listen/lib/listen/multi_listener.rb:108:in `call'
+C:/Ruby193/lib/ruby/gems/1.9.1/gems/sass-3.2.13/vendor/listen/lib/listen/multi_listener.rb:108:in `on_change'
+C:/Ruby193/lib/ruby/gems/1.9.1/gems/sass-3.2.13/vendor/listen/lib/listen/multi_listener.rb:117:in `block in initialize_adapter'
+C:/Ruby193/lib/ruby/gems/1.9.1/gems/sass-3.2.13/vendor/listen/lib/listen/adapters/polling.rb:56:in `call'
+C:/Ruby193/lib/ruby/gems/1.9.1/gems/sass-3.2.13/vendor/listen/lib/listen/adapters/polling.rb:56:in `poll'
+C:/Ruby193/lib/ruby/gems/1.9.1/gems/sass-3.2.13/vendor/listen/lib/listen/adapters/polling.rb:32:in `block in start'
+*/
+body:before {
+  white-space: pre;
+  font-family: monospace;
+  content: "Syntax error: Undefined variable: \"$header_background_color\".\A         on line 6 of css/scss/users.scss, in `loginLink'\A         from line 28 of css/scss/users.scss\A \A 1: /* defined as a mixin to possibly include it somewhere else, where !important is not strong enough */\A 2: @mixin loginLink {\A 3: 	div.login_link {\A 4: 		padding-bottom: 23px;\A 5: 		margin-bottom: 20px;\A 6: 		border-bottom: 2px solid $header_background_color;\A 7: 		@include clearfix;\A 8: 		\A 9: 		p {\A 10: 			font-weight: bold;\A 11: 		}"; }

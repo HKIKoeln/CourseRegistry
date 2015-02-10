@@ -1,0 +1,11 @@
+<div class="auth">
+<h2>Reset your password - Step 1/2</h2>
+<?php echo $this->Session->flash('auth'); ?>
+<p>Please enter the email you used for registration and you'll get an email with further instructions.</p>
+<?php
+	echo $this->Form->create($modelName);
+	echo $this->Form->input('email', array('label' => 'Your Email', 'required' => false));
+	echo $this->Form->submit('Submit');
+	echo $this->Form->end();
+?>
+</div>

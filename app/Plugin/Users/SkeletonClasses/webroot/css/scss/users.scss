@@ -1,0 +1,62 @@
+/* defined as a mixin to possibly include it somewhere else, where !important is not strong enough */
+@mixin loginLink {
+	div.login_link {
+		padding-bottom: 23px;
+		margin-bottom: 20px;
+		border-bottom: 2px solid $header_background_color;
+		@include clearfix;
+		
+		p {
+			font-weight: bold;
+		}
+		
+		ul {
+			li {
+				float: left;
+				border-left: 2px solid $header_background_color;
+				padding: 0 10px !important;
+				margin: 2px 0 !important;
+				font-size: 12px !important;
+				&:first-child {
+					border: none;
+					padding-left: 0 !important;
+				}
+			}
+		}
+	}
+}
+@include loginLink;
+
+
+/* auth forms - centered */
+div.auth {
+	border: 2px solid $border_color;
+	padding: 20px;
+	margin: 6% auto;
+	width: 520px;
+	@include clearfix;
+	
+	ul {
+		list-style: none;
+		margin-left: 207px;
+		li {
+			float: left;
+			border-left: 2px solid $header_background_color;
+			padding: 0 15px;
+			margin: 2px 0;
+			font-size: 12px;
+			font-weight: bold;
+			&:first-child {
+				border: none;
+				padding-left: 0;
+			}
+			a {
+				text-decoration: none;
+				color: $menu_main_link_color;
+				&:hover {
+					color: $menu_main_link_hover_color
+				}
+			}
+		}
+	}
+}

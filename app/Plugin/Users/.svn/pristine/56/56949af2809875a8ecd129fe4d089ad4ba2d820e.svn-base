@@ -1,0 +1,24 @@
+<div class="users_form">
+	<h2>User Registration</h2>
+	
+	<?php
+	echo $this->Form->create($modelName, array('novalidate' => true));
+	
+	if(Configure::read('Users.username')) {
+		echo $this->Form->input('username', array(
+			'label' => 'Username'
+		));
+	}
+	echo $this->Form->input('email', array(
+		'label' => 'E-mail'
+	));
+	
+	echo $this->Form->input('password', array(
+		'label' => 'Password',
+		'type' => 'password'
+	));
+	
+	echo $this->Form->end('Submit');
+	?>
+	
+</div>

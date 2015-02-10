@@ -1,0 +1,255 @@
+/** Forms **/
+
+
+
+/* Generic forms */
+form {
+	margin: 30px 0 0; 
+	padding: 0 0 60px;
+	display: block;
+	position:relative;
+	
+	
+	
+	div {
+		margin-bottom: 14px;
+		vertical-align: text-top;
+	}
+	
+	.clearer, .spacer {
+		margin-bottom: 0;
+	}
+	
+	label, legend, a {
+		display:block;
+		font-weight:bold;
+		margin: 0 0 2px;
+		float:left;
+		margin:2px 0 4px;
+		width:208px;
+	}
+	.required > label {
+		&:after {content: " *";}
+	}
+	
+	a {
+		width: auto;
+		float: none;
+		margin-bottom: 18px;
+	}
+	
+	/* inputs fixed width: match date-select with select(+multiple) & radio.fieldset */
+	
+	input[type=text],
+	input[type=tel],
+	input[type=number],
+	input[type=password],
+	input[type=email],
+	textarea {
+		display: block;
+		padding: 2px 4px;
+		border:1px solid #999;
+		color:#666;
+		width: 277px;
+		margin-bottom: 5px;
+	}
+	
+	/*
+	textarea {
+		resize:none;
+	}
+	*/
+	
+	input[disabled=disabled] {
+		border: none;
+		background-color: transparent;
+		font-weight: bold;
+		padding-left: 0;
+		color: #999;
+	}
+	
+	div.error {
+		> label {color: #ac1313;}
+		input[type=text],
+		input[type=tel],
+		input[type=number],
+		input[type=password],
+		input[type=email],
+		textarea,
+		select {border-color: #ac1313;}
+	}
+	
+	.error-message {
+		color: #ac1313;
+		font-weight: normal;
+		margin-left: 208px;
+	}
+	
+	input.form-error {
+		background-color: #f0f0aa;
+	}
+
+	select {
+		margin: 0 0 5px;
+		padding: 1px;
+		background-color:#eee;
+		color:$font_color;
+		vertical-align: middle;
+		width: 287px;
+		border:1px solid #999;
+		display: block;
+	}
+
+	option {
+		padding: 0 3px;
+	}
+
+	div.time, 
+	div.date,
+	div.datetime {
+		
+		select {
+			width: 91px;
+		}
+	}
+
+	div.datetime {
+		
+		label {
+			margin-bottom: 45px;
+		}
+		select {
+			margin-bottom: 2px;
+		}
+	}
+	
+	
+	/* Radio Buttons, Checkboxen / Radio- & Checkbox-Selects*/
+	
+	/* Anzeige linksbündig, OHNE DIV */
+	input[type=radio], input[type=checkbox] {
+		clear: both;
+		float:left;
+		width:auto;
+		margin: 1px 5px 0px 0;
+		height: 14px;
+		line-height: 14px;
+	}
+	input[type=radio] {
+		margin: 0px 5px 3px 0;
+	}
+	/* Ausrichtung der Labels fuer die Radiobuttons und Checkboxen */
+	input[type=checkbox] + label, input[type=radio] + label {
+		float: none;
+		margin: 0 4px 14px 20px;
+		font: normal 12px Verdana, sans-serif;
+		line-height: 14px;
+	}
+	input[type=radio] + label {
+		margin: -1px 4px 6px 20px;
+	}
+	
+	
+	div.input.checkbox,
+	div.input.radio {
+		input[type=radio], input[type=checkbox] {
+			float:none;
+		}
+		input[type=checkbox] + label, input[type=radio] + label {
+			float: left;
+			font-weight:bold;
+			font-size: inherit;
+			margin: 0 0 14px;
+		}
+	}
+
+
+	/* Selects - Label links, inputs rechts*/
+
+	.radio > fieldset	{
+		border:1px solid #999;
+		background: #e4e4e4;
+		width: 180px;
+		margin-left: 208px;
+		margin-top: 17px;
+		padding: 10px 10px 8px 15px;
+	}
+	/* legend wird als label für radio-selects benutzt - hier nach links verschieben */
+	.radio > fieldset > legend {
+		float: left;
+		width: 208px;
+		margin-left: -224px;
+		margin-bottom: -8px;
+		margin-top: -10px;
+	}
+	
+	div.select {
+		
+		div.checkbox input, div.radio input {
+			float: none;
+			margin: 0;
+			display: inline-block;
+		}
+		
+		div.checkbox input + label, .select div.radio input + label {
+			float: none;
+			margin: 0 0 0 20px;
+			font: normal 12px Verdana, sans-serif;
+			line-height: 14px;
+			display: inline-block;
+			vertical-align: bottom;
+		}
+
+		div.checkbox {
+			margin-left: 207px;
+			line-height: 14px;
+			margin-top: -0px;
+			margin-bottom: 0px;
+			border: 1px solid #999;
+			border-bottom: none;
+			background: #e4e4e4;
+			padding: 10px;
+			width: 266px;
+		}
+		div.checkbox + div.checkbox {
+			border-top: none;
+		}
+		div.checkbox:last-of-type {
+			border-bottom: 1px solid #999;
+			margin-bottom: 0;
+		}
+	}
+	
+	
+
+	/* Standard-SubmitButton */
+	input[type=submit] { 
+		float: left; 
+		clear: none;
+		font: bold 11px Arial, Sans-serif; 
+		-moz-border-radius: 4px;
+		-webkit-border-radius: 4px;
+		border-radius: 4px;
+		border: 1px solid #999;
+		background: $header_background_color; 
+		padding: 2px 3px; 
+		margin: 5px 50px 5px 207px;
+		color: #fff;
+		width: auto;
+	}
+	input[type=submit]:hover {
+		border: 1px solid #999;
+		background: #ccc; 
+		color: #666;
+		outline: none;
+		cursor:pointer;
+	}
+}
+
+div.validation-errors {
+	border: 2px solid #999;
+	padding: 10px;
+	margin-bottom: 15px;
+	
+}
+

@@ -1,0 +1,255 @@
+<?php
+
+App::uses('UsersAppController', 'Users.Controller');
+
+class UsersController extends UsersAppController {
+
+
+	public $name = 'Users';
+	
+	
+	public function beforeFilter() {
+		parent::beforeFilter();
+		
+		$this->set('modelName', $this->modelClass);
+		
+		if(isset($this->Auth)) {
+			$this->Auth->allow(array(
+				'request_new_password',
+				'reset_password',
+				'register',
+				'logout',
+				'verify_email',
+				'request_email_verification'
+			));
+			if(!is_null(Configure::read('Users.allowRegistration')) && !Configure::read('Users.allowRegistration')) {
+				$this->Auth->deny('register');
+			}
+		}
+		
+		if (!Configure::read('App.defaultEmail')) {
+			$host = (env('HTTP_HOST') != 'localhost') ? env('HTTP_HOST') : 'example.com';
+			Configure::write('App.defaultEmail', 'noreply@' . $host);
+		}
+	}
+	
+	
+	public function login() {
+		$Event = new CakeEvent(
+			'Users.Controller.Users.beforeLogin',
+			$this,
+			array(
+				'data' => $this->request->data,
+			)
+		);
+		$this->getEventManager()->dispatch($Event);
+		if($Event->isStopped()) {
+			return;
+		}
+		if($this->request->is('post')) {
+			if($this->Auth->login()) {
+				$Event = new CakeEvent(
+					'Users.Controller.Users.afterLogin',
+					$this,
+					array(
+						'data' => $this->request->data,
+						'isFirstLogin' => !$this->Auth->user('last_login')
+					)
+				);
+				$this->getEventManager()->dispatch($Event);
+				$this->{$this->modelClass}->id = $this->Auth->user('id');
+				$this->{$this->modelClass}->saveField('last_login', date('Y-m-d H:i:s'));
+				if($this->here == $this->Auth->loginRedirect) {
+					$this->Auth->loginRedirect = '/';
+				}
+				$returnTo = null;
+				if($this->Session->check('Auth.redirect')) {
+					$returnTo = $this->Session->read('Auth.redirect');
+				}
+				// Checking for 2.3 but keeping a fallback for older versions
+				if(method_exists($this->Auth, 'redirectUrl')) {
+					$this->redirect($this->Auth->redirectUrl($returnTo));
+				}else{
+					$this->redirect($this->Auth->redirect($returnTo));	// fallback
+				}
+			}else{
+				$this->Auth->flash('Invalid email-password combination. Please try again.');
+			}
+		}
+	}
+	
+	
+	public function logout() {
+		$this->Session->destroy();
+		$this->Session->setFlash('You have successfully logged out.');
+		$this->redirect($this->Auth->logout());
+	}
+	
+	
+	public function dashboard() {
+		$user = $this->{$this->modelClass}->read(null, $this->Auth->user('id'));
+		$this->set('user', $user);
+	}
+	
+	
+	public function edit() {
+		// @todo replace this with something better than the user details that were removed
+	}
+	
+	
+	public function request_new_password($email = null) {
+		$user = false;
+		if(!empty($this->request->data[$this->modelClass]['email'])) {
+			$email = $this->request->data[$this->modelClass]['email'];
+		}
+		if(!empty($email)) {
+			$user = $this->{$this->modelClass}->requestNewPassword($email);
+			if($user AND !empty($user[$this->modelClass]['password_token'])) {
+				$result = $this->_sendUserManagementMail($email, $user, 'Users.password_reset');
+				if($result) $this->Session->setFlash('You should receive an email with further instructions shortly.', 'default', array(), 'auth');
+				$this->redirect(array('action' => 'login'));
+			}
+		}
+	}
+	
+	
+	protected function _sendUserManagementMail($email = null, $user = array(), $template = null, $options = array()) {
+		$subject_prefix = (Configure::read('App.EmailSubjectPrefix'))
+			? trim(Configure::read('App.EmailSubjectPrefix')) . ' '
+			: '';
+		$defaults = array(
+			'subject' => $subject_prefix . 'Password Reset',
+			//'template' => 'Users.password_reset',
+			'emailFormat' => 'text',
+			'layout' => 'default'
+		);
+		if($template) $defaults['template'] = $template;
+		$options = array_merge($defaults, $options);
+		if(empty($defaults['template'])) return false;
+		$result = false;
+		if(empty($user) AND !empty($this->{$this->modelClass}->data))
+			$user = $this->{$this->modelClass}->data;
+		if(!empty($email)) {
+			App::uses('CakeEmail', 'Network/Email');
+			$Email = $this->_getMailInstance();
+			$Email->to($email);
+			if(!empty($options['from'])) $Email->from($options['from']);	// set in email config on app level
+			$Email->emailFormat($options['emailFormat']);
+			$Email->subject($options['subject']);
+			$Email->template($options['template'], $options['layout']);
+			$Email->viewVars(array(
+				'model' => $this->modelClass,
+				'user' => $user
+			));
+			$result = $Email->send();
+		}
+		return $result;
+	}
+	
+	
+	public function reset_password($token = null) {
+		if(!empty($token)) {
+			$user = $this->{$this->modelClass}->checkPasswordToken($token);
+			if(empty($user)) {
+				$this->Session->setFlash('Invalid password reset token, try again.', 'default', array(), 'auth');
+				$this->redirect(array('action' => 'request_new_password'));
+				return;
+			}
+			$id = (!empty($user[$this->modelClass][$this->{$this->modelClass}->primaryKey]))
+				? $user[$this->modelClass][$this->{$this->modelClass}->primaryKey]
+				: null;
+			if(!empty($this->request->data[$this->modelClass]) AND !empty($id)) {
+				$data = array();
+				$data[$this->modelClass][$this->{$this->modelClass}->primaryKey] = $id;
+				$data[$this->modelClass]['new_password'] = $this->request->data[$this->modelClass]['new_password'];
+				if($this->{$this->modelClass}->resetPassword($data)) {
+					$this->Session->setFlash('Password changed, please login with your new password.', 'default', array(), 'auth');
+					$this->redirect($this->Auth->loginAction);
+				}
+			}
+
+			$this->set('token', $token);
+		}
+	}
+	
+	
+	public function register() {
+		if(!empty($this->request->data[$this->modelClass])) {
+			$user = $this->{$this->modelClass}->register($this->request->data);
+			if($user) {
+				$result = $this->_sendUserManagementMail($user[$this->modelClass]['email'], $user, 'Users.email_verification');
+				$this->Session->write('Users.verification', $user[$this->modelClass]['email']);
+				if($result) {
+					$this->Session->setFlash('Before logging in, check your inbox for an email with instructions to veryfy your email address.', 'default', array(), 'auth');
+					$this->redirect(array('action' => 'login'));
+				}else{
+					$this->Session->setFlash('Something went wrong. Try resending the veryfication mail.');
+					$this->redirect(array('action' => 'request_email_verification'));
+				}
+			}
+		}
+	}
+	
+	
+	public function request_email_verification() {
+		$new_email = false;
+		if($this->Session->check('Users.verification')) {
+			$this->set('new_email', $this->Session->read('Users.verification'));
+		}
+		if(!empty($this->request->data[$this->modelClass]['new_email'])) {
+			if(	$this->Session->check('Users.verification')
+			OR	$this->Auth->login()
+			) {
+				$new_email = $this->request->data[$this->modelClass]['new_email'];
+			}
+		}
+		if($new_email) {
+			$user = $this->Auth->user();
+			if(empty($user)) $user = array();
+			$user = $this->{$this->modelClass}->requestEmailVerification($new_email, $user);
+			if($user AND !empty($user[$this->modelClass]['email_token'])) {
+				$result = $this->_sendUserManagementMail($new_email, $user, 'Users.email_verification');
+				if($result) {
+					$this->Session->setFlash('Before logging in, check your inbox for an email with instructions to veryfy your email address.', 'default', array(), 'auth');
+					$this->redirect(array('action' => 'login'));
+				}else{
+					$this->Session->setFlash('Something went wrong. Try resending the veryfication mail.');
+					$this->redirect(array('action' => 'request_email_verification'));
+				}
+			}
+		}
+	}
+	
+	
+	public function verify_email($token = null) {
+		if(!empty($token)) {
+			$user = $this->{$this->modelClass}->checkEmailToken($token);
+			if(empty($user)) {
+				$this->Session->setFlash('Invalid email verification token, try again.', 'default', array(), 'auth');
+				$this->redirect(array('action' => 'request_email_verification'));
+			}
+			$id = (!empty($user[$this->modelClass][$this->{$this->modelClass}->primaryKey]))
+				? $user[$this->modelClass][$this->{$this->modelClass}->primaryKey]
+				: null;
+			if(!empty($id)) {
+				if($result = $this->{$this->modelClass}->verifyEmail($user)) {
+					$this->Session->setFlash('Your email address has been verified successful.', 'default', array(), 'auth');
+					$this->Session->delete('Users.verification');
+				}else{
+					$this->Session->setFlash('An error occurred, pleas try again.', 'default', array(), 'auth');
+					$this->redirect(array('action' => 'request_email_verification'));
+				}
+			}
+		}
+		$this->redirect($this->Auth->loginAction);
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+}
+?>

@@ -1,0 +1,191 @@
+<?php
+
+App::uses('UsersAppController', 'Users.Controller');
+
+class UsersController extends UsersAppController {
+
+
+	public $name = 'Users';
+	
+	
+	public function beforeFilter() {
+		parent::beforeFilter();
+		
+		$this->set('modelName', $this->modelClass);
+		
+		$this->Auth->allow(array('request_new_password'));
+		
+		if (!Configure::read('App.defaultEmail')) {
+			$host = (env('HTTP_HOST') != 'localhost') ? env('HTTP_HOST') : 'example.com';
+			Configure::write('App.defaultEmail', 'noreply@' . $host);
+		}
+	}
+	
+	
+	public function login() {
+		$Event = new CakeEvent(
+			'Users.Controller.Users.beforeLogin',
+			$this,
+			array(
+				'data' => $this->request->data,
+			)
+		);
+		$this->getEventManager()->dispatch($Event);
+		if ($Event->isStopped()) {
+			return;
+		}
+
+		if ($this->request->is('post')) {
+			if ($this->Auth->login()) {
+				$Event = new CakeEvent(
+					'Users.Controller.Users.afterLogin',
+					$this,
+					array(
+						'data' => $this->request->data,
+						'isFirstLogin' => !$this->Auth->user('last_login')
+					)
+				);
+				$this->getEventManager()->dispatch($Event);
+				$this->{$this->modelClass}->id = $this->Auth->user('id');
+				$this->{$this->modelClass}->saveField('last_login', date('Y-m-d H:i:s'));
+				if ($this->here == $this->Auth->loginRedirect) {
+					$this->Auth->loginRedirect = '/';
+				}
+				$this->Session->setFlash(sprintf(__d('users', '%s you have successfully logged in'), $this->Auth->user($this->{$this->modelClass}->displayField)));
+				if (!empty($this->request->data)) {
+					$data = $this->request->data[$this->modelClass];
+					if (empty($this->request->data[$this->modelClass]['remember_me'])) {
+						$this->RememberMe->destroyCookie();
+					} else {
+						$this->_setCookie();
+					}
+				}
+				if (empty($data[$this->modelClass]['return_to'])) {
+					$data[$this->modelClass]['return_to'] = null;
+				}
+				// Checking for 2.3 but keeping a fallback for older versions
+				if (method_exists($this->Auth, 'redirectUrl')) {
+					$this->redirect($this->Auth->redirectUrl($data[$this->modelClass]['return_to']));
+				} else {
+					$this->redirect($this->Auth->redirect($data[$this->modelClass]['return_to']));
+				}
+			} else {
+				$this->Auth->flash(__d('users', 'Invalid e-mail / password combination. Please try again'));
+			}
+		}
+		if (isset($this->request->params['named']['return_to'])) {
+			$this->set('return_to', urldecode($this->request->params['named']['return_to']));
+		} else {
+			$this->set('return_to', false);
+		}
+		$allowRegistration = Configure::read('Users.allowRegistration');
+		$this->set('allowRegistration', (is_null($allowRegistration) ? true : $allowRegistration));
+	}
+	
+	
+	public function logout() {
+		$user = $this->Auth->user();
+		$this->Session->destroy();
+		$this->RememberMe->destroyCookie();
+		$this->Session->setFlash('You have successfully logged out.');
+		$this->redirect($this->Auth->logout());
+	}
+	
+	
+	public function dashboard() {
+		$user = $this->{$this->modelClass}->read(null, $this->Auth->user('id'));
+		$this->set('user', $user);
+	}
+	
+	
+	public function edit() {
+		// @todo replace this with something better than the user details that were removed
+	}
+	
+	
+	public function request_new_password($email = null) {
+		$user = false;
+		if(!empty($this->request->data[$this->modelClass]['email'])) {
+			$email = $this->request->data[$this->modelClass]['email'];
+		}
+		if(!empty($email)) {
+			$user = $this->{$this->modelClass}->requestNewPassword($email);
+			if($user) {
+				$this->_sendPasswordReset($user);
+				$this->Session->setFlash('You should receive an email with further instructions shortly.', 'default', array(), 'auth');
+				$this->redirect(array('action' => 'login'));
+			}
+		}
+	}
+	
+	
+	protected function _sendPasswordReset($user = array(), $options = array()) {
+		$defaults = array(
+			//'from' => 'foo@bar.com',
+			'subject' => '[DH Course Registry] Password Reset',
+			'template' => 'Users.password_reset_request',
+			'emailFormat' => 'text',
+			'layout' => 'default'
+		);
+		$options = array_merge($defaults, $options);
+		
+		if(empty($user) AND !empty($this->{$this->modelClass}->data))
+			$user = $this->{$this->modelClass}->data;
+		if(is_array($user) AND !empty($user[$this->modelClass])) {
+			App::uses('CakeEmail', 'Network/Email');
+			$Email = $this->_getMailInstance();
+			$Email->to($user[$this->modelClass]['email']);
+			if(!empty($options['from'])) $Email->from($options['from']);	// set in email config on app level
+			$Email->emailFormat($options['emailFormat']);
+			$Email->subject($options['subject']);
+			$Email->template($options['template'], $options['layout']);
+			$Email->viewVars(array(
+				'model' => $this->modelClass,
+				'user' => $user,
+				'token' => $user[$this->modelClass]['password_token']));
+			$result = $Email->send();
+		}
+	}
+	
+	
+	public function reset_password($token = null) {
+		if(!empty($token)) {
+			$user = $this->{$this->modelClass}->checkPasswordToken($token);
+			if(empty($user)) {
+				$this->Session->setFlash('Invalid password reset token, try again.', 'default', array(), 'auth');
+				$this->redirect(array('action' => 'request_new_password'));
+				return;
+			}
+			$id = (!empty($user[$this->modelClass][$this->modelClass->primaryKey]))
+				? $user[$this->modelClass][$this->modelClass->primaryKey]
+				: null;
+			
+			if(!empty($this->request->data) AND !empty($id)) {
+				$data = array();
+				$data[$this->modelClass][$this->{$this->modelClass}->primaryKey] = $id;
+				$data[$this->modelClass]['new_password'] = $this->request->data[$this->modelClass]['new_password'];
+				if($this->{$this->modelClass}->resetPassword($data)) {
+					//if ($this->RememberMe->cookieIsSet()) {
+					//	$this->Session->setFlash('Password changed.');
+					//	$this->_setCookie();
+					//} else {
+						$this->Session->setFlash('Password changed, please login with your new password.', 'default', array(), 'auth');
+						$this->redirect($this->Auth->loginAction);
+					//}
+				}
+			}
+
+			$this->set('token', $token);
+		}
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+}
+?>

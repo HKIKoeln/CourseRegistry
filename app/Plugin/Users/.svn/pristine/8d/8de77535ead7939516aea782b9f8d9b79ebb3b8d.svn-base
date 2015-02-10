@@ -1,0 +1,16 @@
+<div class="auth">
+<h2>Reset your password - Step 2/2</h2>
+<?php
+	echo $this->Form->create($modelName, array(
+		'url' => array(
+			'action' => 'reset_password',
+			$token
+		)
+	));
+	echo $this->Form->input('new_password', array(
+		'label' => 'New Password',
+		'type' => 'password'
+	));
+	echo $this->Form->end('Submit');
+?>
+</div>

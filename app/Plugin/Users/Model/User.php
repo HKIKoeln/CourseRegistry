@@ -1,0 +1,312 @@
+<?php
+App::uses('UsersAppModel', 'Users.Model');
+
+class User extends UsersAppModel {
+
+	public $name = 'User';
+
+	public $displayField = 'email';
+
+	// 60*60*24 = 86400
+	public $tokenExpirationTime = 86400;
+	
+	
+	
+	public $validate = array(
+		'username' => array(
+			'required' => array(
+				'rule' => array('notEmpty'),
+				'message' => 'Please enter a username.'
+			),
+			'alpha' => array(
+				'rule' => array('alphaNumeric'),
+				'message' => 'The username must be alphanumeric.'
+			),
+			'unique_username' => array(
+				'rule' => array('isUnique', 'username'),
+				'message' => 'This username is already in use.'
+			),
+			'username_min' => array(
+				'rule' => array('minLength', '3'),
+				'message' => 'The username must have at least 3 characters.'
+			)
+		),
+		'email' => array(
+			'isValid' => array(
+				'rule' => 'email',
+				'message' => 'Please enter a valid email address.'
+			),
+			'isUnique' => array(
+				'rule' => array('isUnique', 'email'),
+				'message' => 'An account with that email already exists.'
+			)
+		),
+		'new_email' => array(
+			'isValid' => array(
+				'rule' => 'email',
+				'message' => 'Please enter a valid email address.'
+			),
+			'isUnique' => array(
+				'rule' => array('newMailIsUnique'),
+				'message' => 'An account with that email already exists.'
+			)
+		),
+		'password' => array(
+			'too_short' => array(
+				'rule' => array('minLength', '6'),
+				'message' => 'The password must have at least 6 characters.'
+			)
+		)
+	);
+	
+	
+	// blacklist for profile-edit/registration
+	public $blacklist = array(
+		'id','email','password','email_verified','active','is_admin','user_admin','last_login','password_token',
+		'email_token','new_email','password_token_expires','email_token_expires','created','modified'
+	);
+	
+	
+	
+	
+	public function newMailIsUnique($check) {
+		$count = $this->find('count', array(
+			'conditions' => array($this->alias . '.email' => $check)
+		));
+		return ($count == 0);
+	}
+	
+	
+	public function findByEmail($email = null) {
+		if(empty($email)) return false;
+		return $this->find('first', array(
+			'contain' => array(),
+			'conditions' => array(
+				$this->alias . '.email' => $email,
+				$this->alias . '.active' => 1
+			)
+		));
+	}
+	
+	
+	public function requestNewPassword($email = null) {
+		$user = $this->findByEmail($email);
+		if(!empty($user) && $user[$this->alias]['email_verified'] == 1) {
+			$expiry = date('Y-m-d H:i:s', time() + $this->tokenExpirationTime);
+			$token = $this->generateToken('password_token');
+			$data = array();
+			$data[$this->alias]['id'] = $user[$this->alias]['id'];
+			$data[$this->alias]['password_token'] = $token;
+			$data[$this->alias]['password_token_expires'] = $expiry;
+			$data = $this->save($data, false);
+			if($data) {
+				$user[$this->alias] = array_merge($user[$this->alias], $data[$this->alias]);
+				$this->data = $user;
+				return $user;
+			}
+		}elseif(!empty($user) && $user[$this->alias]['email_verified'] == 0) {
+			$this->invalidate('email', 'This Email Address exists but was never validated.');
+		}else{
+			$this->invalidate('email', 'This Email Address does not exist in the system.');
+		}
+		return false;
+	}
+	
+	
+	public function generateToken($fieldname = null, $length = 16) {
+		$time = substr((string)time(), -6, 6);
+		$possible = '0123456789abcdefghijklmnopqrstuvwxyz';
+		// create an unique token
+		for($c = 1; $c > 0; ) {
+			$token = '';
+			for($i = 0; $i < $length - 6; $i++) {
+				$token .= substr($possible, mt_rand(0, strlen($possible) - 1), 1);
+			}
+			$token = $time . $token;
+			if(empty($fieldname)) break;
+			$c = $this->find('count', array('conditions' => array(
+				$this->alias . '.' . $fieldname => $token
+			)));
+		}
+		return $token;
+	}
+	
+	
+	public function checkPasswordToken($token = null) {
+		if(empty($token)) return false;
+		$user = $this->find('first', array(
+			'contain' => array(),
+			'conditions' => array(
+				$this->alias . '.password_token' => $token,
+				$this->alias . '.password_token_expires >=' => date('Y-m-d H:i:s')
+			)
+		));
+		if(empty($user)) return false;
+		return $user;
+	}
+	
+	
+	public function resetPassword($data = array()) {
+		$result = false;
+		foreach($this->blacklist as $fieldname) {
+			// make sure the primaryKey is secured in any manner!!! (eg. SecurityComponent)
+			if(!in_array($fieldname, array($this->primaryKey))) {
+				unset($data[$this->alias][$fieldname]);
+			}
+		}
+		$tmp = $this->validate;
+		$this->validate = array('new_password' => $this->validate['password']);
+		$this->set($data);
+		if($this->validates() AND !empty($this->data[$this->alias][$this->primaryKey])) {
+			$hash = $this->hash($this->data[$this->alias]['new_password']);
+			// make sure we're not saving anything else than the password!
+			$this->data[$this->alias][$this->primaryKey] = $this->data[$this->alias][$this->primaryKey];
+			$this->data[$this->alias]['password'] = $hash;
+			$this->data[$this->alias]['password_token'] = null;
+			$this->data[$this->alias]['password_token_expires'] = null;
+			$this->data[$this->alias]['email_verified'] = 1;
+			$result = $this->save($data, array('validate' => false));
+		}
+		$this->validate = $tmp;
+		return $result;
+	}
+	
+	
+	public function register($data = array()) {
+		$result = false;
+		foreach($this->blacklist as $fieldname) {
+			if(!in_array($fieldname, array('email','password'))) {
+				unset($data[$this->alias][$fieldname]);
+			}
+		}
+		$this->set($data);
+		if($this->validates()) {
+			$hash = $this->hash($this->data[$this->alias]['password']);
+			$expiry = date('Y-m-d H:i:s', time() + $this->tokenExpirationTime);
+			$this->data[$this->alias]['password'] = $hash;
+			$this->data[$this->alias]['email_verified'] = 0;
+			$this->data[$this->alias]['active'] = (Configure::read('Users.adminConfirmRegistration')) ? 0 : 1;
+			$this->data[$this->alias]['approved'] = (Configure::read('Users.adminConfirmRegistration')) ? 0 : 1;
+			$this->data[$this->alias]['is_admin'] = 0;
+			$this->data[$this->alias]['user_admin'] = 0;
+			$this->data[$this->alias]['new_email'] = $this->data[$this->alias]['email'];
+			$this->data[$this->alias]['email_token'] = $this->generateToken('email_token');
+			$this->data[$this->alias]['email_token_expires'] = $expiry;
+			if(Configure::read('Users.adminConfirmRegistration')) {
+				$this->data[$this->alias]['approval_token'] = $this->generateToken('approval_token');
+				$this->data[$this->alias]['approval_token_expires'] = $expiry;
+			}
+			$result = $this->save($this->data, array('validate' => false));
+		}
+		return $result;
+	}
+	
+	
+	public function checkEmailToken($token = null) {
+		if(empty($token)) return false;
+		$conditions = array(
+			$this->alias . '.email_token' => $token,
+			$this->alias . '.email_token_expires >=' => date('Y-m-d H:i:s')
+		);
+		if(!Configure::read('Users.adminConfirmRegistration')) {
+			$conditions[$this->alias . '.active'] = 1;
+		}
+		$user = $this->find('first', array(
+			'contain' => array(),
+			'conditions' => $conditions
+		));
+		if(empty($user)) return false;
+		return $user;
+	}
+	
+	
+	public function requestEmailVerification($new_email = null, $user = array()) {
+		if(!empty($user)) {
+			if(!empty($user[$this->alias])) $user = $user[$this->alias];
+			$expiry = date('Y-m-d H:i:s', time() + $this->tokenExpirationTime);
+			$token = $this->generateToken('email_token');
+			$data = array();
+			$data[$this->alias]['id'] = $user['id'];
+			$data[$this->alias]['email_token'] = $token;
+			$data[$this->alias]['email_token_expires'] = $expiry;
+			$data[$this->alias]['new_email'] = $new_email;
+			$this->set($data);
+			$result = false;
+			if(	$new_email == $user['email']
+			OR	$this->validates(array('fieldlist' => array('new_email')))
+			) {
+				$result = $this->save($this->data, array('validate' => false));
+			}
+			if($result) {
+				$ret = array();
+				$ret[$this->alias] = array_merge($user, $result[$this->alias]);
+				$this->data = $ret;
+				return $ret;
+			}
+		}
+		return false;
+	}
+	
+	
+	public function verifyEmail($user = array()) {
+		if(empty($user)) return false;
+		$data = array();
+		$data[$this->alias][$this->primaryKey] = $user[$this->alias][$this->primaryKey];
+		if(!empty($user[$this->alias]['new_email'])) {
+			$data[$this->alias]['email'] = $user[$this->alias]['new_email'];
+			$data[$this->alias]['email_verified'] = 1;
+			$data[$this->alias]['new_email'] = null;
+			$data[$this->alias]['email_token'] = null;
+			$data[$this->alias]['email_token_expires'] = null;
+			return $this->save($data, array('validate' => false));
+		}
+		return false;
+	}
+	
+	
+	public function saveProfile($data = array(), $admin = false) {
+		if(!empty($data[$this->alias])) $this->set($data);
+		$this->id = $this->data[$this->alias][$this->primaryKey];
+		if(!$admin AND !empty($this->blacklist)) {
+			foreach($this->blacklist as $fieldname) {
+				unset($this->data[$this->alias][$fieldname]);
+			}
+		}
+		return $result = $this->save($this->data);
+	}
+	
+	
+	public function hash($pwd = null) {
+		if(empty($pwd) AND !empty($this->data[$this->alias]['password'])) {
+			$pwd = $this->data[$this->alias]['password'];
+		}
+		App::uses('Security', 'Utility');
+		return $hash = Security::hash(
+			$string = $pwd, 
+			$type = null,
+			$salt = true
+		);
+	}
+	
+	
+	public function approve($id = null) {
+		if(empty($id)) return false;
+		$this->id = $id;
+		$data[$this->alias]['active'] = 1;
+		$data[$this->alias]['approved'] = 1; // if approved is true, but active false, then the user is banned!
+		$data[$this->alias]['approval_token'] = null;
+		$data[$this->alias]['approval_token_expires'] = null;
+		$this->save($data, array('validate' => false));
+		$this->recursive = -1;
+		return $this->read();
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+
+}

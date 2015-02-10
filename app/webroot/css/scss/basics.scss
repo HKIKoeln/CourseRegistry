@@ -1,0 +1,116 @@
+
+
+/* resetter */
+* {
+	margin: 0;
+	padding: 0;
+}
+
+/* basics */
+body {
+	font-family: Verdana, Helvetica, Arial, sans-serif;
+	font-size: 12px;
+	color: $font_color;
+	background-color: $background_color;
+}
+h1, h2, h3, h4 {
+	margin-bottom: 0.9em;
+	font-weight: bold;
+	margin-top: 2em;
+	&:first-child {
+		margin-top: 0;
+	}
+}
+h1 {
+	font-size: 2em;
+}
+h2 {
+	font-size: 1.5em;
+}
+h3 {
+	font-size: 1.2em;
+}
+h4 {
+	font-size: 1em;
+}
+ul, li {
+	margin: 0;
+}
+p {
+	margin: 0 0 1em 0;
+}
+img {
+	border: none;
+}
+a {
+	color: $link_color;
+	text-decoration: underline;
+	&:hover {
+		color: $link_hover_color;
+		text-decoration:none;
+	}
+}
+dl {
+	line-height: 2em;
+	margin: 0em 0em;
+	dt {
+		vertical-align: top;
+		float: left;
+		clear: left;
+		display: block;
+		width: 150px;
+		font-weight: bold;
+		&:after {
+			content: ": ";
+		}
+	}
+	dd {
+		margin-left: 1em;
+		vertical-align: top;
+		float: left;
+		display: block;
+		width: 60%;
+	}
+	@include clearfix;
+}
+
+.left {float: left;}
+.right {float: right;}
+.fnone {float: none;}
+.clearfix {
+	@include clearfix;
+}
+.clear, .clearer {
+	clear: both;
+}
+.noclear {
+	clear: none;
+}
+.strong {
+	font-weight: bold;
+}
+
+/* A flexible, but simple columns layout (up to 3) */
+/* One can include the following classes in a container (div.col) with fixed width to fix the columns width as well. */
+/* With 30px margin this will work down to 375px width (8% => 30px) */
+.col {
+	@include clearfix;
+}
+.narrow {
+	width: 32%;
+	dt {width: 80px;}
+}
+.half {
+	width: 46%;
+	dt {width: 110px;}
+}
+.wide {
+	width: 60%;
+	dt {width: 150px;}
+}
+.narrow, .half, .wide {
+	margin-left: 30px;
+	&:first-child {
+		margin-left: 0;
+	}
+}

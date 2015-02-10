@@ -1,0 +1,29 @@
+<div class="users_form">
+	<h2>Edit Profile</h2>
+	<?php
+	
+	echo $this->Form->create($modelName);
+	
+	echo $this->Form->input('id', array('disabled' => true, 'type' => 'text'));
+	
+	echo $this->Form->input('last_login', array('disabled' => true, 'type' => 'text'));
+	
+	echo $this->Form->input('email', array('disabled' => true));
+	
+	echo $this->Html->link('Change E-mail', array(
+		'controller' => 'users',
+		'action' => 'request_email_verification'
+	));
+	
+	echo $this->Html->link('Change Password', array(
+		'controller' => 'users',
+		'action' => 'request_new_password'
+	));
+	
+	if(Configure::read('Users.loginName') == 'username') {
+		echo $this->Form->input('username');
+	}
+	
+	echo $this->Form->end('Submit');
+	?>
+</div>

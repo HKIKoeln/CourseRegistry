@@ -1,0 +1,27 @@
+<div class="users_form">
+	<h2>User Registration</h2>
+	
+	<?php
+	echo $this->Form->create($modelName);
+	
+	if(Configure::read('Users.username')) {
+		echo $this->Form->input('username', array(
+			'label' => 'Username'
+		));
+	}
+	echo $this->Form->input('email', array(
+		'label' => 'E-mail',
+		'error' => array(
+			'isValid' => 'Must be a valid email address',
+			'isUnique' => 'An account with that email already exists'
+		)
+	));
+	echo $this->Form->input('password', array(
+		'label' => 'Password',
+		'type' => 'password'
+	));
+	
+	echo $this->Form->end('Submit');
+	?>
+	
+</div>

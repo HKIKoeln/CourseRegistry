@@ -1,0 +1,54 @@
+@mixin clearfix {
+	&:after {
+		visibility: hidden;
+		display: block;
+		font-size: 0;
+		content: " ";
+		clear: both;
+		height: 0;
+	}
+}
+
+@mixin taxonomySelector {
+	div.input.taxonomy.select {
+		
+		> label {width: 208px;}
+		
+		div.checkbox {
+			padding: 0 5px 0 5px;
+			width: 276px;
+			@include clearfix;
+			
+			label {
+				margin-top: 5px;
+				margin-bottom: 5px;
+				width: auto;
+				float: none;
+			}
+			input {
+				width: 10px;
+				margin-right: 10px;
+				margin-top: 5px;
+				margin-bottom: 5px;
+				float: none;
+			}
+			&.primary {
+				background-color: #fff;
+				padding: 0 25px 0 5px;
+				width: 256px;
+			}
+			&.secondary {
+				background-color: #ddd;
+				padding-left: 15px;
+				padding-right: 15px;
+				width: 256px;
+			}
+			&.tertiary {
+				background-color: #bbb;
+				padding-left: 25px;
+				padding-right: 5px;
+				width: 256px;
+			}
+		}
+	}
+}
