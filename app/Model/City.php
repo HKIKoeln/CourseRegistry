@@ -22,7 +22,7 @@ App::uses('AppModel', 'Model');
  *
  * @property Country $Country
  * @property Course $Course
- * @property University $University
+ * @property Institution $Institution
  */
 class City extends AppModel {
 
@@ -100,8 +100,8 @@ class City extends AppModel {
 			'finderQuery' => '',
 			'counterQuery' => ''
 		),
-		'University' => array(
-			'className' => 'University',
+		'Institution' => array(
+			'className' => 'Institution',
 			'foreignKey' => 'city_id',
 			'dependent' => false,
 			'conditions' => '',

@@ -22,7 +22,7 @@ App::uses('AppModel', 'Model');
  *
  * @property Country $Country
  * @property City $City
- * @property University $University
+ * @property Institution $Institution
  * @property ParentType $ParentType
  * @property Type $Type
  * @property Language $Language
@@ -56,17 +56,17 @@ class Course extends AppModel {
 				'required' => true
 			),
 		),
-		'university_id' => array(
+		'institution_id' => array(
 			'from_list' => array(
-				'rule' => array('checkList', 'University'),
+				'rule' => array('checkList', 'Institution'),
 				'message' => 'Only the provided options are allowed.',
 				'allowEmpty' => false,
 				'required' => true
 			),
 		),
-		'type_id' => array(
+		'course_type_id' => array(
 			'from_list' => array(
-				'rule' => array('checkList', 'Type'),
+				'rule' => array('checkList', 'CourseType'),
 				'message' => 'Only the provided options are allowed.',
 				'allowEmpty' => false,
 				'required' => true
@@ -252,17 +252,17 @@ class Course extends AppModel {
 			'className' => 'City',
 			'foreignKey' => 'city_id'
 		),
-		'University' => array(
-			'className' => 'University',
-			'foreignKey' => 'university_id'
+		'Institution' => array(
+			'className' => 'Institution',
+			'foreignKey' => 'institution_id'
 		),
-		'ParentType' => array(
-			'className' => 'ParentType',
-			'foreignKey' => 'parent_type_id'
+		'CourseParentType' => array(
+			'className' => 'CourseParentType',
+			'foreignKey' => 'course_parent_type_id'
 		),
-		'Type' => array(
-			'className' => 'Type',
-			'foreignKey' => 'type_id'
+		'CourseType' => array(
+			'className' => 'CourseType',
+			'foreignKey' => 'course_type_id'
 		),
 		'Language' => array(
 			'className' => 'Language',
@@ -308,20 +308,20 @@ class Course extends AppModel {
 	
 	
 	public function beforeValidate($options = array()) {
-		unset($this->data['Course']['parent_type_id']);
+		unset($this->data['Course']['course_parent_type_id']);
 		unset($this->data['Course']['city_id']);
 		unset($this->data['Course']['country_id']);
 		if(!empty($this->data['Course']['type_id'])) {
-			$this->data['Course']['parent_type_id'] = $this->Type->field('parent_type_id', array(
-				'Type.id' => $this->data['Course']['type_id']));
+			$this->data['Course']['course_parent_type_id'] = $this->CourseType->field('course_parent_type_id', array(
+				'CourseType.id' => $this->data['Course']['course_type_id']));
 		}
-		if(!empty($this->data['Course']['university_id'])) {
-			$university = $this->University->find('first', array(
+		if(!empty($this->data['Course']['institution_id'])) {
+			$university = $this->Institution->find('first', array(
 				'contain' => array(),
-				'conditions' => array('University.id' => $this->data['Course']['university_id'])
+				'conditions' => array('Institution.id' => $this->data['Course']['institution_id'])
 			));
-			$this->data['Course']['city_id'] = $university['University']['city_id'];
-			$this->data['Course']['country_id'] = $university['University']['country_id'];
+			$this->data['Course']['city_id'] = $university['Institution']['city_id'];
+			$this->data['Course']['country_id'] = $university['Institution']['country_id'];
 		}
 		if(!empty($this->data['Course']['start_date'])) {
 			$dates = trim($this->data['Course']['start_date']);

@@ -73,8 +73,8 @@ class Country extends AppModel {
 			'foreignKey' => 'country_id',
 			'dependent' => false,
 		),
-		'University' => array(
-			'className' => 'University',
+		'Institution' => array(
+			'className' => 'Institution',
 			'foreignKey' => 'country_id',
 			'dependent' => false,
 		)

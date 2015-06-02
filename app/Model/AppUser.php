@@ -25,7 +25,7 @@ class AppUser extends User {
 	
 	// a set of validation rules, extending or overriding the given rules from the plugin
 	public $validationRules = array(
-		'university_id' => array(
+		'institution_id' => array(
 			'special' => array(
 				'rule' => 'checkUniversity',
 				'message' => 'Please either choose your university from this list or enter the name in the next field if it\'s not available.'
@@ -70,9 +70,9 @@ class AppUser extends User {
 	
 	
 	public $belongsTo = array(
-		'University' => array(
-			'className' => 'University',
-			'foreignKey' => 'university_id'
+		'Institution' => array(
+			'className' => 'Institution',
+			'foreignKey' => 'institution_id'
 		)
 	);
 	
@@ -88,10 +88,10 @@ class AppUser extends User {
 	// custom validation
 	public function checkUniversity($check) {
 		$result = false;
-		$universities = $this->University->find('list');
+		$universities = $this->Institution->find('list');
 		
-		if(	!empty($this->data[$this->alias]['university_id'])
-		AND	isset($universities[$this->data[$this->alias]['university_id']])
+		if(	!empty($this->data[$this->alias]['institution_id'])
+		AND	isset($universities[$this->data[$this->alias]['institution_id']])
 		) {
 			$result = true;
 		}
@@ -101,7 +101,7 @@ class AppUser extends User {
 			}
 			$pos = array_search(strtolower($this->data[$this->alias]['university']), $universities);
 			if($pos !== false) {
-				$this->data[$this->alias]['university_id'] = $pos;
+				$this->data[$this->alias]['institution_id'] = $pos;
 			}
 			$result = true;
 		}
@@ -113,7 +113,7 @@ class AppUser extends User {
 	public function inviteRegister($data = array()) {
 		$result = false;
 		$this->set($data);
-		if($this->validates(array('fieldList' => array('email', 'university_id', 'first_name', 'last_name')))) {
+		if($this->validates(array('fieldList' => array('email', 'institution_id', 'first_name', 'last_name')))) {
 			$token = $this->generateToken('password_token');
 			$expiry = date('Y-m-d H:i:s', time() + $this->tokenExpirationTime);
 			$this->data[$this->alias]['email_verified'] = 1;

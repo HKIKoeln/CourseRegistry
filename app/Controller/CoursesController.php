@@ -62,7 +62,7 @@ class CoursesController extends AppController {
 		$locations = $this->Course->find('all', array(
 			'contain' => array('University.name'),
 			'conditions' => $this->_getFilter(),
-			'fields' => array('id','active','name','department','user_id','city_id','country_id','type_id','parent_type_id','university_id','lon','lat'),
+			'fields' => array('id','active','name','department','user_id','city_id','country_id','course_type_id','course_parent_type_id','university_id','lon','lat'),
 			'limit' => 1000
 		));
 		if($this->request->is('requested')) {
@@ -230,8 +230,8 @@ class CoursesController extends AppController {
 		ksort($universities);
 		$languages = $this->Course->Language->find('list');
 		$types = $this->Course->Type->find('list', array(
-			'contain' => array('ParentType'),
-			'fields' => array('Type.id','Type.name','ParentType.name')
+			'contain' => array('CourseParentType'),
+			'fields' => array('CourseType.id','CourseType.name','CourseParentType.name')
 		));
 		
 		$this->_setTaxonomy();
@@ -325,11 +325,11 @@ class CoursesController extends AppController {
 				if(empty($form['university_id'])) unset($this->filter['Course.university_id']);
 				else $this->filter['Course.university_id'] = $form['university_id'];
 				
-				if(empty($form['parent_type_id'])) unset($this->filter['Course.parent_type_id']);
-				else $this->filter['Course.parent_type_id'] = $form['parent_type_id'];
+				if(empty($form['course_parent_type_id'])) unset($this->filter['Course.course_parent_type_id']);
+				else $this->filter['Course.course_parent_type_id'] = $form['course_parent_type_id'];
 				
-				if(empty($form['type_id'])) unset($this->filter['Course.type_id']);
-				else $this->filter['Course.type_id'] = $form['type_id'];
+				if(empty($form['course_type_id'])) unset($this->filter['Course.course_type_id']);
+				else $this->filter['Course.course_type_id'] = $form['course_type_id'];
 			}
 			// the HABTM filters
 			if(!empty($this->request->data['TadirahObject'])) {
@@ -442,13 +442,13 @@ class CoursesController extends AppController {
 	protected function _getFilterOptions_validateFilters() {
 		// filter logic: if minor doesn't fit major, remove minor from filter
 		// get option lists for the filter
-		$parentTypes = $this->Course->ParentType->find('list');
-		$conditions = (empty($this->filter['Course.parent_type_id'])) ? array() : array('Type.parent_type_id' => $this->filter['Course.parent_type_id']);
-		$types = $this->Course->Type->find('list', array('conditions' => $conditions));
-		if(!empty($this->filter['Course.type_id']) AND !isset($types[$this->filter['Course.type_id']])) unset($this->filter['Course.type_id']);
-		$types = $this->Course->Type->find('list', array(
-			'contain' => array('ParentType'),
-			'fields' => array('Type.id', 'Type.name', 'ParentType.name'),
+		$parentTypes = $this->Course->CourseParentType->find('list');
+		$conditions = (empty($this->filter['Course.course_parent_type_id'])) ? array() : array('CourseType.course_parent_type_id' => $this->filter['Course.course_parent_type_id']);
+		$types = $this->Course->CourseType->find('list', array('conditions' => $conditions));
+		if(!empty($this->filter['Course.course_type_id']) AND !isset($types[$this->filter['Course.course_type_id']])) unset($this->filter['Course.course_type_id']);
+		$types = $this->Course->CourseType->find('list', array(
+			'contain' => array('CourseParentType'),
+			'fields' => array('CourseType.id', 'CourseType.name', 'CourseParentType.name'),
 			'conditions' => $conditions
 		));
 		
@@ -467,7 +467,7 @@ class CoursesController extends AppController {
 		
 		// filter logic 2 - avoid redundant conditions
 		if(!empty($this->filter['Course.city_id'])) unset($this->filter['Course.country_id']);
-		if(!empty($this->filter['Course.type_id'])) unset($this->filter['Course.parent_type_id']);
+		if(!empty($this->filter['Course.course_type_id'])) unset($this->filter['Course.course_parent_type_id']);
 		
 		// child of country & city: university
 		$conditions = array();

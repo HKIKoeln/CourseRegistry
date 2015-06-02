@@ -18,12 +18,12 @@
 
 App::uses('AppModel', 'Model');
 /**
- * University Model
+ * Institution Model
  *
  * @property City $City
  * @property Course $Course
  */
-class University extends AppModel {
+class Institution extends AppModel {
 
 /**
  * Display field
@@ -33,7 +33,7 @@ class University extends AppModel {
 	public $displayField = 'name';
 	
 	
-	public $order = 'University.name ASC';
+	public $order = 'Institution.name ASC';
 
 /**
  * Validation rules
@@ -99,7 +99,7 @@ class University extends AppModel {
 	public $hasMany = array(
 		'Course' => array(
 			'className' => 'Course',
-			'foreignKey' => 'university_id',
+			'foreignKey' => 'institution_id',
 			'dependent' => false,
 			'conditions' => '',
 			'fields' => '',
@@ -112,7 +112,7 @@ class University extends AppModel {
 		),
 		'User' => array(
 			'className' => 'User',
-			'foreignKey' => 'university_id',
+			'foreignKey' => 'institution_id',
 			'dependent' => false
 		)
 	);
