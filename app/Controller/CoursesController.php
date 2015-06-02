@@ -229,7 +229,7 @@ class CoursesController extends AppController {
 		));
 		ksort($universities);
 		$languages = $this->Course->Language->find('list');
-		$types = $this->Course->Type->find('list', array(
+		$types = $this->Course->CourseType->find('list', array(
 			'contain' => array('CourseParentType'),
 			'fields' => array('CourseType.id','CourseType.name','CourseParentType.name')
 		));

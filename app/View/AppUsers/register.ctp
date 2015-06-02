@@ -43,15 +43,15 @@
 		'autocomplete' => 'off'
 	));
 	
-	echo $this->Form->input('university_id', array(
-		'label' => 'University',
-		'empty' => '-- choose university --'
+	echo $this->Form->input('institution_id', array(
+		'label' => 'Institution',
+		'empty' => '-- choose institution --'
 	));
 	
 	echo $this->Form->input('university', array(
-		'label' => 'Other University',
+		'label' => 'Other Institution',
 		'type' => 'text',
-		'title' => 'Only fill in if you cannot find your university in the dropdown list above.'
+		'title' => 'Only fill in if you cannot find your institution in the dropdown list above.'
 	));
 	
 	echo $this->Form->input('academic_title');

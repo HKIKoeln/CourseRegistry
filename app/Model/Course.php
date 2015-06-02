@@ -311,7 +311,7 @@ class Course extends AppModel {
 		unset($this->data['Course']['course_parent_type_id']);
 		unset($this->data['Course']['city_id']);
 		unset($this->data['Course']['country_id']);
-		if(!empty($this->data['Course']['type_id'])) {
+		if(!empty($this->data['Course']['course_type_id'])) {
 			$this->data['Course']['course_parent_type_id'] = $this->CourseType->field('course_parent_type_id', array(
 				'CourseType.id' => $this->data['Course']['course_type_id']));
 		}

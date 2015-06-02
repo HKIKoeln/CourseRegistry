@@ -47,9 +47,9 @@
 		echo $this->Form->input('username');
 	}
 	
-	echo $this->Form->input('university_id', array(
-		'label' => 'University',
-		'empty' => '-- choose university --'
+	echo $this->Form->input('institution_id', array(
+		'label' => 'Institution',
+		'empty' => '-- choose institution --'
 	));
 	
 	echo $this->Form->input('academic_title');

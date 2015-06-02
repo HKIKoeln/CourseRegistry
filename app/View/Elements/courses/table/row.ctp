@@ -61,8 +61,8 @@ if($outdated) {
 			case 'Course.name':
 				$classname = ' class="strong"';
 				break;
-			case 'Type.name':
-				$value = $record['ParentType']['name'] . ': ' . $value;
+			case 'CourseType.name':
+				$value = $record['CourseParentType']['name'] . ': ' . $value;
 				break;
 			case 'Course.url':
 				if($value != ' - ' AND !empty($value)) {

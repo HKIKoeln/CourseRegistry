@@ -38,13 +38,13 @@ $filter = $this->Session->read('filter'); ?>
 		if(!$location_fixed) {
 			echo $this->Form->input('country_id');
 			echo $this->Form->input('city_id');
-			echo $this->Form->input('university_id');
+			echo $this->Form->input('institution_id');
 		}
-		echo $this->Form->input('parent_type_id', array(
-			'label' => '1. Type'
+		echo $this->Form->input('course_parent_type_id', array(
+			'label' => '1. Coursetype'
 		));
-		echo $this->Form->input('type_id', array(
-			'label' => '2. Type'
+		echo $this->Form->input('course_type_id', array(
+			'label' => '2. Coursetype'
 		));
 		?>
 		<p>TaDiRAH keywords</p>

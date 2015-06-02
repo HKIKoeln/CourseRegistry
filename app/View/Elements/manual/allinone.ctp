@@ -159,7 +159,7 @@ Thank you for your patience: Login is only enabled once your national coordinato
    <h3><img src="/img/Filloutform.png" width="511" height="294" align="right" vspace="10" hspace="20" alt="Text?">Fill out the form</h3>
    <p>
     If you are missing anything in the drop-down list, please contact us so we are able to add the needed information. Most of the fields in the form are self-explaining. Hopefully all the others are explained in the following:</p>
-   <h4>Type Id</h4>
+   <h4>Corusetype Id</h4>
     <p>
   
    </p>

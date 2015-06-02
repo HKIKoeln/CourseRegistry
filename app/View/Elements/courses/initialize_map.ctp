@@ -52,7 +52,7 @@ if(!empty($locations) AND is_array($locations)) {
 					'action' => 'index',
 					'id' => $record['Course']['id']
 				));
-				$content .= ' - ' . $record['Course']['name'] . ', ' . $record['University']['name'];
+				$content .= ' - ' . $record['Course']['name'] . ', ' . $record['Institution']['name'];
 				$content .= '</li>';
 			}
 			$content .= '</ul>';
@@ -61,7 +61,7 @@ if(!empty($locations) AND is_array($locations)) {
 			$record = $list[0];
 			$title = $record['Course']['name'];
 			$content = '<h1>' . $title . '</h1>';
-			$content .= '<p>' . $record['University']['name'] . ',</p>';
+			$content .= '<p>' . $record['Institution']['name'] . ',</p>';
 			$content .= '<p>Department: ' . $record['Course']['department'] . '.</p>';
 			$content .= '<p>' . $this->Html->link('Details', array(
 				'controller' => 'courses',

@@ -31,9 +31,9 @@ echo $this->Form->input('email', array(
 
 // no password is required, the invited users are emailed to set it themselves
 
-echo $this->Form->input('university_id', array(
-	'label' => 'University',
-	'empty' => '-- choose university --'
+echo $this->Form->input('institution_id', array(
+	'label' => 'Institution',
+	'empty' => '-- choose institution --'
 ));
 
 echo $this->Form->input('academic_title');

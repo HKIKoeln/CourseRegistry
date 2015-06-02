@@ -17,8 +17,8 @@
  */
 $fieldlist = array(
 	'Course.name' => array('label' => 'Course Name'),
-	'Type.name' => array('label' => 'Type'),
-	'University.name' => array('label' => 'University'),
+	'CourseType.name' => array('label' => 'Coursetype'),
+	'Institution.name' => array('label' => 'Institution'),
 	'Course.department' => array('label' => 'Department'),
 	'Course.url' => array('label' => 'Information'),
 	'Course.guide_url' => array('label' => 'Curriculum'),

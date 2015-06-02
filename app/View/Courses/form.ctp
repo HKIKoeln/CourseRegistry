@@ -100,7 +100,7 @@ if(!empty($admin)) {
 
 echo $this->Form->input('active', array('label' => 'publish'));
 echo $this->Form->input('name');
-echo $this->Form->input('type_id', array('empty' => ' -- none -- '));
+echo $this->Form->input('course_type_id', array('empty' => ' -- none -- '));
 echo $this->Form->input('language_id', array('empty' => ' -- none -- '));
 echo $this->Form->input('access_requirements');
 echo $this->Form->input('start_date', array('title' => 'One or many course start dates, format YYYY-MM-DD, separated by ";".'));
@@ -122,9 +122,9 @@ echo $this->Form->input('contact_mail');
 echo $this->Form->input('lat', array('label' => 'Latitude', 'title' => 'Lookup coordinates of the university or department in Google maps.'));
 echo $this->Form->input('lon', array('label' => 'Longitude', 'title' => 'Lookup coordinates of the university or department in Google maps.'));
 $opts = array('empty' => ' -- none -- ');
-if($this->action === 'add' AND !empty($auth_user) AND !empty($auth_user['university_id']))
-	$opts = array('selected' => $auth_user['university_id']);
-echo $this->Form->input('university_id', $opts);
+if($this->action === 'add' AND !empty($auth_user) AND !empty($auth_user['institution_id']))
+	$opts = array('selected' => $auth_user['institution_id']);
+echo $this->Form->input('institution_id', $opts);
 echo $this->Form->input('department');
 
 echo $this->element('courses/taxonomy/selector', array('habtmModel' => 'TadirahActivity'));
