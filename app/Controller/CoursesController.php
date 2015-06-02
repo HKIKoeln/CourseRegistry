@@ -60,9 +60,9 @@ class CoursesController extends AppController {
 	// set the unpaginated results to view for the map
 	public function map() {
 		$locations = $this->Course->find('all', array(
-			'contain' => array('University.name'),
+			'contain' => array('Institution.name'),
 			'conditions' => $this->_getFilter(),
-			'fields' => array('id','active','name','department','user_id','city_id','country_id','course_type_id','course_parent_type_id','university_id','lon','lat'),
+			'fields' => array('id','active','name','department','user_id','city_id','country_id','course_type_id','course_parent_type_id','institution_id','lon','lat'),
 			'limit' => 1000
 		));
 		if($this->request->is('requested')) {
@@ -202,7 +202,7 @@ class CoursesController extends AppController {
 	protected function _setOptions($admin = false) {
 		$users = array();
 		if($admin) $rawUsers = $this->Course->AppUser->find('all', array(
-			'contain' => array('University' => array('Country')),
+			'contain' => array('Institution' => array('Country')),
 			'conditions' => array(
 				'AppUser.active' => 1
 			),
@@ -212,10 +212,10 @@ class CoursesController extends AppController {
 			$countries = array();
 			foreach($rawUsers as $user) {
 				$entry = array($user['AppUser']['id'] => $user['AppUser']['name']);
-				if(empty($user['AppUser']['university_id']) OR empty($user['University']['Country'])) {
+				if(empty($user['AppUser']['institution_id']) OR empty($user['Institution']['Country'])) {
 					$users = $users + $entry;
 				}else{
-					$country = $user['University']['Country']['name'];
+					$country = $user['Institution']['Country']['name'];
 					if(isset($countries[$country])) $countries[$country] = $countries[$country] + $entry;
 					else $countries[$country] = $entry;
 				}
@@ -223,9 +223,9 @@ class CoursesController extends AppController {
 			ksort($countries);
 			$users = $users + $countries;
 		}
-		$universities = $this->Course->University->find('list', array(
+		$universities = $this->Course->Institution->find('list', array(
 			'contain' => array('Country'),
-			'fields' => array('University.id', 'University.name', 'Country.name')
+			'fields' => array('Institution.id', 'Institution.name', 'Country.name')
 		));
 		ksort($universities);
 		$languages = $this->Course->Language->find('list');
@@ -322,8 +322,8 @@ class CoursesController extends AppController {
 				if(empty($form['city_id'])) unset($this->filter['Course.city_id']);
 				else $this->filter['Course.city_id'] = $form['city_id'];
 				
-				if(empty($form['university_id'])) unset($this->filter['Course.university_id']);
-				else $this->filter['Course.university_id'] = $form['university_id'];
+				if(empty($form['institution_id'])) unset($this->filter['Course.institution_id']);
+				else $this->filter['Course.institution_id'] = $form['institution_id'];
 				
 				if(empty($form['course_parent_type_id'])) unset($this->filter['Course.course_parent_type_id']);
 				else $this->filter['Course.course_parent_type_id'] = $form['course_parent_type_id'];
@@ -472,20 +472,20 @@ class CoursesController extends AppController {
 		// child of country & city: university
 		$conditions = array();
 		if(!empty($this->filter['Course.country_id']))
-			$conditions['University.country_id'] = $this->filter['Course.country_id'];
+			$conditions['Institution.country_id'] = $this->filter['Course.country_id'];
 		if(!empty($this->filter['Course.city_id']))
-			$conditions['University.city_id'] = $this->filter['Course.city_id'];
-		$universities = $this->Course->University->find('list', array('conditions' => $conditions));
+			$conditions['Institution.city_id'] = $this->filter['Course.city_id'];
+		$universities = $this->Course->Institution->find('list', array('conditions' => $conditions));
 		// filter logic 1
-		if(!empty($this->filter['Course.university_id']) AND !isset($universities[$this->filter['Course.university_id']])) unset($this->filter['Course.university_id']);
-		$universities = $this->Course->University->find('list', array(
+		if(!empty($this->filter['Course.institution_id']) AND !isset($universities[$this->filter['Course.institution_id']])) unset($this->filter['Course.institution_id']);
+		$universities = $this->Course->Institution->find('list', array(
 			'contain' => array('Country'),
-			'fields' => array('University.id', 'University.name', 'Country.name'),
+			'fields' => array('Institution.id', 'Institution.name', 'Country.name'),
 			'conditions' => $conditions
 		));
 		ksort($universities);
 		// filter logic 2
-		if(!empty($this->filter['Course.university_id'])) {
+		if(!empty($this->filter['Course.institution_id'])) {
 			unset($this->filter['Course.country_id']);
 			unset($this->filter['Course.city_id']);
 		}
@@ -608,7 +608,7 @@ class CoursesController extends AppController {
 			if(!empty($this->filter['Course.lon']) OR !empty($this->filter['Course.lat'])) {
 				unset($this->filter['Course.country_id']);
 				unset($this->filter['Course.city_id']);
-				unset($this->filter['Course.university_id']);
+				unset($this->filter['Course.institution_id']);
 			}
 			if(!empty($this->filter['Course.id'])) {
 				$this->filter = array('Course.id' => $this->filter['Course.id']);
