@@ -14885,3 +14885,68 @@ Request URL: /apple-touch-icon.png
 Stack Trace:
 #0 /afs/.rrz.uni-koeln.de/vol/www/projekt/dariah/http/docs/app/webroot/index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
 #1 {main}
+2015-06-02 13:27:49 Error: [MissingTableException] Table parent_types for model ParentType was not found in datasource default.
+Exception Attributes: array (
+  'table' => 'parent_types',
+  'class' => 'ParentType',
+  'ds' => 'default',
+)
+Request URL: /DH/
+Stack Trace:
+#0 C:\xampp\htdocs\DH\lib\Cake\Model\Model.php(3525): Model->setSource('parent_types')
+#1 C:\xampp\htdocs\DH\lib\Cake\Model\Model.php(2921): Model->getDataSource()
+#2 C:\xampp\htdocs\DH\lib\Cake\Model\Model.php(2893): Model->_readDataSource('list', Array)
+#3 C:\xampp\htdocs\DH\app\Controller\CoursesController.php(445): Model->find('list')
+#4 C:\xampp\htdocs\DH\app\Controller\CoursesController.php(254): CoursesController->_getFilterOptions_validateFilters()
+#5 C:\xampp\htdocs\DH\app\Controller\CoursesController.php(273): CoursesController->_setupFilter()
+#6 C:\xampp\htdocs\DH\app\Controller\CoursesController.php(38): CoursesController->_getFilter()
+#7 [internal function]: CoursesController->index()
+#8 C:\xampp\htdocs\DH\lib\Cake\Controller\Controller.php(490): ReflectionMethod->invokeArgs(Object(CoursesController), Array)
+#9 C:\xampp\htdocs\DH\lib\Cake\Routing\Dispatcher.php(191): Controller->invokeAction(Object(CakeRequest))
+#10 C:\xampp\htdocs\DH\lib\Cake\Routing\Dispatcher.php(165): Dispatcher->_invoke(Object(CoursesController), Object(CakeRequest))
+#11 C:\xampp\htdocs\DH\app\webroot\index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#12 C:\xampp\htdocs\DH\index.php(41): require('C:\\xampp\\htdocs...')
+#13 {main}
+2015-06-02 13:41:12 Error: [MissingTableException] Table parent_types for model ParentType was not found in datasource default.
+Exception Attributes: array (
+  'table' => 'parent_types',
+  'class' => 'ParentType',
+  'ds' => 'default',
+)
+Request URL: /DH/
+Stack Trace:
+#0 C:\xampp\htdocs\DH\lib\Cake\Model\Model.php(3525): Model->setSource('parent_types')
+#1 C:\xampp\htdocs\DH\lib\Cake\Model\Model.php(2921): Model->getDataSource()
+#2 C:\xampp\htdocs\DH\lib\Cake\Model\Model.php(2893): Model->_readDataSource('list', Array)
+#3 C:\xampp\htdocs\DH\app\Controller\CoursesController.php(445): Model->find('list')
+#4 C:\xampp\htdocs\DH\app\Controller\CoursesController.php(254): CoursesController->_getFilterOptions_validateFilters()
+#5 C:\xampp\htdocs\DH\app\Controller\CoursesController.php(273): CoursesController->_setupFilter()
+#6 C:\xampp\htdocs\DH\app\Controller\CoursesController.php(38): CoursesController->_getFilter()
+#7 [internal function]: CoursesController->index()
+#8 C:\xampp\htdocs\DH\lib\Cake\Controller\Controller.php(490): ReflectionMethod->invokeArgs(Object(CoursesController), Array)
+#9 C:\xampp\htdocs\DH\lib\Cake\Routing\Dispatcher.php(191): Controller->invokeAction(Object(CakeRequest))
+#10 C:\xampp\htdocs\DH\lib\Cake\Routing\Dispatcher.php(165): Dispatcher->_invoke(Object(CoursesController), Object(CakeRequest))
+#11 C:\xampp\htdocs\DH\app\webroot\index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#12 C:\xampp\htdocs\DH\index.php(41): require('C:\\xampp\\htdocs...')
+#13 {main}
+2015-06-02 13:44:31 Error: [MissingTableException] Table parent_types for model ParentType was not found in datasource default.
+Exception Attributes: array (
+  'table' => 'parent_types',
+  'class' => 'ParentType',
+  'ds' => 'default',
+)
+Request URL: /DH/
+Stack Trace:
+#0 C:\xampp\htdocs\DH\lib\Cake\Model\Model.php(3525): Model->setSource('parent_types')
+#1 C:\xampp\htdocs\DH\lib\Cake\Model\Model.php(2921): Model->getDataSource()
+#2 C:\xampp\htdocs\DH\lib\Cake\Model\Model.php(2893): Model->_readDataSource('list', Array)
+#3 C:\xampp\htdocs\DH\app\Controller\CoursesController.php(445): Model->find('list')
+#4 C:\xampp\htdocs\DH\app\Controller\CoursesController.php(254): CoursesController->_getFilterOptions_validateFilters()
+#5 C:\xampp\htdocs\DH\app\Controller\CoursesController.php(273): CoursesController->_setupFilter()
+#6 C:\xampp\htdocs\DH\app\Controller\CoursesController.php(38): CoursesController->_getFilter()
+#7 [internal function]: CoursesController->index()
+#8 C:\xampp\htdocs\DH\lib\Cake\Controller\Controller.php(490): ReflectionMethod->invokeArgs(Object(CoursesController), Array)
+#9 C:\xampp\htdocs\DH\lib\Cake\Routing\Dispatcher.php(191): Controller->invokeAction(Object(CakeRequest))
+#10 C:\xampp\htdocs\DH\lib\Cake\Routing\Dispatcher.php(165): Dispatcher->_invoke(Object(CoursesController), Object(CakeRequest))
+#11 C:\xampp\htdocs\DH\app\webroot\index.php(108): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#12 {main}
