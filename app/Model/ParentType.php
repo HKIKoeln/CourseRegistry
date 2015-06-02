@@ -23,7 +23,7 @@ App::uses('AppModel', 'Model');
  * @property Course $Course
  * @property Type $Type
  */
-class ParentType extends AppModel {
+class CourseParentType extends AppModel {
 
 /**
  * Display field
@@ -60,7 +60,7 @@ class ParentType extends AppModel {
 	public $hasMany = array(
 		'Course' => array(
 			'className' => 'Course',
-			'foreignKey' => 'parent_type_id',
+			'foreignKey' => 'course_parent_type_id',
 			'dependent' => false,
 			'conditions' => '',
 			'fields' => '',
@@ -71,9 +71,9 @@ class ParentType extends AppModel {
 			'finderQuery' => '',
 			'counterQuery' => ''
 		),
-		'Type' => array(
-			'className' => 'Type',
-			'foreignKey' => 'parent_type_id',
+		'CourseType' => array(
+			'className' => 'CourseType',
+			'foreignKey' => 'course_parent_type_id',
 			'dependent' => false,
 			'conditions' => '',
 			'fields' => '',

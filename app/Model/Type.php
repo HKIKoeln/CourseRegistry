@@ -23,7 +23,7 @@ App::uses('AppModel', 'Model');
  * @property ParentType $ParentType
  * @property Course $Course
  */
-class Type extends AppModel {
+class CourseType extends AppModel {
 
 /**
  * Display field
@@ -38,7 +38,7 @@ class Type extends AppModel {
  * @var array
  */
 	public $validate = array(
-		'parent_type_id' => array(
+		'course_parent_type_id' => array(
 			'numeric' => array(
 				'rule' => array('numeric'),
 				//'message' => 'Your custom message here',
@@ -68,9 +68,9 @@ class Type extends AppModel {
  * @var array
  */
 	public $belongsTo = array(
-		'ParentType' => array(
-			'className' => 'ParentType',
-			'foreignKey' => 'parent_type_id',
+		'CourseParentType' => array(
+			'className' => 'CourseParentType',
+			'foreignKey' => 'course_parent_type_id',
 			'conditions' => '',
 			'fields' => '',
 			'order' => ''
@@ -85,7 +85,7 @@ class Type extends AppModel {
 	public $hasMany = array(
 		'Course' => array(
 			'className' => 'Course',
-			'foreignKey' => 'type_id',
+			'foreignKey' => 'course_type_id',
 			'dependent' => false,
 			'conditions' => '',
 			'fields' => '',
