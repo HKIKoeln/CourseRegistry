@@ -40,7 +40,7 @@ $this->Html->scriptBlock(
 
 
 // Please create new Google API key for JavaScript V3. Please Follow instructions under https://code.google.com/apis/console/?pli=1 and enter key in [ToDo]
-$this->Html->script('https://maps.googleapis.com/maps/api/js?key=[ToDo]&sensor=false', array('inline' => false));
+$this->Html->script('https://maps.googleapis.com/maps/api/js?key=AIzaSyBR4ndG2xpJKvCXdpHmvNG0w9lzAzkTFwM&sensor=false', array('inline' => false));
 // as the google marker clusterer provokes "mixed content errors" while on https, their code has been adapted (images loading via https)
 //$this->Html->script('https://google-maps-utility-library-v3.googlecode.com/svn/trunk/markerclusterer/src/markerclusterer.js', array('inline' => false));
 $this->Html->script('markerclusterer.js', array('inline' => false));

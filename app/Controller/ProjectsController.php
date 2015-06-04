@@ -17,8 +17,7 @@
  */
 
 class ProjectsController extends AppController {
-	
-	
+
 	
 	public function beforeFilter() {
 		parent::beforeFilter();
@@ -29,7 +28,18 @@ class ProjectsController extends AppController {
 	
 	
 	public function index() {
-		$records = $this->Project->find('all', array('limit' => 10));
+		$filter = $this->_getFilter();
+		
+		$this->Paginator->settings = $this->paginate;
+		try{
+			$records = $this->Paginator->paginate('Project', $filter);
+		}catch(NotFoundException $e) {
+			$this->redirect(array(
+				'controller' => 'projects',
+				'action' => 'index'
+			));
+		}
+		
 		$this->set(compact('records'));
 	}
 	

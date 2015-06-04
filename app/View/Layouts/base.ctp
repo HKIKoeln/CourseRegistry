@@ -62,30 +62,14 @@
 				echo $this->element('Users.login_info');
 				?>
 				<ul>
-				<li>
-					<?php
-					
-					if($this->here != '/pages/manual') {
-						echo $this->Html->link('Manual', array('controller' => 'pages', 'action' => 'manual', 'plugin' => null));
-					}else{
-						echo $this->Html->link('Home', array('controller' => 'courses', 'action' => 'index', 'plugin' => null)); 
-					}
-					?>
-				</li>
 				<?php
-				if($menu = $this->fetch('menu')) {
-					echo $menu;
-				}else{
-					?>
-					
-						<li>
-							<?php echo $this->Html->link('Home', array('controller' => 'courses', 'action' => 'index', 'plugin' => null)); ?>
-						</li>
-					
-					<?php
-				}
+				echo '<li>' . $this->Html->link('Courses', array('controller' => 'courses', 'action' => 'index', 'plugin' => null)) . '</li>';
+				echo '<li>' . $this->Html->link('Projects', array('controller' => 'projects', 'action' => 'index', 'plugin' => null)) . '</li>';
+				echo '<li>' . $this->Html->link('Manual', array('controller' => 'pages', 'action' => 'manual', 'plugin' => null)) . '</li>';
+				echo '<li>' . $this->Html->link('Contact us', array('controller' => 'contacts', 'action' => 'send', 'plugin' => null)) . '</li>';
+				
+				echo $this->fetch('menu');
 				?>
-
 				</ul>
 			</div>
 			

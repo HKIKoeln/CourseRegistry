@@ -1,6 +1,5 @@
 <?php
-//debug($this->request);
-//echo $this->element('pager');
+echo $this->element('pager');
 $fieldlist = array(
 	'Project.name' => array(
 		'label' => 'Project Name',
@@ -17,5 +16,5 @@ $detailsFieldlist = array(
 );
 $this->set(compact('fieldlist', 'detailsFieldlist'));
 echo $this->element('index');
-//echo $this->element('pager');
+echo $this->element('pager');
 ?>

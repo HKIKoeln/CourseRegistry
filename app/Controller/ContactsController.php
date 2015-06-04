@@ -27,7 +27,7 @@ class ContactsController extends AppController {
 		parent::beforeFilter();
 		
 		$this->Auth->allow(array('send'));
-		
+		$this->set('title_for_layout', 'Contact');
 	}
 	
 	public function send() {

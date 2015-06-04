@@ -61,12 +61,13 @@ class AppUsersController extends UsersController {
 	
 	
 	protected function _setUniversities() {
-		$universities = $this->AppUser->University->find('list', array(
+		$institutions = $this->AppUser->Institution->find('list', array(
 			'contain' => array('Country'),
-			'fields' => array('University.id', 'University.name', 'Country.name')
+			'fields' => array('Institution.id', 'Institution.name', 'Country.name'),
+			'conditions' => array('Institution.is_university' => 1)
 		));
-		ksort($universities);
-		$this->set('universities', $universities);
+		ksort($institutions);
+		$this->set('institutions', $institutions);
 	}
 	
 	
