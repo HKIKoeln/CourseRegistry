@@ -18,6 +18,8 @@
 
 class ProjectsController extends AppController {
 	
+	
+	
 	public function beforeFilter() {
 		parent::beforeFilter();
 		
@@ -27,8 +29,8 @@ class ProjectsController extends AppController {
 	
 	
 	public function index() {
-		$projects = $this->Project->find('all', array('limit' => 10));
-		$this->set(compact('projects'));
+		$records = $this->Project->find('all', array('limit' => 10));
+		$this->set(compact('records'));
 	}
 	
 }

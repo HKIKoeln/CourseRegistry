@@ -64,6 +64,7 @@ class AppController extends Controller {
 		// disable SSL on the dariah.uni-koeln.de server (bad configuration...)
 		if(isset($this->Security))	$this->Security->requireSecure = array();
 		
+		$this->set('modelName', $this->modelClass);
 	}
 	
 	

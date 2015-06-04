@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 $toggle = ($showDetails) ? ''
-	: 'style="display:none" onclick="toggleRow(event, \'course-details-' . $k . '\');" onmouseover="siblingHover(this, \'prev\');" onmouseout="siblingHover(this, \'prev\')"';
+	: 'style="display:none" onclick="toggleRow(event, \'record-details-' . $k . '\');" onmouseover="siblingHover(this, \'prev\');" onmouseout="siblingHover(this, \'prev\')"';
 
 $outdated = false;
 if(	$record['Course']['updated'] < date('Y-m-d H:i:s', time() - Configure::read('App.CoursePublicWarnPeriod'))
@@ -33,12 +33,12 @@ if($outdated) {
 ?>
 
 <tr <?php echo $toggle; echo $title; ?>
-	id="course-details-<?php echo $k; ?>" 
+	id="record-details-<?php echo $k; ?>" 
 	class="<?php echo $classname; ?>"
 	>
 	<td colspan="<?php echo $colspan; ?>">
 		<p class="strong">Details</p>
-		<div class="course_details">
+		<div class="record_details">
 			<div class="left narrow">
 				<dl>
 					<dt>Language</dt>
