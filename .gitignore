@@ -1,0 +1,7 @@
+/app/Config/core.php
+/app/Config/bootstrap.php
+/app/Config/database.php
+cache
+logs
+sessions
+tests

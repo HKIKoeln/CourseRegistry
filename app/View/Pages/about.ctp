@@ -1,49 +1,113 @@
-<!-- 
- * Copyright 2014 Hendrik Schmeer on behalf of DARIAH-EU, VCC2 and DARIAH-DE,
- * Credits to Erasmus University Rotterdam, University of Cologne, PIREH / University Paris 1
- * 
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- * 
- * http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License. 
--->
+
+
+<h2>Intent</h2>
 
 <p>
-Copyright 2014 Hendrik Schmeer on behalf of DARIAH-EU, <br />
-VCC2 and DARIAH-DE,  <br />
-Credits to  <br />
-Erasmus University Rotterdam,  <br />
-University of Cologne,  <br />
-PIREH / University Paris 1 
+	The DH Course Registry is a collaborative inventory of DH courses in Europe. 
+	It links educational efforts on the interaction between 
+	humanities and information technology. <br>
+	The main objective of this resource is to help students, researchers, 
+	lecturers and institutions to find, add and connect to courses 
+	or programmes in the DH field. <br>
+	Furthermore, it will allow academic institutions to improve 
+	the visibility of their courses and study programmes. 
+	In the near future, the DH-Registry is intended to be extended 
+	to also cover research projects in the field of digital humanities. <br>
+	For further information or individual requests, please consult the 
+	manual or use the contact form on the left.
 </p>
 
-<h2>About</h2>
 
+<h2>License</h2>
+
+<p>
+	Licensed under the Apache License, Version 2.0 (the "License"). <br>
+	You may not use this file except in compliance with the License. <br>
+	You may obtain a copy of the License at <br>
+	<?php echo $this->Html->link(
+		'http://www.apache.org/licenses/LICENSE-2.0',
+		'http://www.apache.org/licenses/LICENSE-2.0'
+	); ?>. <br>
+	Unless required by applicable law or agreed to in writing, software
+	distributed under the License is distributed on an "AS IS" BASIS,
+	WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+	See the License for the specific language governing permissions and
+	limitations under the License. 
+</p>
+<p>
+	Copyright 2014 Hendrik Schmeer on behalf of DARIAH-EU, <br />
+	VCC2 and DARIAH-DE,  <br />
+	Credits to:  <br />
+	Erasmus University Rotterdam,  <br />
+	University of Cologne,  <br />
+	PIREH / University Paris 1. 
+</p>
 <p>
 	Created by a consortium of DARIAH-VCC2, <br />
 	Erasmus	UniversityRotterdam, University of Cologne. <br />
 	With credits to University Paris 1.
 </p>
 
-The DH Course Registry is a collaborative inventory of DH courses in Europe. It links educational efforts on the interaction between humanities and information technology.
-The main objective of this resource is to help students, researchers, lecturers and institutions to find, add and connect to courses or programmes in the DH field. Furthermore, it will allow academic institutions to improve the visibility of their courses and study programmes. 
-In the near future, the DH-Registry is intended to be extended to also cover research projects in the field of digital humanities.
-For further information or individual requests, please consult the manual or use the contact form on the left.
-
-
-<br />
-<br />
 
 
 <h2>Impressum</h2>
+<h3>Verantwortlich für den Inhalt</h3>
+<h4>Anbieter</h4>
+<p>
+	Anbieter dieser Internetpräsenz ist im Rechtssinne die 
+	Niedersächsische Staats- und Universitätsbibliothek Göttingen.
+</p>
+<p>
+	Georg-August-Universität Göttingen <br>
+	Niedersächsische Staats- und Universitätsbibliothek Göttingen <br>
+	Platz der Göttinger Sieben 1 <br>
+	37073 Göttingen
+</p>
+<p>
+	Tel.: +49 (0)551 / 39-5212 <br>
+	Fax: +49 (0)551 / 39-5222 <br>
+	E-Mail: sekretariat@sub.uni-goettingen.de <br>
+	www.sub.uni-goettingen.de
+</p>
+<p>
+	Die Niedersächsische Staats- und Universitätsbibliothek Göttingen 
+	(SUB Göttingen) wird vertreten durch den leitenden Direktor 
+	Dr. Wolfram Horstmann.
+	Die SUB Göttingen ist als zentrale Einrichtung eine organisatorische, 
+	rechtlich nicht selbständige Einheit der Georg-August-Universität Göttingen. 
+	Die Georg-August-Universität Göttingen ist eine Körperschaft des 
+	öffentlichen Rechts. Sie wird durch die Präsidentin 
+	Prof. Dr. Ulrike Beisiegel gesetzlich vertreten:
+</p>
+<p>
+	Georg-August-Universität Göttingen <br>
+	Wilhelmsplatz 1 <br>
+	37073 Göttingen <br>
+	Tel.: +49 (0)551 / 39-0 <br>
+	Fax: +49 (0)551 / 39-9612
+</p>
 
+<h4>Zuständige Aufsichtsbehörde</h4>
+<p>
+	Georg-August-Universität Göttingen Stiftung Öffentlichen Rechts <br>
+	Stiftungsausschuss Universität 	(§§ 59 Abs. 2, 60 Abs. 2 Satz 2 Nr. 7, 60 a Abs. 1 NHG) <br>
+	Wilhelmsplatz 1 <br>
+	37073 Göttingen
+</p>
+<p>
+	Umsatzsteuer-Identifikationsnummer gemäß § 27 a Umsatzsteuergesetz:  <br>
+	DE 152 336 201
+</p>
+
+<h4>Inhaltlich Verantwortlicher gemäß § 55 Abs. 2 RStV</h4>
+<p>
+	Dr. Wolfram Horstmann (Projektleitung) <br>
+	Platz der Göttinger Sieben 1 <br>
+	37073 Göttingen <br>
+	Tel.: +49 (0)551 - 39 33866 <br>
+	Fax: +49 (0)551 - 39 33856 <br>
+	E-Mail: horstmann@sub.uni-goettingen.de
+</p>
 
 
 <h3>Haftungsausschluss (Disclaimer)</h3>

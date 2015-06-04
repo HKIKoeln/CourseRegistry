@@ -16,35 +16,44 @@
  * limitations under the License.
  */
 
-$this->extend('/Layouts/base');
+App::uses('AppModel', 'Model');
+/**
+ * Project Model
+ *
+ * 
+ */
+class Project extends AppModel {
 
-$this->start('header');
-?>
-<div id="header">
-	<?php
-	/*echo $this->Html->image('/img/DARIAH-EURGB-Klein.png', array(
-		'alt' => 'DARIA-EU',
-		'class' => 'left',
-		'url' => '/',
-		'width' => 202,
-		'height' => 61
-	));*/
-	?>
-	<div>
-		<h1>
-			<?php
-			echo $this->Html->link('DH Registry', '/');
-			$title = $this->fetch('title');
-			if(!empty($title)) echo ' - ' . $title;
-			?>
-		</h1>
-		<?php //<p>Research and teaching within the Digital Humanities community</p>?>
-		<p>This instance of the registry is for demonstration only and will be moved soon.</p>
-	</div>
-</div>
-<?php
-$this->end();
+/**
+ * Display field
+ *
+ * @var string
+ */
+	public $displayField = 'name';
+	
+	
+	//public $order = 'Project.updated DESC';
+	
+	
+	
 
-// pass content to parent view
-echo $this->fetch('content');
+/**
+ * Validation rules
+ *
+ * @var array
+ */
+	public $validate = array(
+		'name' => array(
+			'notEmpty' => array(
+				'rule' => array('notEmpty'),
+				'message' => 'Provide a meaningful name for your course.',
+				'allowEmpty' => false,
+				'required' => true
+			)
+		)
+	);
+	
+	
+	
+}
 ?>

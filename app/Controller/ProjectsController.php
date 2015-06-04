@@ -16,35 +16,20 @@
  * limitations under the License.
  */
 
-$this->extend('/Layouts/base');
-
-$this->start('header');
-?>
-<div id="header">
-	<?php
-	/*echo $this->Html->image('/img/DARIAH-EURGB-Klein.png', array(
-		'alt' => 'DARIA-EU',
-		'class' => 'left',
-		'url' => '/',
-		'width' => 202,
-		'height' => 61
-	));*/
-	?>
-	<div>
-		<h1>
-			<?php
-			echo $this->Html->link('DH Registry', '/');
-			$title = $this->fetch('title');
-			if(!empty($title)) echo ' - ' . $title;
-			?>
-		</h1>
-		<?php //<p>Research and teaching within the Digital Humanities community</p>?>
-		<p>This instance of the registry is for demonstration only and will be moved soon.</p>
-	</div>
-</div>
-<?php
-$this->end();
-
-// pass content to parent view
-echo $this->fetch('content');
+class ProjectsController extends AppController {
+	
+	public function beforeFilter() {
+		parent::beforeFilter();
+		
+		$this->Auth->allow(array('index', 'reset'));
+	}
+	
+	
+	
+	public function index() {
+		$projects = $this->Project->find('all', array('limit' => 10));
+		$this->set(compact('projects'));
+	}
+	
+}
 ?>

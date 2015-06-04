@@ -62,14 +62,17 @@ $menu_width: 236px;
 		float: left;
 	}
 	
-	h1 {
+	div {
 		background-color: $header_background_color;
 		height: 61px;
 		margin: 0;
 		margin-left: $menu_width + 24px;
-		padding: 27px 50px 0;
 		border-left: 2px solid $background_color;
 		width: auto;
+		padding: 27px 50px 20px;
+		
+		h1 { margin-bottom: 0.5em; }
+		p { font-weight: bold;}
 		a {
 			color: $header_font_color;
 			text-decoration: none;
