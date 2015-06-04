@@ -57,6 +57,7 @@ class UsersController extends UsersAppController {
 		}
 		
 		parent::beforeFilter();
+		$this->set('title_for_layout', 'User Management');
 	}
 	
 	

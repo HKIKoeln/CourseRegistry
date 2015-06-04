@@ -38,7 +38,10 @@ class AppUsersController extends UsersController {
 	public $uses = array('AppUser');
 	
 	
-	
+	public function beforeFilter() {
+		parent::beforeFilter();
+		$this->set('title_for_layout', 'User Management');
+	}
 	
 	
 	
