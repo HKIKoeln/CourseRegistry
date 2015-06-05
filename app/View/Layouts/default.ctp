@@ -25,7 +25,7 @@ $this->start('header');
 	echo $this->Html->image('/img/logos/logoEhG_small.png', array(
 		'alt' => 'eHumanities Group',
 		'class' => 'left',
-		'url' => '/',
+		'url' => 'https://www.knaw.nl/en/institutes/e-humanities-group',
 		'width' => 236,
 		'height' => 57
 	));
@@ -39,7 +39,11 @@ $this->start('header');
 			?>
 		</h1>
 		<?php //<p>Research and teaching within the Digital Humanities community</p>?>
-		<p>This instance of the registry is for demonstration only and will be moved soon.</p>
+		<p>
+			Project-Registry <strong>BETA.</strong> Derived from DARIAH sourcecode. 
+			Visit <?php echo $this->Html->link('DARIAH Course-Registry', 'https://dh-registry.de.dariah.eu/', array('target' => 'blank')); ?> 
+			for the most recent content regarding courses.
+		</p>
 	</div>
 </div>
 <?php

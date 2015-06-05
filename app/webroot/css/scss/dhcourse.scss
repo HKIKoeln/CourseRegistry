@@ -72,11 +72,21 @@ $menu_width: 236px;
 		padding: 27px 50px 20px;
 		
 		h1 { margin-bottom: 0.5em; }
-		p { font-weight: bold;}
 		a {
 			color: $header_font_color;
 			text-decoration: none;
 		}
+		p {
+			font-weight: bold;
+			strong {
+				color: red;
+			}
+			a {
+				text-decoration: underline;
+				color: red;
+			}
+		}
+		
 	}
 }
 
