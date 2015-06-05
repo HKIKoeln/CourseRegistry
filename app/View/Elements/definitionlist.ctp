@@ -29,7 +29,6 @@ if(!empty($fieldlist)) {
 		if(!isset($fieldDef['label']) OR empty($fieldDef['label'])) {
 			$fieldDef['label'] = Inflector::camelize($fieldname);
 		}
-		echo '<dt>' . $fieldDef['label'] . '</dt>';
 		$value = (!empty($record[$fieldModelName][$fieldname])) ? $record[$fieldModelName][$fieldname] : ' - ';
 		$fieldclass = null;
 		if(!empty($fieldDef['class'])) {
@@ -41,19 +40,30 @@ if(!empty($fieldlist)) {
 		}
 		if(!empty($fieldDef['display'])) {
 			switch($fieldDef['display']) {
-			case 'link':
-				if($value != ' - ' AND !empty($value)) {
-					$value = $this->Html->link('Link >>', $record[$fieldModelName][$fieldname], array(
-						'target' => '_blank',
-						'title' => 'external link (new tab)'
-					));
-				}
-				break;
-			case 'bool':
-				$value = (in_array(strtolower($value), array(' - ','-','0','n','no','false')) OR empty($value)) ? 'No' : 'Yes';
-				break;
+				case 'link':
+					if($value != ' - ' AND !empty($value)) {
+						$value = $this->Html->link('Link >>', $record[$fieldModelName][$fieldname], array(
+							'target' => '_blank',
+							'title' => 'external link (new tab)'
+						));
+					}
+					break;
+				case 'bool':
+					$value = (in_array(strtolower($value), array(' - ','-','0','n','no','false')) OR empty($value)) ? 'No' : 'Yes';
+					break;
+				default: 
+					if(is_callable($fieldDef['display'])) {
+						try{
+							$value = call_user_func($fieldDef['display'], $this, $record, $fieldDef);
+						}catch(Exception $e) {
+							echo $e->getMessage();
+						}
+					}
+					if(empty($value)) $value = ' - ';
 			}
 		}
+		
+		echo '<dt>' . $fieldDef['label'] . '</dt>';
 		echo '<dd' . $fieldclass . '>' . $value . '</dd>';
 	}
 	echo '</dl>';

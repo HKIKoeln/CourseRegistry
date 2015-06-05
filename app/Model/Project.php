@@ -56,7 +56,7 @@ class Project extends AppModel {
 	public $hasAndBelongsToMany = array(
 		'Person' => array(
 			'className' => 'Person',
-			'joinTable' => 'projects_persons',
+			'joinTable' => 'projects_people',
 			'foreignKey' => 'project_id',
 			'associationForeignKey' => 'person_id',
 			'unique' => 'keepExisting'

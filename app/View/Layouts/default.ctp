@@ -22,13 +22,13 @@ $this->start('header');
 ?>
 <div id="header">
 	<?php
-	/*echo $this->Html->image('/img/DARIAH-EURGB-Klein.png', array(
-		'alt' => 'DARIA-EU',
+	echo $this->Html->image('/img/logos/logoEhG_small.png', array(
+		'alt' => 'eHumanities Group',
 		'class' => 'left',
 		'url' => '/',
-		'width' => 202,
-		'height' => 61
-	));*/
+		'width' => 236,
+		'height' => 57
+	));
 	?>
 	<div>
 		<h1>

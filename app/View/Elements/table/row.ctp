@@ -52,14 +52,17 @@ $toggle = ($showDetails OR empty($detailsFieldlist)) ? ''
 		}
 		if(!empty($fieldDef['display'])) {
 			switch($fieldDef['display']) {
-			case 'link':
-				if($value != ' - ' AND !empty($value)) {
-					$value = $this->Html->link('Link >>', $record[$fieldModelName][$fieldname], array(
-						'target' => '_blank',
-						'title' => 'external link (new tab)'
-					));
-				}
-				break;
+				case 'link':
+					if($value != ' - ' AND !empty($value)) {
+						$value = $this->Html->link('Link >>', $record[$fieldModelName][$fieldname], array(
+							'target' => '_blank',
+							'title' => 'external link (new tab)'
+						));
+					}
+					break;
+				case 'bool':
+					$value = (in_array(strtolower($value), array(' - ','-','0','n','no','false')) OR empty($value)) ? 'No' : 'Yes';
+					break;
 			}
 		}
 		echo '<td' . $fieldclass . '>' . $value . '</td>';
