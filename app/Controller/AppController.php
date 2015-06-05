@@ -108,6 +108,14 @@ class AppController extends Controller {
 	
 	
 	protected function _getFilter() {
+		$filter = $this->filter;
+		if(empty($filter)) $filter = $this->_setupFilter();
+		return $filter;
+	}
+	
+	protected function _setupFilter() {
+		// check for previously set filters
+		$this->filter = $this->Session->read('filter');
 		return $this->filter;
 	}
 	

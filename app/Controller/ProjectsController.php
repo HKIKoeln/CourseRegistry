@@ -21,7 +21,20 @@ class ProjectsController extends AppController {
 	
 	public function beforeFilter() {
 		parent::beforeFilter();
-		
+		$paginate = array(
+			'Project' => array(
+				'contain' => array(
+					'ProjectsInstitution' => array(
+						'Institution',
+						'InstitutionRole'
+					),
+					'ProjectsPerson' => array('PersonRole'),
+					'ProjectLink' => array('ProjectLinkType'),
+					'ProjectExternalIdentifier' => array('ExternalIdentifierType')
+				)
+			)
+		);
+		$this->paginate = array_merge($this->paginate, $paginate);
 		$this->Auth->allow(array('index', 'reset'));
 	}
 	
@@ -41,6 +54,36 @@ class ProjectsController extends AppController {
 		}
 		
 		$this->set(compact('records'));
+	}
+	
+	
+	protected function _getFilter($filter = null) {
+		$filter = $this->filter;
+		if(empty($filter)) $filter = $this->_setupFilter();
+		// set some filter properties that are NOT editable via the filter form - so $this->filter remains empty if no filter is set
+		$filter['Project.active'] = 1;	// active will be used as an user-option to unpublish the record
+		return $filter;
+	}
+	
+	
+	protected function _setupFilter() {
+		// check for previously set filters
+		$this->filter = $this->Session->read('filter');
+		// get/maintain filters
+		//$this->_postedFilters();
+		//$this->_getFilterOptions_validateFilters();
+		
+		//$this->Session->write('filter', $this->filter);
+		
+		// don't store named and extended filters in the session, but set the named to the form!
+		//$this->_namedFilters();
+		//$this->_filterToForm();
+		
+		//$this->_extendFilters();
+		
+		//$this->_setJoins();
+		
+		return $this->filter;
 	}
 	
 }

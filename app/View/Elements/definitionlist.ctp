@@ -30,7 +30,8 @@ if(!empty($fieldlist)) {
 			$fieldDef['label'] = Inflector::camelize($fieldname);
 		}
 		echo '<dt>' . $fieldDef['label'] . '</dt>';
-		$value = (!empty($record[$fieldModelName][$fieldname])) ? record[$fieldModelName][$fieldname] : ' - ';
+		$value = (!empty($record[$fieldModelName][$fieldname])) ? $record[$fieldModelName][$fieldname] : ' - ';
+		$fieldclass = null;
 		if(!empty($fieldDef['class'])) {
 			if(is_array($fieldDef['class'])) {
 				$fieldclass = ' class="' . implode(' ', $fieldDef['class']) . '"';
@@ -47,6 +48,9 @@ if(!empty($fieldlist)) {
 						'title' => 'external link (new tab)'
 					));
 				}
+				break;
+			case 'bool':
+				$value = (in_array(strtolower($value), array(' - ','-','0','n','no','false')) OR empty($value)) ? 'No' : 'Yes';
 				break;
 			}
 		}

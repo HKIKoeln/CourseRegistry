@@ -34,6 +34,71 @@ class Project extends AppModel {
 	
 	//public $order = 'Project.updated DESC';
 	
+	public $hasMany = array(
+		'ProjectExternalIdentifier' => array(
+			'className' => 'ProjectExternalIdentifier',
+			'foreignKey' => 'project_id'
+		),
+		'ProjectLink' => array(
+			'className' => 'ProjectLink',
+			'foreignKey' => 'project_id'
+		),
+		'ProjectsInstitution' => array(
+			'className' => 'ProjectsInstitution',
+			'foreignKey' => 'project_id'
+		),
+		'ProjectsPerson' => array(
+			'className' => 'ProjectsPerson',
+			'foreignKey' => 'project_id'
+		)
+	);
+	
+	public $hasAndBelongsToMany = array(
+		'Person' => array(
+			'className' => 'Person',
+			'joinTable' => 'projects_persons',
+			'foreignKey' => 'project_id',
+			'associationForeignKey' => 'person_id',
+			'unique' => 'keepExisting'
+		),
+		'Institution' => array(
+			'className' => 'Institution',
+			'joinTable' => 'projects_institutions',
+			'foreignKey' => 'project_id',
+			'associationForeignKey' => 'institution_id',
+			'unique' => 'keepExisting'
+		),
+		'TadirahActivity' => array(
+			'className' => 'TadirahActivity',
+			'joinTable' => 'projects_tadirah_activities',
+			'foreignKey' => 'project_id',
+			'associationForeignKey' => 'tadirah_activity_id',
+			'unique' => 'keepExisting'
+		),
+		'TadirahTechnique' => array(
+			'className' => 'TadirahTechnique',
+			'joinTable' => 'projects_tadirah_techniques',
+			'foreignKey' => 'project_id',
+			'associationForeignKey' => 'tadirah_technique_id',
+			'unique' => 'keepExisting'
+		),
+		'TadirahObject' => array(
+			'className' => 'TadirahObject',
+			'joinTable' => 'projects_tadirah_objects',
+			'foreignKey' => 'project_id',
+			'associationForeignKey' => 'tadirah_object_id',
+			'unique' => 'keepExisting'
+		),
+		'NwoDiscipline' => array(
+			'className' => 'NwoDiscipline',
+			'joinTable' => 'projects_nwo_disciplines',
+			'foreignKey' => 'project_id',
+			'associationForeignKey' => 'nwo_discipline_id',
+			'unique' => 'keepExisting'
+		)
+	);
+	
+	
 	
 	
 

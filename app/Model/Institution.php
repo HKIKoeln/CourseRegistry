@@ -110,10 +110,28 @@ class Institution extends AppModel {
 			'finderQuery' => '',
 			'counterQuery' => ''
 		),
-		'User' => array(
+		'User' => array(			// this is only an administrative thing
 			'className' => 'User',
 			'foreignKey' => 'institution_id',
 			'dependent' => false
+		),
+		'ProjectsInstitution' => array(
+			'className' => 'ProjectsInstitution',
+			'foreignKey' => 'institution_id'
+		),
+		'InstitutionExternalIdentifier' => array(
+			'className' => 'InstitutionExternalIdentifier',
+			'foreignKey' => 'institution_id'
+		)
+	);
+	
+	public $hasAndBelongsToMany = array(
+		'Project' => array(
+			'className' => 'Project',
+			'joinTable' => 'projects_institutions',
+			'foreignKey' => 'institution_id',
+			'associationForeignKey' => 'project_id',
+			'unique' => 'keepExisting'
 		)
 	);
 
