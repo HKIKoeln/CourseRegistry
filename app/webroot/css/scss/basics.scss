@@ -97,20 +97,22 @@ dl {
 	@include clearfix;
 }
 .narrow {
-	width: 32%;
-	dt {width: 80px;}
+	width: 35%;
+	dt {width: 90px;}
+	dd {width: 55%;}
 }
 .half {
 	width: 46%;
-	dt {width: 110px;}
+	dt {width: 100px;}
 }
 .wide {
 	width: 60%;
-	dt {width: 150px;}
+	dt {width: 100px;}
+	dd {width: 71%;}
 }
 .narrow, .half, .wide {
-	margin-left: 30px;
-	&:first-child {
-		margin-left: 0;
+	margin-right: 30px;
+	&:last-child {
+		margin-right: 0;
 	}
 }

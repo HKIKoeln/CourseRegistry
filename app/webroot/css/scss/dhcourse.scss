@@ -57,14 +57,14 @@ $menu_width: 236px;
 	@include clearfix;
 	
 	img {
-		margin: 20px 0 0  10px;
+		margin: 25px 0 0  10px;
 		display: block;
 		float: left;
 	}
 	
 	div {
 		background-color: $header_background_color;
-		height: 61px;
+		min-height: 61px;
 		margin: 0;
 		margin-left: $menu_width + 24px;
 		border-left: 2px solid $background_color;
@@ -78,6 +78,7 @@ $menu_width: 236px;
 		}
 		p {
 			font-weight: bold;
+			margin: 0;
 			strong {
 				color: red;
 			}
@@ -293,4 +294,12 @@ $col_min_height: 400px;
 	box-shadow: inset 0 1px 0 rgba(0, 0, 0, 0.25), 0 1px 0 rgba(255, 255, 255, 0.5);
 	text-shadow: 0 1px 1px rgba(255, 255, 255, 0.8);
 	margin-bottom: 2em;
+}
+
+// menu sidebar notification - for project registry presentation
+.columns #menu li.notification {
+	font-size: 11px;
+	color: red;
+	font-weight: bold;
+	a { text-decoration: underline; }
 }

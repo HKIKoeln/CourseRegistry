@@ -20,7 +20,15 @@
 <head>
 	<meta http-equiv="X-UA-Compatible" content="IE=Edge">
 	<?php echo $this->Html->charset(); ?>
-	<title>DH Course Registry</title>
+	<title>
+		<?php
+		$page = $this->fetch('title');
+		$title = 'DH Registry';
+		if($page == 'Courses') $title = 'DH Course Registry';
+		elseif($page == 'Projects') $title = 'DH Project Registry - Beta';
+		echo $title;
+		?>
+	</title>
 	<?php
 	if(Configure::read('debug') > 0) {
 		echo $this->Html->meta(array('name' => 'robots', 'content' => 'noindex'));
@@ -29,8 +37,8 @@
 		echo $this->Html->meta(array('name' => 'robots', 'content' => 'index'));
 		echo $this->Html->meta(array('name' => 'robots', 'content' => 'follow'));
 	}
-	echo $this->Html->meta('keywords', 'digital humanities, programs, courses');
-	echo $this->Html->meta('description', 'An interactive overview of digital humanity related courses and programs');
+	echo $this->Html->meta('keywords', 'digital humanities, research, programs, courses');
+	echo $this->Html->meta('description', 'European platform for digital humanity related research, courses and programs.');
 	echo $this->Html->meta('icon');
 	
 	echo $this->Html->css('dhcourse.css');

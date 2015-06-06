@@ -35,16 +35,20 @@
 	limitations under the License. 
 </p>
 <p>
-	Copyright 2014 Hendrik Schmeer on behalf of DARIAH-EU, <br />
-	VCC2 and DARIAH-DE,  <br />
-	Credits to:  <br />
-	Erasmus University Rotterdam,  <br />
-	University of Cologne,  <br />
+	Copyright 2014 Hendrik Schmeer on behalf of DARIAH-EU, <br>
+	VCC2 and DARIAH-DE,  <br><br>
+	Credits to:  <br>
+	Royal Netherlands Academy of Arts and Sciences, <br>
+	the eHumanities Group, <br>
+	Data Archiving and Networked Services, <br>
+	Erasmus University Rotterdam,  <br>
+	University of Cologne,  <br>
 	PIREH / University Paris 1. 
 </p>
 <p>
-	Created by a consortium of DARIAH-VCC2, <br />
-	Erasmus	UniversityRotterdam, University of Cologne. <br />
+	Created by a consortium of DARIAH-VCC2, <br>
+	Royal Netherlands Academy of Arts and Sciences &amp; the eHumanities Group, <br>
+	Erasmus	UniversityRotterdam, University of Cologne. <br>
 	With credits to University Paris 1.
 </p>
 

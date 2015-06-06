@@ -16,6 +16,10 @@
  * limitations under the License.
  */
 $filter = $this->Session->read('filter'); ?>
+	<li class="notification">
+		Courses not in sync with the Course-Registry (state ~2014).<br>
+		Visit the <?php echo $this->Html->link('DARIAH Course-Registry.', 'https://dh-registry.de.dariah.eu/', array('target' => 'blank')); ?>
+	</li>
 	<li class="filter">Filters:</li>
 	<?php
 	$location_fixed = false;

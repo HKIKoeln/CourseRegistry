@@ -42,7 +42,8 @@ $this->start('header');
 		<p>
 			Project-Registry <strong>BETA.</strong> Derived from DARIAH sourcecode. 
 			Visit <?php echo $this->Html->link('DARIAH Course-Registry', 'https://dh-registry.de.dariah.eu/', array('target' => 'blank')); ?> 
-			for the most recent content regarding courses.
+			for the most recent content regarding courses. Information on projects derived from 
+			<?php echo $this->Html->link('NARCIS', 'http://www.narcis.nl/'); ?>. Project websites not complete. 
 		</p>
 	</div>
 </div>
