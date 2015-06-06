@@ -17,6 +17,19 @@
  */
 ?>
 
-<div id="barchart">
-	
+<div class="barchart">
+	<?php
+	$ruleSet = null;
+	foreach($chartData['years'] as $year => $count) {
+		$style = 'height:' . $chartData['unitY'] * $count . 'px;';
+		echo '<div class="bar" style="' . $style . '">';
+			echo '<span class="count">' . $count . '</span>';
+		echo '</div>';
+		if(empty($year)) $year = 'NULL';
+		$ruleSet .= '<div class="bar"><span class="year">' . $year . '</span></div>';
+	}
+	?>
+</div>
+<div class="barchart-x-rule">
+	<?php echo $ruleSet; ?>
 </div>

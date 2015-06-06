@@ -200,11 +200,44 @@ $col_min_height: 400px;
 			height:400px;
 		}
 		
-		#barchart {
-			margin-bottom: 1.5em;
+		.barchart, .barchart-x-rule {
+			margin-bottom: 0;
 			width:100%;
-			height:400px;
+			height:350px;
 			background-color: $background_color_2;
+			display: flex;
+			align-items: flex-end; // align at bottom
+			
+			.bar {
+				background-color: orange;
+				flex-grow: 1;
+				flex-basis: 0;
+				margin: 10px 2px 2px 0;
+				overflow: hidden;
+				&:first-child { margin-left: 10px; }
+				&:last-child { margin-right: 10px; }
+				display: flex;
+				flex-direction: column-reverse;
+				justify-content: space-between;
+				text-align: center;
+				min-height: 22px;
+				.count {
+					color: white;
+					margin: 5px 0;
+				}
+			}
+		}
+		.barchart-x-rule {
+			margin-bottom: 1.5em;
+			height: 50px;
+			align-items: stretch;
+			.bar {
+				background-color: $background_color;
+				margin: 0 2px 10px 0;
+				flex-direction: row;
+				justify-content: center;
+				align-items: center;
+			}
 		}
 		
 		.associations,
