@@ -1,7 +1,7 @@
 <?php
 
 
-echo $this->element('pager');
+
 $fieldlist = array(
 	'Project.name' => array(
 		'label' => 'Project Name',
@@ -18,13 +18,16 @@ $detailsFieldlist = array(
 	'left' => array(
 		'Project.links' => array('display' => 'dh_project_links'),
 		'Project.institutions' => array('display' => 'dh_project_institutions'),
-		'Project.persons' => array('display' => 'dh_project_people')
+		'Project.persons' => array('display' => 'dh_project_people'),
+		'Project.identifiers' => array('display' => 'dh_project_identifiers')
 	),
 	'right' => array(
 		'Project.description' => array('label' => 'Description')
 	)
 );
 $this->set(compact('fieldlist', 'detailsFieldlist'));
+
+echo $this->element('pager');
 echo $this->element('index');
 echo $this->element('pager');
 
@@ -59,6 +62,7 @@ function dh_project_links($obj = null, $record = array(), $fieldDef = array()) {
 	return $content;
 }
 
+
 function dh_project_institutions($obj = null, $record = array(), $fieldDef = array()) {
 	$modelData = getModelData('ProjectsInstitution', $record);
 	$content = null;
@@ -69,6 +73,7 @@ function dh_project_institutions($obj = null, $record = array(), $fieldDef = arr
 	}
 	return $content;
 }
+
 
 function dh_project_people($obj = null, $record = array(), $fieldDef = array()) {
 	$modelData = getModelData('ProjectsPerson', $record);
@@ -84,6 +89,24 @@ function dh_project_people($obj = null, $record = array(), $fieldDef = array()) 
 	}
 	return $content;
 }
+
+
+function dh_project_identifiers($obj = null, $record = array(), $fieldDef = array()) {
+	$modelData = getModelData('ProjectExternalIdentifier', $record);
+	$content = null;
+	if(!empty($modelData)) {
+		foreach($modelData as $k => $row) {
+			$identifier = (!$row['ExternalIdentifierType']['schema_remove_prefix'])
+				? $row['identifier']
+				: str_replace($row['ExternalIdentifierType']['prefix'], '', $row['identifier']);
+			$href = $row['ExternalIdentifierType']['schema'] . $identifier;
+			$content .= $row['ExternalIdentifierType']['name'] . ': ';
+			$content .= $obj->Html->link($row['identifier'], $href, array('target' => 'blank')) . '<br>';
+		}
+	}
+	return $content;
+}
+
 
 function getModelData($modelName = null, $data = array()) {
 	$modelData = $data;
