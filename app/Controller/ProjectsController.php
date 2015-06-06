@@ -56,7 +56,44 @@ class ProjectsController extends AppController {
 			));
 		}
 		
-		$this->set(compact('records'));
+		$minYear = $this->Project->field('Project.start_date', array(
+			'Project.active' => 1,
+			'Project.start_date !=' => null
+		), 'Project.start_date ASC');
+		if(!empty($minYear)) $minYear = substr($minYear, 0, 4);
+		$maxYear = $this->Project->field('Project.start_date', array(
+			'Project.active' => 1,
+			'Project.start_date !=' => null
+		), 'Project.start_date DESC');
+		if(!empty($maxYear)) $maxYear = substr($maxYear, 0, 4);
+		$projectYears = $this->Project->find('all', array(
+			'conditions' => array('Project.active' => 1),
+			'order' => array('Project.start_date ASC'),
+			'fields' => array('Project.start_date'),
+			'contain' => array()
+		));
+		$years = array(0 => 0);
+		if(!empty($projectYears)) 
+			foreach($projectYears as $year) {
+				$year = $year['Project']['start_date'];
+				if(!empty($year)) {
+					$year = (int) substr($year, 0, 4);
+					if(empty($years[$year])) {
+						$years[$year] = 1;
+					}else{
+						$years[$year] = $years[$year] + 1;
+					}
+				}else{
+					$years[0] = $years[0] + 1;
+				}
+			}
+		$chartData = array(
+			'minYear' => $minYear,
+			'maxYear' => $maxYear,
+			'years' => $years
+		);
+		
+		$this->set(compact('records', 'chartData'));
 	}
 	
 	

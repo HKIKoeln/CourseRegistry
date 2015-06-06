@@ -27,6 +27,7 @@ $detailsFieldlist = array(
 );
 $this->set(compact('fieldlist', 'detailsFieldlist'));
 
+echo $this->element('projects/barchart');
 echo $this->element('pager');
 echo $this->element('index');
 echo $this->element('pager');

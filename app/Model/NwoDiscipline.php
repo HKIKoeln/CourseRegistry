@@ -17,11 +17,11 @@
  */
 App::uses('AppModel', 'Model');
 /**
- * TadirahObject Model
+ * NwoDiscipline Model
  *
  * @property Course $Course
  */
-class TadirahObject extends AppModel {
+class NwoDiscipline extends AppModel {
 
 /**
  * Display field
@@ -32,15 +32,15 @@ class TadirahObject extends AppModel {
 
 
 	var $validate = array(
-		'TadirahObject' => array(
+		'NwoDiscipline' => array(
 			'rule' => 'checkTags',
-			'message' => 'Please provide at least one keyword of Tadirah Object.',
+			'message' => 'Please provide at least one of NWO disciplines.',
 			'required' => true
 		)
 	);
 	
 	function checkTags() {
-		if(!empty($this->data['TadirahObject']['TadirahObject'])) return true;
+		if(!empty($this->data['NwoDiscipline']['NwoDiscipline'])) return true;
 		return false;
 	}
 	
