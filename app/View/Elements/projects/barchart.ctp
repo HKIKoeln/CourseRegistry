@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 ?>
-
+<p class="caption">New projects per year</p>
 <div class="barchart">
 	<?php
 	$ruleSet = null;

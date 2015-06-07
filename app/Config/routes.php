@@ -26,7 +26,7 @@
  */
 	$layoutRegex = 'iframe';
 	Router::connect('/:layout', array(
-			'controller' => 'courses',
+			'controller' => 'projects',
 			'action' => 'index'
 		),
 		array(
@@ -34,7 +34,7 @@
 			'persist' => array('layout')
 		)
 	);
-	Router::connect('/', array('controller' => 'courses', 'action' => 'index'));
+	Router::connect('/', array('controller' => 'projects', 'action' => 'index'));
 /**
  * ...and connect the rest of 'Pages' controller's URLs.
  */

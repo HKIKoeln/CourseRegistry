@@ -33,7 +33,11 @@ class ProjectsController extends AppController {
 						'PersonRole'
 					),
 					'ProjectLink' => array('ProjectLinkType'),
-					'ProjectExternalIdentifier' => array('ExternalIdentifierType')
+					'ProjectExternalIdentifier' => array('ExternalIdentifierType'),
+					'NwoDiscipline',
+					'TadirahTechnique',
+					'TadirahActivity',
+					'TadirahObject'
 				)
 			)
 		);

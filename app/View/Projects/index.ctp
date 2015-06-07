@@ -22,7 +22,23 @@ $detailsFieldlist = array(
 		'Project.identifiers' => array('display' => 'dh_project_identifiers')
 	),
 	'right' => array(
-		'Project.description' => array('label' => 'Description')
+		'Project.description' => array('label' => 'Description'),
+		'Project.disciplines' => array(
+			'display' => 'dh_tags',
+			'modelName' => 'NwoDiscipline'
+		),
+		'Project.activities' => array(
+			'display' => 'dh_tags',
+			'modelName' => 'TadirahActivity'
+		),
+		'Project.techniques' => array(
+			'display' => 'dh_tags',
+			'modelName' => 'TadirahTechnique'
+		),
+		'Project.objects' => array(
+			'display' => 'dh_tags',
+			'modelName' => 'TadirahObject'
+		)
 	)
 );
 $this->set(compact('fieldlist', 'detailsFieldlist'));
@@ -103,6 +119,18 @@ function dh_project_identifiers($obj = null, $record = array(), $fieldDef = arra
 			$href = $row['ExternalIdentifierType']['schema'] . $identifier;
 			$content .= $row['ExternalIdentifierType']['name'] . ': ';
 			$content .= $obj->Html->link($row['identifier'], $href, array('target' => 'blank')) . '<br>';
+		}
+	}
+	return $content;
+}
+
+
+function dh_tags($obj = null, $record = array(), $fieldDef = array()) {
+	$modelData = getModelData($fieldDef['modelName'], $record);
+	$content = null;
+	if(!empty($modelData) and is_array($modelData)) {
+		foreach($modelData as $k => $row) {
+			if(!empty($row['name'])) $content .= $row['name'] . '<br>';
 		}
 	}
 	return $content;
