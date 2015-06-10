@@ -103,7 +103,10 @@ class ProjectsController extends AppController {
 	
 	protected function _setupFilter() {
 		// check for previously set filters
-		$this->filter = $this->Session->read('filter');
+		
+		// !!! SEPARATE courses & projects filters !!!
+		//$this->filter = $this->Session->read('projects.filter');
+		
 		// get/maintain filters
 		//$this->_postedFilters();
 		//$this->_getFilterOptions_validateFilters();

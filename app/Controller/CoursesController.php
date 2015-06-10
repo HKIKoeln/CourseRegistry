@@ -422,10 +422,10 @@ class CoursesController extends AppController {
 	protected function _getFilterOptions_validateFilters() {
 		// filter logic: if minor doesn't fit major, remove minor from filter
 		// get option lists for the filter
-		$parentTypes = $this->Course->CourseParentType->find('list');
+		$courseParentTypes = $this->Course->CourseParentType->find('list');
 		$conditions = (empty($this->filter['Course.course_parent_type_id'])) ? array() : array('CourseType.course_parent_type_id' => $this->filter['Course.course_parent_type_id']);
-		$types = $this->Course->CourseType->find('list', array('conditions' => $conditions));
-		if(!empty($this->filter['Course.course_type_id']) AND !isset($types[$this->filter['Course.course_type_id']])) unset($this->filter['Course.course_type_id']);
+		$courseTypes = $this->Course->CourseType->find('list', array('conditions' => $conditions));
+		if(!empty($this->filter['Course.course_type_id']) AND !isset($courseTypes[$this->filter['Course.course_type_id']])) unset($this->filter['Course.course_type_id']);
 		$types = $this->Course->CourseType->find('list', array(
 			'contain' => array('CourseParentType'),
 			'fields' => array('CourseType.id', 'CourseType.name', 'CourseParentType.name'),
@@ -450,20 +450,22 @@ class CoursesController extends AppController {
 		if(!empty($this->filter['Course.course_type_id'])) unset($this->filter['Course.course_parent_type_id']);
 		
 		// child of country & city: university
-		$conditions = array();
+		$conditions = array(
+			'Institution.is_university' => true
+		);
 		if(!empty($this->filter['Course.country_id']))
 			$conditions['Institution.country_id'] = $this->filter['Course.country_id'];
 		if(!empty($this->filter['Course.city_id']))
 			$conditions['Institution.city_id'] = $this->filter['Course.city_id'];
-		$universities = $this->Course->Institution->find('list', array('conditions' => $conditions));
+		$institutions = $this->Course->Institution->find('list', array('conditions' => $conditions));
 		// filter logic 1
-		if(!empty($this->filter['Course.institution_id']) AND !isset($universities[$this->filter['Course.institution_id']])) unset($this->filter['Course.institution_id']);
-		$universities = $this->Course->Institution->find('list', array(
+		if(!empty($this->filter['Course.institution_id']) AND !isset($institutions[$this->filter['Course.institution_id']])) unset($this->filter['Course.institution_id']);
+		$institutions = $this->Course->Institution->find('list', array(
 			'contain' => array('Country'),
 			'fields' => array('Institution.id', 'Institution.name', 'Country.name'),
 			'conditions' => $conditions
 		));
-		ksort($universities);
+		ksort($institutions);
 		// filter logic 2
 		if(!empty($this->filter['Course.institution_id'])) {
 			unset($this->filter['Course.country_id']);
@@ -476,9 +478,9 @@ class CoursesController extends AppController {
 		$this->set(compact(
 			'countries',
 			'cities',
-			'parentTypes',
-			'types',
-			'universities'
+			'courseParentTypes',
+			'courseTypes',
+			'institutions'
 		));
 	}
 	
