@@ -39,13 +39,25 @@
  */
 class EmailConfig {
 
+	public function __construct() {
+		$host = env('HTTP_HOST');
+		$host = ($host != 'localhost' AND !empty($host)) ? $host : 'example.com';
+		if(!Configure::read('App.defaultEmail'))
+			Configure::write('App.defaultEmail', 'noreply@example.com');
+		$this->default['from'] = Configure::read('App.defaultEmail');
+	}
+	
+	
+	
 	public $default = array(
 		'transport' => 'Mail',
-		'from' => 'you@localhost',
-		//'charset' => 'utf-8',
-		//'headerCharset' => 'utf-8',
+		'from' => 'noreply@example.com',
+		'charset' => 'utf-8',
+		'headerCharset' => 'utf-8',
 	);
-
+	
+	// not being used for the DH Registry
+	/*
 	public $smtp = array(
 		'transport' => 'Smtp',
 		'from' => array('site@localhost' => 'My Site'),
@@ -90,5 +102,5 @@ class EmailConfig {
 		//'charset' => 'utf-8',
 		//'headerCharset' => 'utf-8',
 	);
-
+	*/
 }
