@@ -1,0 +1,3 @@
+[submodule "app/Config"]
+	path = app/Config
+	url = https://sturmfrisur@bitbucket.org/sturmfrisur/dh-registry.git
