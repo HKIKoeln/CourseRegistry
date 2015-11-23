@@ -42,7 +42,34 @@ class ProjectsController extends AppController {
 			)
 		);
 		$this->paginate = array_merge($this->paginate, $paginate);
-		$this->Auth->allow(array('index', 'reset'));
+		$this->Auth->allow(array('index', 'view', 'reset'));
+	}
+	
+	
+	
+	public function view($id = null) {
+		if(empty($id) OR $id == 0) $this->redirect('index');
+		$record = $this->Project->find('first', array(
+			'conditions' => array('Project.id' => $id),
+			'contain' => array(
+				'ProjectExternalIdentifier',
+				'ProjectLink' => array('ProjectLinkType'),
+				'ProjectsPerson' => array(
+					'PersonRole', 'Person' => array('PersonExternalIdentifier')
+				),
+				'ProjectsInstitution' => array(
+					'InstitutionRole', 'Institution' => array('InstitutionExternalIdentifier')
+				),
+				'TadirahActivity',
+				'TadirahTechnique',
+				'TadirahObject',
+				'NwoDiscipline'
+			)
+		));
+		if(empty($record)) $this->redirect('index');
+		$this->set('record', $record);
+		// TODO: make a non-data view
+		$this->set('_serialize', array('record'));
 	}
 	
 	
@@ -89,6 +116,7 @@ class ProjectsController extends AppController {
 		);
 		
 		$this->set(compact('records', 'chartData'));
+		$this->set('_serialize', array('records'));
 	}
 	
 	
