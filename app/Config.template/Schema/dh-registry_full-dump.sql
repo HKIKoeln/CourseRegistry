@@ -11,7 +11,6 @@
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 
 -- Exportiere Struktur von Tabelle dh-registry.cities
-DROP TABLE IF EXISTS `cities`;
 CREATE TABLE IF NOT EXISTS `cities` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `country_id` int(11) NOT NULL,
@@ -79,7 +78,6 @@ INSERT INTO `cities` (`id`, `country_id`, `name`) VALUES
 
 
 -- Exportiere Struktur von Tabelle dh-registry.countries
-DROP TABLE IF EXISTS `countries`;
 CREATE TABLE IF NOT EXISTS `countries` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
@@ -105,7 +103,6 @@ INSERT INTO `countries` (`id`, `name`) VALUES
 
 
 -- Exportiere Struktur von Tabelle dh-registry.courses
-DROP TABLE IF EXISTS `courses`;
 CREATE TABLE IF NOT EXISTS `courses` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `user_id` int(11) DEFAULT NULL,
@@ -269,7 +266,6 @@ INSERT INTO `courses` (`id`, `user_id`, `active`, `created`, `updated`, `name`, 
 
 
 -- Exportiere Struktur von Tabelle dh-registry.courses_tadirah_activities
-DROP TABLE IF EXISTS `courses_tadirah_activities`;
 CREATE TABLE IF NOT EXISTS `courses_tadirah_activities` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `course_id` int(11) NOT NULL,
@@ -368,7 +364,6 @@ INSERT INTO `courses_tadirah_activities` (`id`, `course_id`, `tadirah_activity_i
 
 
 -- Exportiere Struktur von Tabelle dh-registry.courses_tadirah_objects
-DROP TABLE IF EXISTS `courses_tadirah_objects`;
 CREATE TABLE IF NOT EXISTS `courses_tadirah_objects` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `course_id` int(11) NOT NULL,
@@ -484,7 +479,6 @@ INSERT INTO `courses_tadirah_objects` (`id`, `course_id`, `tadirah_object_id`) V
 
 
 -- Exportiere Struktur von Tabelle dh-registry.courses_tadirah_techniques
-DROP TABLE IF EXISTS `courses_tadirah_techniques`;
 CREATE TABLE IF NOT EXISTS `courses_tadirah_techniques` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `course_id` int(11) NOT NULL,
@@ -559,7 +553,6 @@ INSERT INTO `courses_tadirah_techniques` (`id`, `course_id`, `tadirah_technique_
 
 
 -- Exportiere Struktur von Tabelle dh-registry.course_parent_types
-DROP TABLE IF EXISTS `course_parent_types`;
 CREATE TABLE IF NOT EXISTS `course_parent_types` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(100) COLLATE utf8_unicode_ci NOT NULL COMMENT 'a short name',
@@ -575,7 +568,6 @@ INSERT INTO `course_parent_types` (`id`, `name`) VALUES
 
 
 -- Exportiere Struktur von Tabelle dh-registry.course_types
-DROP TABLE IF EXISTS `course_types`;
 CREATE TABLE IF NOT EXISTS `course_types` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `course_parent_type_id` int(11) NOT NULL,
@@ -600,7 +592,6 @@ INSERT INTO `course_types` (`id`, `course_parent_type_id`, `name`) VALUES
 
 
 -- Exportiere Struktur von Tabelle dh-registry.external_identifier_types
-DROP TABLE IF EXISTS `external_identifier_types`;
 CREATE TABLE IF NOT EXISTS `external_identifier_types` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL,
@@ -628,13 +619,12 @@ INSERT INTO `external_identifier_types` (`id`, `name`, `prefix`, `schema`, `sche
 
 
 -- Exportiere Struktur von Tabelle dh-registry.institutions
-DROP TABLE IF EXISTS `institutions`;
 CREATE TABLE IF NOT EXISTS `institutions` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `parent_id` int(11) DEFAULT NULL,
   `city_id` int(11) DEFAULT NULL,
   `country_id` int(11) DEFAULT NULL,
-  `is_university` tinyint(1) NOT NULL DEFAULT '0',
+  `is_university` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'show only universities in the Course Registry option listings',
   `name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `description` text COLLATE utf8_unicode_ci,
   `url` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
@@ -905,7 +895,6 @@ INSERT INTO `institutions` (`id`, `parent_id`, `city_id`, `country_id`, `is_univ
 
 
 -- Exportiere Struktur von Tabelle dh-registry.institution_external_identifiers
-DROP TABLE IF EXISTS `institution_external_identifiers`;
 CREATE TABLE IF NOT EXISTS `institution_external_identifiers` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `institution_id` int(11) NOT NULL,
@@ -1083,7 +1072,6 @@ INSERT INTO `institution_external_identifiers` (`id`, `institution_id`, `externa
 
 
 -- Exportiere Struktur von Tabelle dh-registry.institution_roles
-DROP TABLE IF EXISTS `institution_roles`;
 CREATE TABLE IF NOT EXISTS `institution_roles` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL,
@@ -1101,7 +1089,6 @@ INSERT INTO `institution_roles` (`id`, `name`) VALUES
 
 
 -- Exportiere Struktur von Tabelle dh-registry.languages
-DROP TABLE IF EXISTS `languages`;
 CREATE TABLE IF NOT EXISTS `languages` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
@@ -1122,52 +1109,51 @@ INSERT INTO `languages` (`id`, `name`) VALUES
 
 
 -- Exportiere Struktur von Tabelle dh-registry.nwo_disciplines
-DROP TABLE IF EXISTS `nwo_disciplines`;
 CREATE TABLE IF NOT EXISTS `nwo_disciplines` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL,
+  `description` text,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=32 DEFAULT CHARSET=utf8;
 
 -- Exportiere Daten aus Tabelle dh-registry.nwo_disciplines: ~31 rows (ungefähr)
 /*!40000 ALTER TABLE `nwo_disciplines` DISABLE KEYS */;
-INSERT INTO `nwo_disciplines` (`id`, `name`) VALUES
-	(1, 'History'),
-	(2, 'Archeology'),
-	(3, 'Literary Studies'),
-	(4, 'Cultural Studies'),
-	(5, 'Heritage Studies'),
-	(6, 'Computer Science'),
-	(7, 'Computanional Linguistics'),
-	(8, 'Formal Semantics'),
-	(9, 'Psycholinguistics'),
-	(10, 'Game Studies'),
-	(11, 'Art History'),
-	(12, 'Social History'),
-	(13, 'Musicology'),
-	(14, 'Information Science'),
-	(15, 'Ethnology'),
-	(16, 'Linguistics'),
-	(17, 'Media Studies'),
-	(18, 'Theatre Studies'),
-	(19, 'Political Science'),
-	(20, 'Cognitive Science'),
-	(21, 'Gender Studies'),
-	(22, 'Political Communication'),
-	(23, 'European Studies'),
-	(24, 'Religion Studies and Theology'),
-	(25, 'Philosophy'),
-	(26, 'Language and Literature'),
-	(27, 'Area Studies'),
-	(28, 'Heritage Studies'),
-	(29, 'formal semantics'),
-	(30, 'psycholinguistics'),
-	(31, 'linguistics');
+INSERT INTO `nwo_disciplines` (`id`, `name`, `description`) VALUES
+	(1, 'History', NULL),
+	(2, 'Archeology', NULL),
+	(3, 'Literary Studies', NULL),
+	(4, 'Cultural Studies', NULL),
+	(5, 'Heritage Studies', NULL),
+	(6, 'Computer Science', NULL),
+	(7, 'Computanional Linguistics', NULL),
+	(8, 'Formal Semantics', NULL),
+	(9, 'Psycholinguistics', NULL),
+	(10, 'Game Studies', NULL),
+	(11, 'Art History', NULL),
+	(12, 'Social History', NULL),
+	(13, 'Musicology', NULL),
+	(14, 'Information Science', NULL),
+	(15, 'Ethnology', NULL),
+	(16, 'Linguistics', NULL),
+	(17, 'Media Studies', NULL),
+	(18, 'Theatre Studies', NULL),
+	(19, 'Political Science', NULL),
+	(20, 'Cognitive Science', NULL),
+	(21, 'Gender Studies', NULL),
+	(22, 'Political Communication', NULL),
+	(23, 'European Studies', NULL),
+	(24, 'Religion Studies and Theology', NULL),
+	(25, 'Philosophy', NULL),
+	(26, 'Language and Literature', NULL),
+	(27, 'Area Studies', NULL),
+	(28, 'Heritage Studies', NULL),
+	(29, 'formal semantics', NULL),
+	(30, 'psycholinguistics', NULL),
+	(31, 'linguistics', NULL);
 /*!40000 ALTER TABLE `nwo_disciplines` ENABLE KEYS */;
 
 
 -- Exportiere Struktur von Tabelle dh-registry.people
-DROP TABLE IF EXISTS `people`;
 CREATE TABLE IF NOT EXISTS `people` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `user_id` int(11) DEFAULT NULL,
@@ -1558,7 +1544,6 @@ INSERT INTO `people` (`id`, `user_id`, `first_name`, `initials`, `name`, `academ
 
 
 -- Exportiere Struktur von Tabelle dh-registry.person_external_identifiers
-DROP TABLE IF EXISTS `person_external_identifiers`;
 CREATE TABLE IF NOT EXISTS `person_external_identifiers` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `person_id` int(11) NOT NULL,
@@ -2060,7 +2045,6 @@ INSERT INTO `person_external_identifiers` (`id`, `person_id`, `external_identifi
 
 
 -- Exportiere Struktur von Tabelle dh-registry.person_institution_roles
-DROP TABLE IF EXISTS `person_institution_roles`;
 CREATE TABLE IF NOT EXISTS `person_institution_roles` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
@@ -2089,7 +2073,6 @@ INSERT INTO `person_institution_roles` (`id`, `name`, `narcis_key`) VALUES
 
 
 -- Exportiere Struktur von Tabelle dh-registry.person_project_roles
-DROP TABLE IF EXISTS `person_project_roles`;
 CREATE TABLE IF NOT EXISTS `person_project_roles` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL,
@@ -2109,14 +2092,13 @@ INSERT INTO `person_project_roles` (`id`, `name`) VALUES
 
 
 -- Exportiere Struktur von Tabelle dh-registry.projects
-DROP TABLE IF EXISTS `projects`;
 CREATE TABLE IF NOT EXISTS `projects` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `active` tinyint(1) NOT NULL DEFAULT '1',
-  `review` tinyint(1) NOT NULL DEFAULT '0',
+  `review` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'what was this field for?',
   `user_id` int(11) DEFAULT NULL COMMENT 'the user this record is assigned to for maintenance',
   `parent_id` int(11) DEFAULT NULL,
-  `has_children` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'check this to have this project in a ''select parent project'' dropdown element',
+  `has_subprojects` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'check this to have this project in a ''select parent project'' dropdown element',
   `created` datetime DEFAULT CURRENT_TIMESTAMP,
   `updated` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
@@ -2133,7 +2115,7 @@ CREATE TABLE IF NOT EXISTS `projects` (
 
 -- Exportiere Daten aus Tabelle dh-registry.projects: ~212 rows (ungefähr)
 /*!40000 ALTER TABLE `projects` DISABLE KEYS */;
-INSERT INTO `projects` (`id`, `active`, `review`, `user_id`, `parent_id`, `has_children`, `created`, `updated`, `name`, `description`, `is_phd`, `start_date`, `end_date`) VALUES
+INSERT INTO `projects` (`id`, `active`, `review`, `user_id`, `parent_id`, `has_subprojects`, `created`, `updated`, `name`, `description`, `is_phd`, `start_date`, `end_date`) VALUES
 	(4, 0, 0, NULL, NULL, 0, '2015-05-22 20:12:54', '2015-06-06 20:14:24', 'Alexandria', '', 0, NULL, NULL),
 	(5, 1, 0, NULL, NULL, 0, '2015-05-22 20:12:54', '2015-05-22 20:22:45', 'Archeology of Architecture: The Presentation and Publication of Virtual 3D Constructions of Lost Monuments', 'This research project focuses on the investigation and, eventually, the development of  a new, interchangeable format and method to publish digital 3/4D reconstruction of (ancient) architecture and cityscapes, with the reconstruction of two (lost) monuments in Rome as a point of departure.', 0, '2013', '2014'),
 	(6, 1, 0, NULL, NULL, 0, '2015-05-22 20:12:54', '2015-05-22 20:22:48', 'Arthurian fiction', 'This research tool provides information on medieval Arthurian narratives and the manuscripts in which they are transmitted throughout Europe. The database consists of linked records on over two hundred texts, more than thousand manuscripts and two hundred persons. Texts which belong to the pseudo-historical tradition of Geoffrey of Monmouth and printed books are not include', 0, '2004', '2008'),
@@ -2350,7 +2332,6 @@ INSERT INTO `projects` (`id`, `active`, `review`, `user_id`, `parent_id`, `has_c
 
 
 -- Exportiere Struktur von Tabelle dh-registry.projects_institutions
-DROP TABLE IF EXISTS `projects_institutions`;
 CREATE TABLE IF NOT EXISTS `projects_institutions` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `project_id` int(11) NOT NULL,
@@ -2663,7 +2644,6 @@ INSERT INTO `projects_institutions` (`id`, `project_id`, `institution_id`, `inst
 
 
 -- Exportiere Struktur von Tabelle dh-registry.projects_nwo_disciplines
-DROP TABLE IF EXISTS `projects_nwo_disciplines`;
 CREATE TABLE IF NOT EXISTS `projects_nwo_disciplines` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `project_id` int(11) NOT NULL,
@@ -2730,7 +2710,6 @@ INSERT INTO `projects_nwo_disciplines` (`id`, `project_id`, `nwo_discipline_id`)
 
 
 -- Exportiere Struktur von Tabelle dh-registry.projects_people
-DROP TABLE IF EXISTS `projects_people`;
 CREATE TABLE IF NOT EXISTS `projects_people` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `person_id` int(11) NOT NULL,
@@ -3241,7 +3220,6 @@ INSERT INTO `projects_people` (`id`, `person_id`, `project_id`, `person_project_
 
 
 -- Exportiere Struktur von Tabelle dh-registry.projects_tadirah_activities
-DROP TABLE IF EXISTS `projects_tadirah_activities`;
 CREATE TABLE IF NOT EXISTS `projects_tadirah_activities` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `project_id` int(11) NOT NULL,
@@ -3259,7 +3237,6 @@ CREATE TABLE IF NOT EXISTS `projects_tadirah_activities` (
 
 
 -- Exportiere Struktur von Tabelle dh-registry.projects_tadirah_objects
-DROP TABLE IF EXISTS `projects_tadirah_objects`;
 CREATE TABLE IF NOT EXISTS `projects_tadirah_objects` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `project_id` int(11) NOT NULL,
@@ -3277,7 +3254,6 @@ CREATE TABLE IF NOT EXISTS `projects_tadirah_objects` (
 
 
 -- Exportiere Struktur von Tabelle dh-registry.projects_tadirah_techniques
-DROP TABLE IF EXISTS `projects_tadirah_techniques`;
 CREATE TABLE IF NOT EXISTS `projects_tadirah_techniques` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `project_id` int(11) NOT NULL,
@@ -3446,7 +3422,6 @@ INSERT INTO `projects_tadirah_techniques` (`id`, `project_id`, `tadirah_techniqu
 
 
 -- Exportiere Struktur von Tabelle dh-registry.project_external_identifiers
-DROP TABLE IF EXISTS `project_external_identifiers`;
 CREATE TABLE IF NOT EXISTS `project_external_identifiers` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `project_id` int(11) NOT NULL,
@@ -3614,7 +3589,6 @@ INSERT INTO `project_external_identifiers` (`id`, `project_id`, `external_identi
 
 
 -- Exportiere Struktur von Tabelle dh-registry.project_links
-DROP TABLE IF EXISTS `project_links`;
 CREATE TABLE IF NOT EXISTS `project_links` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `project_id` int(11) NOT NULL,
@@ -3719,7 +3693,6 @@ INSERT INTO `project_links` (`id`, `project_id`, `project_link_type_id`, `url`, 
 
 
 -- Exportiere Struktur von Tabelle dh-registry.project_link_types
-DROP TABLE IF EXISTS `project_link_types`;
 CREATE TABLE IF NOT EXISTS `project_link_types` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
@@ -3736,7 +3709,6 @@ INSERT INTO `project_link_types` (`id`, `name`) VALUES
 
 
 -- Exportiere Struktur von Tabelle dh-registry.tadirah_activities
-DROP TABLE IF EXISTS `tadirah_activities`;
 CREATE TABLE IF NOT EXISTS `tadirah_activities` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `parent_id` int(11) DEFAULT NULL,
@@ -3803,7 +3775,6 @@ INSERT INTO `tadirah_activities` (`id`, `parent_id`, `name`, `description`) VALU
 
 
 -- Exportiere Struktur von Tabelle dh-registry.tadirah_activities_tadirah_techniques
-DROP TABLE IF EXISTS `tadirah_activities_tadirah_techniques`;
 CREATE TABLE IF NOT EXISTS `tadirah_activities_tadirah_techniques` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `tadirah_activity_id` int(11) NOT NULL DEFAULT '0',
@@ -3852,7 +3823,6 @@ INSERT INTO `tadirah_activities_tadirah_techniques` (`id`, `tadirah_activity_id`
 
 
 -- Exportiere Struktur von Tabelle dh-registry.tadirah_objects
-DROP TABLE IF EXISTS `tadirah_objects`;
 CREATE TABLE IF NOT EXISTS `tadirah_objects` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(100) COLLATE utf8_unicode_ci NOT NULL DEFAULT '0',
@@ -3902,7 +3872,6 @@ INSERT INTO `tadirah_objects` (`id`, `name`, `description`) VALUES
 
 
 -- Exportiere Struktur von Tabelle dh-registry.tadirah_techniques
-DROP TABLE IF EXISTS `tadirah_techniques`;
 CREATE TABLE IF NOT EXISTS `tadirah_techniques` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(100) COLLATE utf8_unicode_ci NOT NULL DEFAULT '0',
@@ -3953,11 +3922,10 @@ INSERT INTO `tadirah_techniques` (`id`, `name`, `description`) VALUES
 
 
 -- Exportiere Struktur von Tabelle dh-registry.users
-DROP TABLE IF EXISTS `users`;
 CREATE TABLE IF NOT EXISTS `users` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `institution_id` int(11) DEFAULT NULL,
-  `university` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT 'temporary value provided during registration, if the university is not in the list yet',
+  `institution` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT 'temporary value provided during registration, if the university is not in the list yet',
   `email` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `password` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `email_verified` tinyint(1) NOT NULL DEFAULT '0',
@@ -3994,9 +3962,9 @@ CREATE TABLE IF NOT EXISTS `users` (
 
 -- Exportiere Daten aus Tabelle dh-registry.users: ~10 rows (ungefähr)
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` (`id`, `institution_id`, `university`, `email`, `password`, `email_verified`, `active`, `approved`, `is_admin`, `user_admin`, `last_login`, `password_token`, `email_token`, `approval_token`, `new_email`, `password_token_expires`, `email_token_expires`, `approval_token_expires`, `last_name`, `first_name`, `academic_title`, `telephone`, `authority`, `created`, `modified`) VALUES
+INSERT INTO `users` (`id`, `institution_id`, `institution`, `email`, `password`, `email_verified`, `active`, `approved`, `is_admin`, `user_admin`, `last_login`, `password_token`, `email_token`, `approval_token`, `new_email`, `password_token_expires`, `email_token_expires`, `approval_token_expires`, `last_name`, `first_name`, `academic_title`, `telephone`, `authority`, `created`, `modified`) VALUES
 	(1, 8, NULL, 'b.safradin@gmail.com', '8a8b603b0be1321a5bfe79e04e191b7e8baf1b3b', 1, 1, 1, 1, 1, '2014-08-21 22:39:13', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Safradin', 'Barbara', '', '0031652394270', NULL, '2014-07-24 12:49:03', '2014-08-21 22:39:13'),
-	(2, 20, NULL, 'hendrik.schmeer@yahoo.de', 'd703561752326f8d191f045b3e4f33555a273f5a', 1, 1, 1, 1, 1, '2014-08-29 15:29:16', NULL, '187500tmjr7qlnqx', NULL, 'hschmeer@smail.uni-koeln.de', NULL, '2014-08-17 13:11:40', NULL, 'Schmeer', 'Hendrik', '', '004915774090678', NULL, NULL, '2014-08-29 15:29:16'),
+	(2, 20, NULL, 'hendrik.schmeer@yahoo.de', 'fbf041b758ae335aeb1ff38b1092ee6e090cc4b5', 1, 1, 1, 1, 1, '2015-11-29 22:17:13', '831131c3d2l1fx4g', '187500tmjr7qlnqx', NULL, 'hschmeer@smail.uni-koeln.de', '2015-11-30 22:05:31', '2014-08-17 13:11:40', NULL, 'Schmeer', 'Hendrik', '', '004915774090678', NULL, NULL, '2015-11-29 22:17:13'),
 	(3, NULL, NULL, 'fien.danniau@ugent.be', NULL, 1, 1, 1, 0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Diannau', 'Fien', NULL, NULL, NULL, NULL, NULL),
 	(15, 1, NULL, 'scagliola@eshcc.eur.nl', NULL, 1, 1, 1, 1, 0, NULL, '037029yt4yyrg2uw', NULL, NULL, NULL, '2014-08-15 19:23:49', NULL, NULL, 'Scagliola', 'Stef', 'Dr. ', '', '', '2014-08-14 19:23:49', '2014-08-14 19:23:49'),
 	(16, 20, NULL, 'zoe.schubert@uni-koeln.de', NULL, 1, 1, 1, 1, 0, NULL, '037070djgfsduplu', NULL, NULL, NULL, '2014-08-15 19:24:30', NULL, NULL, 'Schubert', 'Zoe', '', '', '', '2014-08-14 19:24:30', '2014-08-14 19:24:30'),
