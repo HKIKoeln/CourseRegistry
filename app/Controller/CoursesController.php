@@ -28,9 +28,8 @@ class CoursesController extends AppController {
 		
 		$this->Auth->allow(array('index', 'reset'));
 		
-		if($this->request->is('requested') AND $this->request->params['action'] == 'map') {
+		if($this->request->is('requested') AND $this->request->params['action'] == 'map')
 			$this->Auth->allow(array('map'));
-		}
 	}
 	
 	
@@ -97,6 +96,13 @@ class CoursesController extends AppController {
 		));
 		
 		if(!empty($this->request->data['Course'])) {
+			// check the ID has been autorized correctly
+			$id = $this->Session->read('edit.Course.id');
+			if(!$id) $this->redirect(array(
+				'controller' => 'users',
+				'action' => 'dashboard'
+			));
+			
 			if(!$admin) {
 				$this->request->data['Course']['user_id'] = $this->Auth->user('id');
 				$this->request->data['Course']['id'] = $id;
@@ -114,6 +120,7 @@ class CoursesController extends AppController {
 			if($this->Course->validateAll($this->request->data)) {
 				$this->request->data = $this->Course->data;		// callback beforeValidate manipulates data
 				if($this->Course->saveAll($this->request->data, array('validate' => false))) {
+					$this->Session->delete('edit.Course.id');
 					$this->redirect(array(
 						'controller' => 'users',
 						'action' => 'dashboard'
@@ -124,6 +131,7 @@ class CoursesController extends AppController {
 			}
 		}else{
 			$this->request->data = $course;
+			$this->Session->write('edit.Course.id', $id);
 		}
 		
 		$this->_setOptions($admin);

@@ -24,13 +24,15 @@ class ProjectsController extends AppController {
 		$paginate = array(
 			'Project' => array(
 				'contain' => array(
-					'ProjectsInstitution' => array(
+					'ProjectInstitution' => array(
 						'Institution',
 						'InstitutionRole'
 					),
-					'ProjectsPerson' => array(
+					'ProjectPerson' => array(
 						'Person',
-						'PersonProjectRole'
+						'PersonProjectRole',
+						'PersonInstitutionRole',
+						'Institution'
 					),
 					'ProjectLink' => array('ProjectLinkType'),
 					'ProjectExternalIdentifier' => array('ExternalIdentifierType'),
@@ -42,6 +44,7 @@ class ProjectsController extends AppController {
 			)
 		);
 		$this->paginate = array_merge($this->paginate, $paginate);
+		
 		$this->Auth->allow(array('index', 'view', 'reset'));
 	}
 	
@@ -72,6 +75,63 @@ class ProjectsController extends AppController {
 		$this->set('_serialize', array('record'));
 	}
 	
+	
+	public function edit($id = null) {
+		if(empty($id)) $this->redirect(array(
+			'controller' => 'users',
+			'action' => 'dashboard'
+		));
+		
+		$admin = false;
+		$conditions = array('Project.id' => $id);
+		if(!$this->Auth->user('is_admin')) $conditions['Project.user_id'] = $this->Auth->user('id');
+		else $admin = true;
+		
+		// check autorisation beforehand
+		$project = $this->Project->find('first', array('conditions' => $conditions));
+		if(empty($project)) $this->redirect(array(
+			'controller' => 'users',
+			'action' => 'dashboard'
+		));
+		
+		if(!empty($this->request->data['Project'])) {
+			// check the ID has been autorized correctly
+			$id = $this->Session->read('edit.Project.id');
+			if(!$id) $this->redirect(array(
+				'controller' => 'users',
+				'action' => 'dashboard'
+			));
+			
+			if(!$admin) {
+				$this->request->data['Project']['user_id'] = $this->Auth->user('id');
+				$this->request->data['Project']['id'] = $id;
+				unset($this->request->data['Project']['created']);
+				unset($this->request->data['Project']['updated']);
+			}else{
+				if(empty($this->request->data['Project']['update'])) {
+					$this->request->data['Project']['updated'] = $project['Project']['updated'];
+				}
+			}
+			if($this->Project->validateAll($this->request->data)) {
+				$this->request->data = $this->Project->data;		// callback beforeValidate manipulates data
+				if($this->Project->saveAll($this->request->data, array('validate' => false))) {
+					$this->Session->delete('edit.Project.id');
+					$this->redirect(array(
+						'controller' => 'users',
+						'action' => 'dashboard'
+					));
+				}
+			}else{
+				$this->set('errors', $this->Project->validationErrors);
+			}
+		}else{
+			$this->request->data = $project;
+			$this->Session->write('edit.Project.id', $id);
+		}
+		
+		$this->_setOptions($admin);
+		$this->render('form');
+	}
 	
 	
 	public function index() {

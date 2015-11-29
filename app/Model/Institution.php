@@ -115,8 +115,12 @@ class Institution extends AppModel {
 			'foreignKey' => 'institution_id',
 			'dependent' => false
 		),
-		'ProjectsInstitution' => array(
-			'className' => 'ProjectsInstitution',
+		'ProjectInstitution' => array(
+			'className' => 'ProjectInstitution',
+			'foreignKey' => 'institution_id'
+		),
+		'ProjectPerson' => array(
+			'className' => 'ProjectPerson',
 			'foreignKey' => 'institution_id'
 		),
 		'InstitutionExternalIdentifier' => array(

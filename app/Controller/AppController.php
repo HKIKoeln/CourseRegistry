@@ -67,6 +67,8 @@ class AppController extends Controller {
 		if(isset($this->Security))	$this->Security->requireSecure = array();
 		
 		$this->set('modelName', $this->modelClass);
+		
+		if($this->request->params['action'] != 'edit') $this->Session->delete('edit');
 	}
 	
 	

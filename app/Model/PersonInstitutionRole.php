@@ -18,7 +18,7 @@
 
 App::uses('AppModel', 'Model');
 
-class PersonProjectRole extends AppModel {
+class PersonInstitutionRole extends AppModel {
 
 /**
  * Display field
@@ -30,7 +30,7 @@ class PersonProjectRole extends AppModel {
 	public $hasMany = array(
 		'ProjectPerson' => array(
 			'className' => 'ProjectPerson',
-			'foreignKey' => 'person_project_role_id'
+			'foreignKey' => 'person_institution_role_id'
 		)
 	);
 	

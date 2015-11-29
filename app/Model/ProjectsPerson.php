@@ -39,6 +39,14 @@ class ProjectsPerson extends AppModel {
 		'PersonProjectRole' => array(
 			'className' => 'PersonProjectRole',
 			'foreignKey' => 'person_project_role_id'
+		),
+		'PersonInstitutionRole' => array(
+			'className' => 'PersonInstitutionRole',
+			'foreignKey' => 'person_institution_role_id'
+		),
+		'Institution' => array(
+			'className' => 'Institution',
+			'foreignKey' => 'institution_id'
 		)
 	);
 	
