@@ -34,6 +34,23 @@ class Project extends AppModel {
 	
 	//public $order = 'Project.updated DESC';
 	
+	
+	public $belongsTo = array(
+		/*
+		'Country' => array(
+			'className' => 'Country',
+			'foreignKey' => 'country_id'
+		),
+		'City' => array(
+			'className' => 'City',
+			'foreignKey' => 'city_id'
+		),*/
+		'AppUser' => array(
+			'className' => 'AppUser',
+			'foreignKey' => 'user_id'
+		)
+	);
+	
 	public $hasMany = array(
 		'ProjectExternalIdentifier' => array(
 			'className' => 'ProjectExternalIdentifier',

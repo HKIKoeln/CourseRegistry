@@ -81,6 +81,11 @@ class AppUser extends User {
 			'className' => 'Course',
 			'foreignKey' => 'user_id',
 			'dependent' => false
+		),
+		'Project' => array(
+			'className' => 'Project',
+			'foreignKey' => 'user_id',
+			'dependent' => false
 		)
 	);
 	

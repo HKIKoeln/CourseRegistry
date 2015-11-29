@@ -10,6 +10,7 @@
 */
 
 // cake internal base url - will be prepended to Router::url(/foo/bar, $full = true) => https://dariah.uni-koeln.de/foo/bar
+// this URL must be declared as it cannot be retrieved otherwise when sending emails from cron/console
 Configure::write('App.fullBaseUrl', 'https://example.com');
 
 Configure::write('App.EmailSubjectPrefix', '[DH Course Registry]');

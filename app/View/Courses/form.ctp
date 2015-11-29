@@ -99,7 +99,7 @@ if(!empty($admin)) {
 }
 
 echo $this->Form->input('active', array('label' => 'publish'));
-echo $this->Form->input('name');
+echo $this->Form->input('name', array('type' => 'textarea'));
 echo $this->Form->input('course_type_id', array('empty' => ' -- none -- '));
 echo $this->Form->input('language_id', array('empty' => ' -- none -- '));
 echo $this->Form->input('access_requirements');

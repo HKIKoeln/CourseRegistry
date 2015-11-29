@@ -134,6 +134,75 @@ class ProjectsController extends AppController {
 	}
 	
 	
+	protected function _setOptions($admin = false) {
+		$users = array();
+		if($admin) $rawUsers = $this->Project->AppUser->find('all', array(
+			'contain' => array('Institution' => array('Country')),
+			'conditions' => array(
+				'AppUser.active' => 1
+			),
+			'order' => 'AppUser.last_name ASC'
+		));
+		if(!empty($rawUsers)) {
+			$countries = array();
+			foreach($rawUsers as $user) {
+				$entry = array($user['AppUser']['id'] => $user['AppUser']['name']);
+				if(empty($user['AppUser']['institution_id']) OR empty($user['Institution']['Country'])) {
+					$users = $users + $entry;
+				}else{
+					$country = $user['Institution']['Country']['name'];
+					if(isset($countries[$country])) $countries[$country] = $countries[$country] + $entry;
+					else $countries[$country] = $entry;
+				}
+			}
+			ksort($countries);
+			$users = $users + $countries;
+		}
+		$institutions = $this->Project->Institution->find('list', array(
+			'contain' => array('Country'),
+			'fields' => array('Institution.id', 'Institution.name', 'Country.name')
+		));
+		ksort($institutions);
+		
+		$this->_setTaxonomies();
+		
+		$this->set(compact(
+			'users',
+			'institutions',
+			'admin'
+		));
+	}
+	
+	
+	protected function _setTaxonomies() {
+		$tadirahObjects = $this->Project->TadirahObject->find('all', array('contain' => array()));
+		$tadirahObjectsList = Hash::combine($tadirahObjects, '{n}.TadirahObject.id', '{n}.TadirahObject.name');
+		$tadirahTechniques = $this->Project->TadirahTechnique->find('all', array('contain' => array()));
+		$tadirahTechniquesList = Hash::combine($tadirahTechniques, '{n}.TadirahTechnique.id', '{n}.TadirahTechnique.name');
+		$tadirahActivities = $this->Project->TadirahActivity->find('threaded', array(
+			'contain' => array(
+				'ParentTadirahActivity',
+				'TadirahTechnique'		// both needed for filter extension
+			)
+		));
+		$tadirahActivitiesList = $this->Project->TadirahActivity->find('list');
+		
+		$nwoDisciplines = $this->Project->NwoDiscipline->find('all', array('contain' => array()));
+		$nwoDisciplinesList = Hash::combine($nwoDisciplines, '{n}.NwoDiscipline.id', '{n}.NwoDiscipline.name');
+		
+		$this->set(compact(
+			'tadirahObjects',
+			'tadirahTechniques',
+			'tadirahActivities',
+			'tadirahActivitiesList',
+			'tadirahObjectsList',
+			'tadirahTechniquesList',
+			'nwoDisciplinesList',
+			'nwoDisciplines'
+		));
+	}
+	
+	
 	public function index() {
 		$filter = $this->_getFilter();
 		
@@ -174,6 +243,8 @@ class ProjectsController extends AppController {
 			'years' => $years,
 			'unitY' => floor(338 / $maxCount)
 		);
+		
+		if($this->Auth->user('is_admin')) $this->set('edit', true);
 		
 		$this->set(compact('records', 'chartData'));
 		$this->set('_serialize', array('records'));

@@ -98,7 +98,7 @@ class AppUsersController extends UsersController {
 		if($this->_isAdmin()) {
 			// admin dashboard
 			$unapproved = $this->AppUser->find('all', array(
-				'contain' => array('University'),
+				'contain' => array('Institution'),
 				'conditions' => array(
 					$this->modelClass . '.active' => 0,
 					$this->modelClass . '.approved' => 0
@@ -106,7 +106,7 @@ class AppUsersController extends UsersController {
 			));
 			
 			$invited = $this->AppUser->find('all', array(
-				'contain' => array('University'),
+				'contain' => array('Institution'),
 				'conditions' => array(
 					'OR' => array(
 						$this->modelClass . '.password IS NULL',

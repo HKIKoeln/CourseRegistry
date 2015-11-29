@@ -213,7 +213,8 @@ class CoursesController extends AppController {
 		}
 		$universities = $this->Course->Institution->find('list', array(
 			'contain' => array('Country'),
-			'fields' => array('Institution.id', 'Institution.name', 'Country.name')
+			'fields' => array('Institution.id', 'Institution.name', 'Country.name'),
+			'conditions' => array('Institution.is_university' => 1)
 		));
 		ksort($universities);
 		$languages = $this->Course->Language->find('list');
