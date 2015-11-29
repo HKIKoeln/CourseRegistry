@@ -101,7 +101,7 @@ function dh_project_people($obj = null, $record = array(), $fieldDef = array()) 
 			$name = (!empty($row['Person']['academic_grade'])) ? $row['Person']['academic_grade'] . ' ' : '';
 			$name .= (!empty($fname)) ? $fname . ' ' : '';
 			$name .= $row['Person']['name'];
-			$content .= $name . ' (' . $row['PersonRole']['name'] . '), <br>';
+			$content .= $name . ' (' . $row['PersonProjectRole']['name'] . '), <br>';
 		}
 	}
 	return $content;
