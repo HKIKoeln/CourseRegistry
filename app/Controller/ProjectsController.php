@@ -30,7 +30,7 @@ class ProjectsController extends AppController {
 					),
 					'ProjectsPerson' => array(
 						'Person',
-						'PersonRole'
+						'PersonProjectRole'
 					),
 					'ProjectLink' => array('ProjectLinkType'),
 					'ProjectExternalIdentifier' => array('ExternalIdentifierType'),
@@ -55,7 +55,7 @@ class ProjectsController extends AppController {
 				'ProjectExternalIdentifier',
 				'ProjectLink' => array('ProjectLinkType'),
 				'ProjectsPerson' => array(
-					'PersonRole', 'Person' => array('PersonExternalIdentifier')
+					'PersonProjectRole', 'Person' => array('PersonExternalIdentifier')
 				),
 				'ProjectsInstitution' => array(
 					'InstitutionRole', 'Institution' => array('InstitutionExternalIdentifier')
