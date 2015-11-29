@@ -22,12 +22,26 @@ $this->start('header');
 ?>
 <div id="header">
 	<?php
-	echo $this->Html->image('/img/logos/logoEhG_small.png', array(
-		'alt' => 'eHumanities Group',
-		'class' => 'left',
+	$logo = array(
+		'file' => 'DARIAH-EURGB-Klein.png',
+		'alt' => 'DARIAH-EU',
+		'url' => 'http://dariah.eu/',
+		'width' => 202,
+		'height' => 61
+	);
+	if($this->request->params['controller'] == 'projects') $logo = array(
+		'file' => 'logoEhG_small.png',
+		'alt' => 'The eHumanities Group',
 		'url' => 'https://www.knaw.nl/en/institutes/e-humanities-group',
 		'width' => 236,
 		'height' => 57
+	);	
+	echo $this->Html->image('/img/logos/' . $logo['file'], array(
+		'alt' => $logo['alt'],
+		'class' => 'left',
+		'url' => $logo['url'],
+		'width' => $logo['width'],
+		'height' => $logo['height']
 	));
 	?>
 	<div>
