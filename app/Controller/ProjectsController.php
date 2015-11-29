@@ -24,11 +24,11 @@ class ProjectsController extends AppController {
 		$paginate = array(
 			'Project' => array(
 				'contain' => array(
-					'ProjectInstitution' => array(
+					'ProjectsInstitution' => array(
 						'Institution',
 						'InstitutionRole'
 					),
-					'ProjectPerson' => array(
+					'ProjectsPerson' => array(
 						'Person',
 						'PersonProjectRole',
 						'PersonInstitutionRole',
