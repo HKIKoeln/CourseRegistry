@@ -28,8 +28,8 @@ class PersonProjectRole extends AppModel {
 	public $displayField = 'name';
 	
 	public $hasMany = array(
-		'ProjectPerson' => array(
-			'className' => 'ProjectPerson',
+		'ProjectsPerson' => array(
+			'className' => 'ProjectsPerson',
 			'foreignKey' => 'person_project_role_id'
 		)
 	);
