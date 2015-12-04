@@ -357,7 +357,7 @@ class AuthComponent extends Component {
 			}
 			return true;
 		}
-
+		
 		if (!$controller->request->is('ajax')) {
 			$this->flash($this->authError);
 			$this->Session->write('Auth.redirect', $controller->request->here(false));

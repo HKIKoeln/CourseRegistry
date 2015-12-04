@@ -136,6 +136,78 @@ class Project extends AppModel {
 	);
 	
 	
+	public function getSchema($mode = null) {
+		$metadataSkipList = array('id','created','updated','schema','active','review');
+		$schema = array();
+		$collection['Project'] = $this->schema();
+		$collection['ProjectLink'] = $this->ProjectLink->schema();
+		$collection['ProjectLinkType'] = $this->ProjectLink->ProjectLinkType->schema();
+		$collection['ProjectExternalIdentifier'] = $this->ProjectExternalIdentifier->schema();
+		$collection['ProjectsPerson'] = $this->ProjectsPerson->schema();
+		$collection['Person'] = $this->ProjectsPerson->Person->schema();
+		$collection['PersonProjectRole'] = $this->ProjectsPerson->PersonProjectRole->schema();
+		$collection['PersonExternalIdentifier'] = $this->ProjectsPerson->Person->PersonExternalIdentifier->schema();
+		$collection['ProjectsInstitution'] = $this->ProjectsInstitution->schema();
+		$collection['Institution'] = $this->ProjectsInstitution->Institution->schema();
+		$collection['InstitutionRole'] = $this->ProjectsInstitution->InstitutionRole->schema();
+		$collection['InstitutionExternalIdentifier'] = $this->ProjectsInstitution->Institution->InstitutionExternalIdentifier->schema();
+		$collection['NwoDiscipline'] = $this->NwoDiscipline->schema();
+		$collection['TadirahActivity'] = $this->TadirahActivity->schema();
+		$collection['TadirahTechnique'] = $this->TadirahTechnique->schema();
+		$collection['TadirahObject'] = $this->TadirahObject->schema();
+		$collection['ExternalIdentifierType'] = $this->ProjectsPerson->Person->PersonExternalIdentifier->ExternalIdentifierType->schema();
+		
+		switch($mode) {
+		case 'fielddefinition': break;
+		case 'fieldlist':
+			foreach($collection as $model => &$modelschema) {
+				foreach($modelschema as $field => $def) $modelschema[$field] = '';
+			}
+			break;
+		case 'metadata':
+		default:
+			foreach($collection as $model => &$modelschema) {
+				foreach($modelschema as $field => $def) {
+					$modelschema[$field] = '';
+					foreach($metadataSkipList as $skip)
+						if(	strpos($field, $skip) !== false
+						AND	$field != 'identifier'
+						AND $field != 'parent_id'
+						) unset($modelschema[$field]);
+				}
+			}
+			if(isset($collection['ExternalIdentifierType'])) {
+				unset($collection['ExternalIdentifierType']['project']);
+				unset($collection['ExternalIdentifierType']['person']);
+				unset($collection['ExternalIdentifierType']['institution']);
+				unset($collection['ExternalIdentifierType']['deprecated']);
+			}
+		}
+		
+		$schema['Project'] = $collection['Project'];
+		$schema['Project']['ProjectLink'] = $collection['ProjectLink'];
+		$schema['Project']['ProjectLink']['ProjectLinkType'] = $collection['ProjectLinkType'];
+		$schema['Project']['ProjectExternalIdentifier'] = $collection['ProjectExternalIdentifier'];
+		$schema['Project']['ProjectExternalIdentifier']['ExternalIdentifierType'] = $collection['ExternalIdentifierType'];
+		$schema['Project']['ProjectsPerson'] = $collection['ProjectsPerson'];
+		$schema['Project']['ProjectsPerson']['Person'] = $collection['Person'];
+		$schema['Project']['ProjectsPerson']['PersonProjectRole'] = $collection['PersonProjectRole'];
+		$schema['Project']['ProjectsPerson']['Person']['PersonExternalIdentifier'] = $collection['PersonExternalIdentifier'];
+		$schema['Project']['ProjectsPerson']['Person']['PersonExternalIdentifier']['ExternalIdentifierType'] = $collection['ExternalIdentifierType'];
+		$schema['Project']['ProjectsInstitution'] = $collection['ProjectsInstitution'];
+		$schema['Project']['ProjectsInstitution']['Institution'] = $collection['Institution'];
+		$schema['Project']['ProjectsInstitution']['InstitutionRole'] = $collection['InstitutionRole'];
+		$schema['Project']['ProjectsInstitution']['Institution']['InstitutionExternalIdentifier'] = $collection['InstitutionExternalIdentifier'];
+		$schema['Project']['ProjectsInstitution']['Institution']['InstitutionExternalIdentifier']['ExternalIdentifierType'] = $collection['ExternalIdentifierType'];
+		$schema['Project']['NwoDiscipline'] = $collection['NwoDiscipline'];
+		$schema['Project']['TadirahActivity'] = $collection['TadirahActivity'];
+		$schema['Project']['TadirahTechnique'] = $collection['TadirahTechnique'];
+		$schema['Project']['TadirahObject'] = $collection['TadirahObject'];
+		
+		return $schema;
+	}
+	
+	
 	
 }
 ?>

@@ -76,6 +76,14 @@ class ProjectsController extends AppController {
 	}
 	
 	
+	public function schema($mode = null) {
+		$schema = $this->Project->getSchema($mode);
+		//debug($schema);exit;
+		$this->set('DHOECT', $schema);
+		$this->set('_serialize', array('DHOECT'));
+	}
+	
+	
 	public function edit($id = null) {
 		if(empty($id)) $this->redirect(array(
 			'controller' => 'users',
