@@ -21,7 +21,7 @@ CREATE TABLE IF NOT EXISTS `cities` (
   CONSTRAINT `FK_cities_countries` FOREIGN KEY (`country_id`) REFERENCES `countries` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=110 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
--- Exportiere Daten aus Tabelle dh-registry.cities: ~49 rows (ungefähr)
+-- Exportiere Daten aus Tabelle dh-registry.cities: ~51 rows (ungefähr)
 /*!40000 ALTER TABLE `cities` DISABLE KEYS */;
 INSERT INTO `cities` (`id`, `country_id`, `name`) VALUES
 	(1, 1, 'Rotterdam'),
@@ -3995,17 +3995,17 @@ CREATE TABLE IF NOT EXISTS `users` (
 
 -- Exportiere Daten aus Tabelle dh-registry.users: ~10 rows (ungefähr)
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` (`id`, `institution_id`, `institution`, `email`, `password`, `email_verified`, `active`, `approved`, `is_admin`, `user_admin`, `last_login`, `password_token`, `email_token`, `approval_token`, `new_email`, `password_token_expires`, `email_token_expires`, `approval_token_expires`, `last_name`, `first_name`, `academic_title`, `telephone`, `authority`, `created`, `modified`) VALUES
-	(1, 8, NULL, 'b.safradin@gmail.com', '8a8b603b0be1321a5bfe79e04e191b7e8baf1b3b', 1, 1, 1, 1, 1, '2014-08-21 22:39:13', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Safradin', 'Barbara', '', '0031652394270', NULL, '2014-07-24 12:49:03', '2014-08-21 22:39:13'),
-	(2, 20, NULL, 'hendrik.schmeer@yahoo.de', 'fbf041b758ae335aeb1ff38b1092ee6e090cc4b5', 1, 1, 1, 1, 1, '2015-12-04 00:19:58', '831131c3d2l1fx4g', '187500tmjr7qlnqx', NULL, 'hschmeer@smail.uni-koeln.de', '2015-11-30 22:05:31', '2014-08-17 13:11:40', NULL, 'Schmeer', 'Hendrik', '', '004915774090678', NULL, NULL, '2015-12-04 00:19:58'),
-	(3, NULL, NULL, 'fien.danniau@ugent.be', NULL, 1, 1, 1, 0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Diannau', 'Fien', NULL, NULL, NULL, NULL, NULL),
-	(15, 1, NULL, 'scagliola@eshcc.eur.nl', NULL, 1, 1, 1, 1, 0, NULL, '037029yt4yyrg2uw', NULL, NULL, NULL, '2014-08-15 19:23:49', NULL, NULL, 'Scagliola', 'Stef', 'Dr. ', '', '', '2014-08-14 19:23:49', '2014-08-14 19:23:49'),
-	(16, 20, NULL, 'zoe.schubert@uni-koeln.de', NULL, 1, 1, 1, 1, 0, NULL, '037070djgfsduplu', NULL, NULL, NULL, '2014-08-15 19:24:30', NULL, NULL, 'Schubert', 'Zoe', '', '', '', '2014-08-14 19:24:30', '2014-08-14 19:24:30'),
-	(18, 8, NULL, 'J.deKruif@uu.nl', NULL, 1, 1, 0, 0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'de Kruif', 'José', 'Dr.', '0031302537867', NULL, NULL, NULL),
-	(20, 1, NULL, 'menchentrevino@eshcc.eur.nl', NULL, 1, 1, 1, 0, 0, NULL, '267123bf2ws99ee1', NULL, NULL, NULL, '2014-08-18 11:18:43', NULL, NULL, 'Menchen Trevino', 'Ericka', 'Dr.', '+31 408 8627', '* for the course Digital research methods', '2014-08-17 11:18:43', '2014-08-17 11:20:59'),
-	(21, 8, NULL, 'A.S.Lehmann@uu.nl', NULL, 1, 1, 0, 0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Lehmann', 'Ann-Sophie', 'Dr.', NULL, NULL, NULL, NULL),
-	(23, 20, NULL, 'manfred.thaller@uni-koeln.de', '47e4f42701b485530ea29bd5cc1cad204a356d9b', 1, 1, 1, 1, 0, '2014-08-21 16:35:04', '', NULL, NULL, NULL, NULL, NULL, NULL, 'Thaller', 'Manfred', 'Professor', '00492214707736', 'Project Coordinator', '2014-08-20 12:09:05', '2014-08-21 16:35:04'),
-	(25, 4, NULL, 'malvina.nissim@unibo.it', NULL, 1, 1, 1, 0, 0, NULL, '653803jnywaiq9ks', NULL, NULL, NULL, '2014-08-22 22:43:23', NULL, NULL, 'Nissim', 'Malvina', '', '', '', '2014-08-21 22:43:23', '2014-08-21 22:43:23');
+INSERT INTO `users` (`id`, `user_role_id`, `institution_id`, `institution`, `email`, `password`, `email_verified`, `active`, `approved`, `is_admin`, `user_admin`, `last_login`, `password_token`, `email_token`, `approval_token`, `new_email`, `password_token_expires`, `email_token_expires`, `approval_token_expires`, `last_name`, `first_name`, `academic_title`, `telephone`, `authority`, `created`, `modified`) VALUES
+	(1, NULL, 8, NULL, 'b.safradin@gmail.com', '8a8b603b0be1321a5bfe79e04e191b7e8baf1b3b', 1, 1, 1, 1, 1, '2014-08-21 22:39:13', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Safradin', 'Barbara', '', '0031652394270', NULL, '2014-07-24 12:49:03', '2014-08-21 22:39:13'),
+	(2, NULL, 20, NULL, 'hendrik.schmeer@yahoo.de', 'fbf041b758ae335aeb1ff38b1092ee6e090cc4b5', 1, 1, 1, 1, 1, '2015-12-04 00:19:58', '831131c3d2l1fx4g', '187500tmjr7qlnqx', NULL, 'hschmeer@smail.uni-koeln.de', '2015-11-30 22:05:31', '2014-08-17 13:11:40', NULL, 'Schmeer', 'Hendrik', '', '004915774090678', NULL, NULL, '2015-12-04 00:19:58'),
+	(3, NULL, NULL, NULL, 'fien.danniau@ugent.be', NULL, 1, 1, 1, 0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Diannau', 'Fien', NULL, NULL, NULL, NULL, NULL),
+	(15, NULL, 1, NULL, 'scagliola@eshcc.eur.nl', NULL, 1, 1, 1, 1, 0, NULL, '037029yt4yyrg2uw', NULL, NULL, NULL, '2014-08-15 19:23:49', NULL, NULL, 'Scagliola', 'Stef', 'Dr. ', '', '', '2014-08-14 19:23:49', '2014-08-14 19:23:49'),
+	(16, NULL, 20, NULL, 'zoe.schubert@uni-koeln.de', NULL, 1, 1, 1, 1, 0, NULL, '037070djgfsduplu', NULL, NULL, NULL, '2014-08-15 19:24:30', NULL, NULL, 'Schubert', 'Zoe', '', '', '', '2014-08-14 19:24:30', '2014-08-14 19:24:30'),
+	(18, NULL, 8, NULL, 'J.deKruif@uu.nl', NULL, 1, 1, 0, 0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'de Kruif', 'José', 'Dr.', '0031302537867', NULL, NULL, NULL),
+	(20, NULL, 1, NULL, 'menchentrevino@eshcc.eur.nl', NULL, 1, 1, 1, 0, 0, NULL, '267123bf2ws99ee1', NULL, NULL, NULL, '2014-08-18 11:18:43', NULL, NULL, 'Menchen Trevino', 'Ericka', 'Dr.', '+31 408 8627', '* for the course Digital research methods', '2014-08-17 11:18:43', '2014-08-17 11:20:59'),
+	(21, NULL, 8, NULL, 'A.S.Lehmann@uu.nl', NULL, 1, 1, 0, 0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Lehmann', 'Ann-Sophie', 'Dr.', NULL, NULL, NULL, NULL),
+	(23, NULL, 20, NULL, 'manfred.thaller@uni-koeln.de', '47e4f42701b485530ea29bd5cc1cad204a356d9b', 1, 1, 1, 1, 0, '2014-08-21 16:35:04', '', NULL, NULL, NULL, NULL, NULL, NULL, 'Thaller', 'Manfred', 'Professor', '00492214707736', 'Project Coordinator', '2014-08-20 12:09:05', '2014-08-21 16:35:04'),
+	(25, NULL, 4, NULL, 'malvina.nissim@unibo.it', NULL, 1, 1, 1, 0, 0, NULL, '653803jnywaiq9ks', NULL, NULL, NULL, '2014-08-22 22:43:23', NULL, NULL, 'Nissim', 'Malvina', '', '', '', '2014-08-21 22:43:23', '2014-08-21 22:43:23');
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
 /*!40014 SET FOREIGN_KEY_CHECKS=IF(@OLD_FOREIGN_KEY_CHECKS IS NULL, 1, @OLD_FOREIGN_KEY_CHECKS) */;
