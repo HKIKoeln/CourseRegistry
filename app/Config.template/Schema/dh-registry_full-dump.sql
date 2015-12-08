@@ -268,6 +268,24 @@ INSERT INTO `courses` (`id`, `user_id`, `active`, `created`, `updated`, `name`, 
 /*!40000 ALTER TABLE `courses` ENABLE KEYS */;
 
 
+-- Exportiere Struktur von Tabelle dh-registry.courses_nwo_disciplines
+DROP TABLE IF EXISTS `courses_nwo_disciplines`;
+CREATE TABLE IF NOT EXISTS `courses_nwo_disciplines` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `nwo_discipline_id` int(11) NOT NULL,
+  `course_id` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `FK_1_idx` (`course_id`),
+  KEY `FK_2_idx` (`nwo_discipline_id`),
+  CONSTRAINT `FK_courses_nwo_discipliens_courses` FOREIGN KEY (`course_id`) REFERENCES `courses` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `FK_courses_nwo_disciplines_nwo_disciplines` FOREIGN KEY (`nwo_discipline_id`) REFERENCES `nwo_disciplines` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- Exportiere Daten aus Tabelle dh-registry.courses_nwo_disciplines: ~0 rows (ungefähr)
+/*!40000 ALTER TABLE `courses_nwo_disciplines` DISABLE KEYS */;
+/*!40000 ALTER TABLE `courses_nwo_disciplines` ENABLE KEYS */;
+
+
 -- Exportiere Struktur von Tabelle dh-registry.courses_tadirah_activities
 DROP TABLE IF EXISTS `courses_tadirah_activities`;
 CREATE TABLE IF NOT EXISTS `courses_tadirah_activities` (
@@ -641,8 +659,8 @@ CREATE TABLE IF NOT EXISTS `institutions` (
   `address` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `lon` decimal(10,6) DEFAULT NULL,
   `lat` decimal(10,6) DEFAULT NULL,
-  `created` datetime DEFAULT CURRENT_TIMESTAMP,
-  `updated` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `created` datetime DEFAULT NULL,
+  `updated` datetime DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `FK_institutions_cities` (`city_id`),
   KEY `FK_institutions_countries` (`country_id`),
@@ -1177,8 +1195,8 @@ CREATE TABLE IF NOT EXISTS `people` (
   `name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `academic_grade` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `email` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `created` datetime DEFAULT CURRENT_TIMESTAMP,
-  `updated` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `created` datetime DEFAULT NULL,
+  `updated` datetime DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `FK__users` (`user_id`),
   CONSTRAINT `FK__users` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON UPDATE CASCADE
@@ -2118,8 +2136,8 @@ CREATE TABLE IF NOT EXISTS `projects` (
   `user_id` int(11) DEFAULT NULL COMMENT 'the user this record is assigned to for maintenance',
   `parent_id` int(11) DEFAULT NULL,
   `has_subprojects` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'check this to have this project in a ''select parent project'' dropdown element',
-  `created` datetime DEFAULT CURRENT_TIMESTAMP,
-  `updated` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `created` datetime DEFAULT NULL,
+  `updated` datetime DEFAULT NULL,
   `name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `description` text COLLATE utf8_unicode_ci,
   `is_phd` tinyint(1) NOT NULL DEFAULT '0',
@@ -3957,6 +3975,7 @@ INSERT INTO `tadirah_techniques` (`id`, `name`, `description`) VALUES
 DROP TABLE IF EXISTS `users`;
 CREATE TABLE IF NOT EXISTS `users` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_role_id` int(11) DEFAULT NULL,
   `institution_id` int(11) DEFAULT NULL,
   `institution` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT 'temporary value provided during registration, if the university is not in the list yet',
   `email` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
@@ -3990,7 +4009,9 @@ CREATE TABLE IF NOT EXISTS `users` (
   KEY `email_reset_token` (`email_token`),
   KEY `password_reset_token` (`password_token`),
   KEY `FK_users_institutions` (`institution_id`),
-  CONSTRAINT `FK_users_institutions` FOREIGN KEY (`institution_id`) REFERENCES `institutions` (`id`) ON UPDATE CASCADE
+  KEY `FK_users_user_roles_idx` (`user_role_id`),
+  CONSTRAINT `FK_users_institutions` FOREIGN KEY (`institution_id`) REFERENCES `institutions` (`id`) ON UPDATE CASCADE,
+  CONSTRAINT `FK_users_user_roles` FOREIGN KEY (`user_role_id`) REFERENCES `user_roles` (`id`) ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=26 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='Deprecated as this will be moved to the DARIAH AAI.\r\nCopy the non-auth relevant fields to a new table ''persons'', connect both records 1:1:\r\n    last_name\r\n    first_name\r\n    academic_grade\r\n    university_id -> institution_id\r\n    university\r\n';
 
 -- Exportiere Daten aus Tabelle dh-registry.users: ~10 rows (ungefähr)
@@ -4007,6 +4028,19 @@ INSERT INTO `users` (`id`, `user_role_id`, `institution_id`, `institution`, `ema
 	(23, NULL, 20, NULL, 'manfred.thaller@uni-koeln.de', '47e4f42701b485530ea29bd5cc1cad204a356d9b', 1, 1, 1, 1, 0, '2014-08-21 16:35:04', '', NULL, NULL, NULL, NULL, NULL, NULL, 'Thaller', 'Manfred', 'Professor', '00492214707736', 'Project Coordinator', '2014-08-20 12:09:05', '2014-08-21 16:35:04'),
 	(25, NULL, 4, NULL, 'malvina.nissim@unibo.it', NULL, 1, 1, 1, 0, 0, NULL, '653803jnywaiq9ks', NULL, NULL, NULL, '2014-08-22 22:43:23', NULL, NULL, 'Nissim', 'Malvina', '', '', '', '2014-08-21 22:43:23', '2014-08-21 22:43:23');
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
+
+
+-- Exportiere Struktur von Tabelle dh-registry.user_roles
+DROP TABLE IF EXISTS `user_roles`;
+CREATE TABLE IF NOT EXISTS `user_roles` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- Exportiere Daten aus Tabelle dh-registry.user_roles: ~0 rows (ungefähr)
+/*!40000 ALTER TABLE `user_roles` DISABLE KEYS */;
+/*!40000 ALTER TABLE `user_roles` ENABLE KEYS */;
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
 /*!40014 SET FOREIGN_KEY_CHECKS=IF(@OLD_FOREIGN_KEY_CHECKS IS NULL, 1, @OLD_FOREIGN_KEY_CHECKS) */;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
