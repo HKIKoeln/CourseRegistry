@@ -45,7 +45,7 @@ class ProjectsController extends AppController {
 		);
 		$this->paginate = array_merge($this->paginate, $paginate);
 		
-		$this->Auth->allow(array('index', 'view', 'reset'));
+		$this->Auth->allow(array('index', 'view', 'reset', 'schema'));
 	}
 	
 	
@@ -55,13 +55,20 @@ class ProjectsController extends AppController {
 		$record = $this->Project->find('first', array(
 			'conditions' => array('Project.id' => $id),
 			'contain' => array(
-				'ProjectExternalIdentifier',
+				'ParentProject',
+				'ChildProject',
+				'ProjectExternalIdentifier' => array('ExternalIdentifierType'),
 				'ProjectLink' => array('ProjectLinkType'),
 				'ProjectsPerson' => array(
-					'PersonProjectRole', 'Person' => array('PersonExternalIdentifier')
+					'PersonProjectRole', 'Person' => array(
+						'PersonExternalIdentifier' => array('ExternalIdentifierType')
+					)
 				),
 				'ProjectsInstitution' => array(
-					'InstitutionRole', 'Institution' => array('InstitutionExternalIdentifier')
+					'InstitutionRole', 'Institution' => array(
+						'InstitutionExternalIdentifier' => array('ExternalIdentifierType'),
+						'City', 'Country'
+					)
 				),
 				'TadirahActivity',
 				'TadirahTechnique',
@@ -71,7 +78,6 @@ class ProjectsController extends AppController {
 		));
 		if(empty($record)) $this->redirect('index');
 		$this->set('record', $record);
-		// TODO: make a non-data view
 		$this->set('_serialize', array('record'));
 	}
 	

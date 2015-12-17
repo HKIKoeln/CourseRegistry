@@ -36,20 +36,24 @@ class Project extends AppModel {
 	
 	
 	public $belongsTo = array(
-		/*
-		'Country' => array(
-			'className' => 'Country',
-			'foreignKey' => 'country_id'
-		),
-		'City' => array(
-			'className' => 'City',
-			'foreignKey' => 'city_id'
-		),*/
 		'AppUser' => array(
 			'className' => 'AppUser',
 			'foreignKey' => 'user_id'
+		),
+		'ParentProject' => array(
+			'className' => 'Project',
+			'foreignKey' => 'parent_id'
 		)
 	);
+	
+	public function afterFind($results, $primary = false) {
+		if(	$primary === true
+		AND isset($results[0]['ParentProject'])
+		AND	empty($results[0]['ParentProject']['id'])) {
+			unset($results[0]['ParentProject']);
+		}
+		return $results;
+	}
 	
 	public $hasMany = array(
 		'ProjectExternalIdentifier' => array(
@@ -67,6 +71,10 @@ class Project extends AppModel {
 		'ProjectsPerson' => array(
 			'className' => 'ProjectsPerson',
 			'foreignKey' => 'project_id'
+		),
+		'ChildProject' => array(
+			'className' => 'Project',
+			'foreignKey' => 'parent_id'
 		)
 	);
 	
