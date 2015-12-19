@@ -290,6 +290,12 @@ $col_min_height: 400px;
 			border: 1px solid #ccc;
 			padding: 8px;
 			font-size: 90%;
+			&.view {
+				border: none;
+			}
+			.top {
+				margin-bottom: 10px;
+			}
 		}
 	}
 }

@@ -27,23 +27,22 @@ include_once(APPLIBS.'project_display_functions.php');
 function dh_project_links($view = null, $record = array(), $fieldDef = array()) {
 	$modelData = getModelData('ProjectLink', $record);
 	$content = null;
-	if(!empty($modelData)) {
-		foreach($modelData as $k => $row) {
-			$title = (!empty($row['title'])) ? $row['title'] : null;
-			$descr = (!empty($row['description'])) ? $row['description'] : null;
-			if(!empty($row['url'])) {
-				if($title == $record['Project']['name'] OR empty($title))
-					$title = ucwords($row['ProjectLinkType']['name']);
-				$content .= $view->Html->link($title, $row['url'], array(
-					'target' => 'blank',
-					'title' => $descr
-				));
-				$content .= '<br>';
-			}else{
-				if(empty($descr)) $descr = $title;
-				$title = ucwords($row['ProjectLinkType']['name']) . ': <br>' . $descr;
-				$content .= $title . '<br>';
-			}
+	if(empty($modelData)) return null;
+	foreach($modelData as $k => $row) {
+		$title = (!empty($row['title'])) ? $row['title'] : null;
+		$descr = (!empty($row['description'])) ? $row['description'] : null;
+		if(!empty($row['url'])) {
+			if($title == $record['Project']['name'] OR empty($title))
+				$title = ucwords($row['ProjectLinkType']['name']);
+			$content .= $view->Html->link($title, $row['url'], array(
+				'target' => 'blank',
+				'title' => $descr
+			));
+			$content .= '<br>';
+		}else{
+			if(empty($descr)) $descr = $title;
+			$title = ucwords($row['ProjectLinkType']['name']) . ': <br>' . $descr;
+			$content .= $title . '<br>';
 		}
 	}
 	return $content;
@@ -52,32 +51,59 @@ function dh_project_links($view = null, $record = array(), $fieldDef = array()) 
 
 function dh_project_institutions($view = null, $record = array(), $fieldDef = array()) {
 	$modelData = getModelData('ProjectsInstitution', $record);
-	$content = null;
+	$content = $output = null;
+	if(empty($modelData)) return null;
 	// get ready to pull the identifiers:
-	$fieldDef['modelName'] = 'ProjectExternalIdentifier';
-	if(!empty($modelData)) {
-		foreach($modelData as $k => $row) {
-			$content .= $row['Institution']['name'] . ' (' . $row['InstitutionRole']['name'] . '), <br>';
-			//$content .= '<span style="padding-left: 10px;">' . dh_identifiers($view, $record, $fieldDef) . '</span>';
-		}
+	$fieldDef['modelName'] = 'InstitutionExternalIdentifier';
+	foreach($modelData as $k => $row) {
+		$content = $row['Institution']['name'];
+		$location = dh_location($view, $row['Institution']);
+		if(!empty($location))
+			$content .= ',<br>' . $location;
+		if(!empty($row['InstitutionRole']['name']))
+			$content .= ' (' . $row['InstitutionRole']['name'] . ')';
+		$identifiers = dh_identifiers($view, $row['Institution'], $fieldDef);
+		if(!empty($identifiers))
+			$content .= '<br><span style="padding-left: 10px; display: block;">' . $identifiers . '</span>';
+		if(!empty($content)) $output .= '<p>' . $content . '</p>';
 	}
-	return $content;
+	return $output;
+}
+
+
+function dh_location($view = null, $record = array(), $fieldDef = array()) {
+	$output = array();
+	if(empty($record)) return null;
+	if(!empty($record['Country']['name']))
+		$output[] = $record['Country']['name'];
+	if(!empty($record['City']['name']))
+		$output[] = $record['City']['name'];
+	
+	return (empty($output)) ? null : implode(', ', $output);
 }
 
 
 function dh_project_people($view = null, $record = array(), $fieldDef = array()) {
 	$modelData = getModelData('ProjectsPerson', $record);
-	$content = null;
-	if(!empty($modelData)) {
-		foreach($modelData as $k => $row) {
-			$fname = (!empty($row['Person']['first_name'])) ? $row['Person']['first_name'] : $row['Person']['initials'];
-			$name = (!empty($row['Person']['academic_grade'])) ? $row['Person']['academic_grade'] . ' ' : '';
-			$name .= (!empty($fname)) ? $fname . ' ' : '';
-			$name .= $row['Person']['name'];
-			$content .= $name . ' (' . $row['PersonProjectRole']['name'] . '), <br>';
-		}
+	$content = $output = null;
+	if(empty($modelData)) return null;
+	// get ready to pull the identifiers:
+	$fieldDef['modelName'] = 'PersonExternalIdentifier';
+	foreach($modelData as $k => $row) {
+		$content = $firstname = $name = null;
+		$firstname = (!empty($row['Person']['first_name'])) ? $row['Person']['first_name'] : $row['Person']['initials'];
+		$name = (!empty($row['Person']['academic_grade'])) ? $row['Person']['academic_grade'] . ' ' : '';
+		$name .= (!empty($firstname)) ? $firstname . ' ' : '';
+		if(!empty($row['Person']['name'])) $name .= $row['Person']['name'];
+		$content = $name;
+		if(!empty($row['PersonProjectRole']['name']))
+			$content .= ' (' . $row['PersonProjectRole']['name'] . ')';
+		$identifiers = dh_identifiers($view, $row['Person'], $fieldDef);
+		if(!empty($identifiers))
+			$content .= '<br><span style="padding-left: 10px; display: block;">' . $identifiers . '</span>';
+		if(!empty($content)) $output .= '<p>' . $content . '</p>';
 	}
-	return $content;
+	return $output;
 }
 
 
@@ -86,22 +112,29 @@ function dh_identifiers($view = null, $record = array(), $fieldDef = array()) {
 	$modelName = $fieldDef['modelName'];
 	$modelData = getModelData($modelName, $record);
 	$content = null;
+	$output = array();
 	if(!empty($modelData)) {
 		foreach($modelData as $k => $row) {
 			$identifier = (!$row['ExternalIdentifierType']['schema_remove_prefix'])
 				? $row['identifier']
 				: str_replace($row['ExternalIdentifierType']['prefix'], '', $row['identifier']);
-			$href = $row['ExternalIdentifierType']['schema'] . $identifier;
-			$content .= $row['ExternalIdentifierType']['name'] . ': ';
-			$content .= $view->Html->link($row['identifier'], $href, array('target' => 'blank')) . '<br>';
+			if(strpos($row['ExternalIdentifierType']['schema'], '##ID##') === false) {
+				$href = $row['ExternalIdentifierType']['schema'] . $identifier;
+			}else{
+				$href = str_replace('##ID##', $identifier, $row['ExternalIdentifierType']['schema']);
+			}
+			$content = $row['ExternalIdentifierType']['name'] . ': ';
+			$content .= $view->Html->link($row['identifier'], $href, array('target' => 'blank'));
+			$output[] = $content;
 		}
 	}
 	if($modelName == 'ProjectExternalIdentifier') {
 		$href = '/projects/view/' . $record['Project']['id'];
-		$content .= 'DARIAH-PROJECT_ID: ';
+		$content = 'DARIAH-PROJECT_ID: ';
 		$content .= $view->Html->link($record['Project']['id'], $href);
+		$output[] = $content;
 	}
-	return $content;
+	return (empty($output)) ? null : implode('<br>', $output);
 }
 
 
@@ -117,8 +150,28 @@ function dh_tags($view = null, $record = array(), $fieldDef = array()) {
 }
 
 
+function dh_get_parent($view = null, $record = array(), $fieldDef = array()) {
+	$modelData = getModelData('ParentProject', $record);
+	if(empty($modelData)) return null;
+	$href = '/projects/view/' . $modelData['id'];
+	return $view->Html->link($modelData['name'], $href);
+}
+
+
+function dh_get_children($view = null, $record = array(), $fieldDef = array()) {
+	$modelData = getModelData('ChildProject', $record);
+	if(empty($modelData)) return null;
+	$output = array();
+	foreach($modelData as $key => $row) {
+		$href = '/projects/view/' . $row['id'];
+		$output[] = $view->Html->link($row['name'], $href);
+	}
+	return (empty($output)) ? null : implode('<br>', $output);
+}
+
+
 function getModelData($modelName = null, $data = array()) {
-	$modelData = $data;
+	$modelData = array();
 	if(isset($data[$modelName])) $modelData = $data[$modelName];
 	return $modelData;
 }

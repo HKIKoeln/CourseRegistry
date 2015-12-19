@@ -29,22 +29,8 @@ $toggle = ($showDetails) ? ''
 	class="<?php echo $classname; ?>"
 	>
 	<td colspan="<?php echo $colspan; ?>">
-		<p class="strong">Details</p>
 		<div class="record_details">
-			<div class="left narrow">
-				<?php
-				if(!empty($detailsFieldlist['left'])) {
-					echo $this->element('definitionlist', array('fieldlist' => $detailsFieldlist['left']));
-				}
-				?>
-			</div>
-			<div class="left wide">
-				<?php
-				if(!empty($detailsFieldlist['right'])) {
-					echo $this->element('definitionlist', array('fieldlist' => $detailsFieldlist['right']));
-				}
-				?>
-			</div>
+			<?php echo $this->element('projects/view'); ?>
 		</div>
 	</td>
 </tr>

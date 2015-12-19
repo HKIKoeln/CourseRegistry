@@ -16,17 +16,27 @@ $fieldlist = array(
 	)
 );
 $detailsFieldlist = array(
+	'top' => array(
+		'Project.description' => array('label' => 'Description')
+	),
 	'left' => array(
+		'Project.parent_project' => array(
+			'label' => 'ParentProject',
+			'display' => 'dh_get_parent'
+		),
+		'Project.child_projects' => array(
+			'label' => 'Sub-Projects',
+			'display' => 'dh_get_children'
+		),
 		'Project.links' => array('display' => 'dh_project_links'),
-		'Project.institutions' => array('display' => 'dh_project_institutions'),
-		'Project.persons' => array('display' => 'dh_project_people'),
 		'Project.identifiers' => array(
 			'display' => 'dh_identifiers',
 			'modelName' => 'ProjectExternalIdentifier'
-		)
+		),
+		'Project.institutions' => array('display' => 'dh_project_institutions'),
+		'Project.persons' => array('display' => 'dh_project_people')
 	),
 	'right' => array(
-		'Project.description' => array('label' => 'Description'),
 		'Project.disciplines' => array(
 			'display' => 'dh_tags',
 			'modelName' => 'NwoDiscipline'

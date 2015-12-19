@@ -79,6 +79,7 @@ class ProjectsController extends AppController {
 		if(empty($record)) $this->redirect('index');
 		$this->set('record', $record);
 		$this->set('_serialize', array('record'));
+		
 	}
 	
 	

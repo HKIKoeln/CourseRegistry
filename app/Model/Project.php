@@ -46,6 +46,7 @@ class Project extends AppModel {
 		)
 	);
 	
+	// bugfix workaround - Containable was returning a complete Project array of null values!
 	public function afterFind($results, $primary = false) {
 		if(	$primary === true
 		AND isset($results[0]['ParentProject'])

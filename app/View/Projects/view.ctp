@@ -18,65 +18,57 @@
  
 include_once(APPLIBS.'project_display_functions.php');
  
-$top = array(
-	'Project.name' => array('class' => 'strong'),
-	'Project.description' => array('label' => 'Description')
-);
-$left = array(
-	'Project.start_date' => array('label' => 'Start Date'),
-	'Project.end_date' => array('label' => 'End Date'),
-	'Project.is_phd' => array(
-		'label' => 'PhD Project',
-		'display' => 'bool'
+$detailsFieldlist = array(
+	'top' => array(
+		'Project.name' => array('class' => 'strong'),
+		'Project.description' => array('label' => 'Description')
 	),
-	'Project.links' => array('display' => 'dh_project_links'),
-	'Project.institutions' => array('display' => 'dh_project_institutions'),
-	'Project.persons' => array('display' => 'dh_project_people'),
-	'Project.identifiers' => array(
-		'display' => 'dh_identifiers',
-		'modelName' => 'ProjectExternalIdentifier'
-	)
-);
-$right = array(
-	'Project.disciplines' => array(
-		'display' => 'dh_tags',
-		'modelName' => 'NwoDiscipline'
+	'left' => array(
+		'Project.parent_project' => array(
+			'label' => 'ParentProject',
+			'display' => 'dh_get_parent'
+		),
+		'Project.child_projects' => array(
+			'label' => 'Sub-Projects',
+			'display' => 'dh_get_children'
+		),
+		'Project.links' => array('display' => 'dh_project_links'),
+		'Project.identifiers' => array(
+			'display' => 'dh_identifiers',
+			'modelName' => 'ProjectExternalIdentifier'
+		),
+		'Project.institutions' => array('display' => 'dh_project_institutions'),
+		'Project.persons' => array('display' => 'dh_project_people'),
 	),
-	'Project.activities' => array(
-		'display' => 'dh_tags',
-		'modelName' => 'TadirahActivity'
-	),
-	'Project.techniques' => array(
-		'display' => 'dh_tags',
-		'modelName' => 'TadirahTechnique'
-	),
-	'Project.objects' => array(
-		'display' => 'dh_tags',
-		'modelName' => 'TadirahObject'
+	'right' => array(
+		'Project.start_date' => array('label' => 'Start Date'),
+		'Project.end_date' => array('label' => 'End Date'),
+		'Project.is_phd' => array(
+			'label' => 'PhD Project',
+			'display' => 'bool'
+		),
+		'Project.disciplines' => array(
+			'display' => 'dh_tags',
+			'modelName' => 'NwoDiscipline'
+		),
+		'Project.activities' => array(
+			'display' => 'dh_tags',
+			'modelName' => 'TadirahActivity'
+		),
+		'Project.techniques' => array(
+			'display' => 'dh_tags',
+			'modelName' => 'TadirahTechnique'
+		),
+		'Project.objects' => array(
+			'display' => 'dh_tags',
+			'modelName' => 'TadirahObject'
+		)
 	)
 );
 $this->set(compact('fieldlist', 'detailsFieldlist'));
 ?>
-<div class="record_details">
-	<div class="top">
-		<?php
-		if(!empty($left)) {
-			echo $this->element('definitionlist', array('fieldlist' => $top));
-		}
-		?>
-	</div>
-	<div class="left half">
-		<?php
-		if(!empty($left)) {
-			echo $this->element('definitionlist', array('fieldlist' => $left));
-		}
-		?>
-	</div>
-	<div class="left half">
-		<?php
-		if(!empty($right)) {
-			echo $this->element('definitionlist', array('fieldlist' => $right));
-		}
-		?>
-	</div>
+<div class="view record_details">
+<?php echo $this->element('projects/view'); ?>
 </div>
+
+
