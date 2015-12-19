@@ -127,11 +127,11 @@ if($this->action === 'add' AND !empty($auth_user) AND !empty($auth_user['institu
 echo $this->Form->input('institution_id', $opts);
 echo $this->Form->input('department');
 
-echo $this->element('courses/taxonomy/selector', array('habtmModel' => 'TadirahActivity'));
+echo $this->element('taxonomy/selector', array('habtmModel' => 'TadirahActivity'));
 
-echo $this->element('courses/taxonomy/selector', array('habtmModel' => 'TadirahTechnique'));
+echo $this->element('taxonomy/selector', array('habtmModel' => 'TadirahTechnique'));
 
-echo $this->element('courses/taxonomy/selector', array('habtmModel' => 'TadirahObject'));
+echo $this->element('taxonomy/selector', array('habtmModel' => 'TadirahObject'));
 
 echo $this->Form->end('submit');
 ?>

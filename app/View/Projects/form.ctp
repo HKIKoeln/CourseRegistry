@@ -77,25 +77,26 @@ if(!empty($admin)) {
 		'label' => 'Owner',
 		'empty' => ' -- nobody -- '
 	));
+	echo $this->Form->input('active', array('label' => 'Publish'));
+	echo $this->Form->input('review', array('label' => 'Rewiew neccessary'));
 }
 
-echo $this->Form->input('active', array('label' => 'Publish'));
-echo $this->Form->input('review', array('label' => 'Rewiew neccessary'));
+
 echo $this->Form->input('name', array('type' => 'textarea'));
 echo $this->Form->input('description');
 echo $this->Form->input('start_date');
 echo $this->Form->input('end_date');
-echo $this->Form->input('is_phd');
+echo $this->Form->input('is_phd', array('label' => 'Is PhD Project'));
 echo $this->Form->input('has_subprojects');
 
 
-echo $this->element('courses/taxonomy/selector', array('habtmModel' => 'NwoDiscipline'));
+echo $this->element('taxonomy/selector', array('habtmModel' => 'NwoDiscipline'));
 
-echo $this->element('courses/taxonomy/selector', array('habtmModel' => 'TadirahActivity'));
+echo $this->element('taxonomy/selector', array('habtmModel' => 'TadirahActivity'));
 
-echo $this->element('courses/taxonomy/selector', array('habtmModel' => 'TadirahTechnique'));
+echo $this->element('taxonomy/selector', array('habtmModel' => 'TadirahTechnique'));
 
-echo $this->element('courses/taxonomy/selector', array('habtmModel' => 'TadirahObject'));
+echo $this->element('taxonomy/selector', array('habtmModel' => 'TadirahObject'));
 
 echo $this->Form->end('submit');
 ?>

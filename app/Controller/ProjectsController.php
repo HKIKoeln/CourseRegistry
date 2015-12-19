@@ -45,7 +45,7 @@ class ProjectsController extends AppController {
 		);
 		$this->paginate = array_merge($this->paginate, $paginate);
 		
-		$this->Auth->allow(array('index', 'view', 'reset', 'schema'));
+		$this->Auth->allow(array('index', 'view', 'review', 'reset', 'schema'));
 	}
 	
 	
@@ -79,7 +79,17 @@ class ProjectsController extends AppController {
 		if(empty($record)) $this->redirect('index');
 		$this->set('record', $record);
 		$this->set('_serialize', array('record'));
+	}
+	
+	
+	public function review($id = null) {
+		if(empty($id)) $this->redirect('/');
+		$admin = false;
+		$project = $this->Project->find('first', array('conditions' => array('Project.id' => $id)));
+		if(empty($id)) $this->redirect('/');
 		
+		$this->_setOptions($admin);
+		$this->render('form');
 	}
 	
 	
