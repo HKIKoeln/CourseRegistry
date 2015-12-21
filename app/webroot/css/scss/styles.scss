@@ -297,6 +297,15 @@ $col_min_height: 400px;
 				margin-bottom: 10px;
 			}
 		}
+		
+		form.review {
+			.required > label:after {
+				content:"";
+			}
+			.required > label[for=ProjectReviewEmail]:after {
+				content: " *";
+			}
+		}
 	}
 }
 

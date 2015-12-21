@@ -34,23 +34,8 @@ if($this->action == 'edit') {
 	
 	<?php
 }
-if($this->action == 'review') {
-	?>
-	<div class="actions">
-		<?php
-		echo $this->Html->link('View this record', array(
-			'action' => 'view',
-			$this->request->data[$modelName]['id']
-		));
-		?>
-	</div>
-	<?php
-}
 
-echo $this->Form->create('Project', array(
-	'novalidate' => 'novalidate',
-	'class' => 'review'
-));
+echo $this->Form->create('Project', array('novalidate' => 'novalidate'));
 
 if(!empty($errors)) {
 	?>
@@ -70,10 +55,11 @@ if(!empty($errors)) {
 	<?php
 }
 ?>
+
 <fieldset>
 	<h3>Administration Metadata</h3>
 	<?php
-	if($this->action == 'edit' OR $this->action == 'review') {
+	if($this->action == 'edit') {
 		echo $this->Form->input('id', array(
 			'disabled' => true,
 			'type' => 'text',
@@ -94,20 +80,15 @@ if(!empty($errors)) {
 			'empty' => ' -- nobody -- '
 		));
 		?>
-		<p>Hide this Project or not:</p>
-		<?php echo $this->Form->input('Project.active', array('label' => 'Publish')); ?>
+		
 		<p>Mark this Project for further reviews:</p>
 		<?php echo $this->Form->input('Project.review', array('label' => 'Review Neccessary')); ?>
 		<p>Check if this Review-Dataset has been inserted into it's associated Project:</p>
 		<?php echo $this->Form->input('ProjectReview.done', array('label' => 'Update Completed'));
 	}
-	
-	echo $this->Form->input('ProjectReview.email', array('label' => 'Reviewer Email'));
-	echo $this->Form->input('ProjectReview.comment', array(
-		'type' => 'textarea',
-		'placeholder' => 'Additional comments, hints etc. this form doesn\'t cover.'
-	));
 	?>
+	<p>Hide this Project or not:</p>
+	<?php echo $this->Form->input('Project.active', array('label' => 'Publish')); ?>
 </fieldset>
 <fieldset>
 	<h3>Project</h3>
@@ -120,42 +101,15 @@ if(!empty($errors)) {
 	?>
 </fieldset>
 <fieldset>
-	<h3>Hierarchy</h3>
-	<?php echo $this->Form->input('parent_id', array('empty' => ' - ')); ?>
-	<p>
-		If the parent project is not listed in our DH-Project Registry, 
-		please provide at least a link or any hint, as we might want to add it!
-	</p>
-	<?php echo $this->Form->input('parent_not_listed'); ?>
-	<p>
-		If this project has subprojects, please check if these projects occur 
-		in the DH-Project Registry and add this projects\' ID to those.<br>
-		Please also provide the subproject IDs or any other hint (eg. link) in the field below:
-	</p>
-	<?php echo $this->Form->input('subproject_ids', array('type' => 'text')); ?>
-</fieldset>
-<fieldset>
 	<h3>Tagging</h3>
 	<?php
 	echo $this->element('taxonomy/selector', array('habtmModel' => 'NwoDiscipline', 'dropdown' => true));
 	echo $this->element('taxonomy/selector', array('habtmModel' => 'TadirahActivity', 'dropdown' => true));
 	echo $this->element('taxonomy/selector', array('habtmModel' => 'TadirahTechnique', 'dropdown' => true));
 	echo $this->element('taxonomy/selector', array('habtmModel' => 'TadirahObject', 'dropdown' => true));
+	echo $this->Form->end('submit');
 	?>
-</fieldset>
-<fieldset>
-	<h3>Hyperlinks</h3>
-	<?php
-	echo $this->Form->input('ProjectLink.projectpresentation');
-	echo $this->Form->input('ProjectLink.data');
-	echo $this->Form->input('ProjectLink.software');
-	echo $this->Form->input('ProjectLink.publication');
-	echo $this->Form->input('ProjectLink.additional_links', array('type' => 'textarea'));
-	?>
-</fieldset>
-<fieldset>
-	<?php echo $this->Form->end('submit'); ?>
-</fieldset>
+
 
 
 

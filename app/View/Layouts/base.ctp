@@ -41,7 +41,7 @@
 	echo $this->Html->meta('description', 'European platform for digital humanity related research, courses and programs.');
 	echo $this->Html->meta('icon');
 	
-	echo $this->Html->css('dhcourse.css');
+	echo $this->Html->css('styles.css');
 	if(Configure::read('debug') > 0) {
 		echo $this->Html->css('cake_debugging.css');
 	}

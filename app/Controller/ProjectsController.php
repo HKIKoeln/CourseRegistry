@@ -109,7 +109,7 @@ class ProjectsController extends AppController {
 			$this->Session->write('review.Project.id', $id);
 		}
 		$this->_setOptions($admin);
-		$this->render('form');
+		$this->render('review');
 	}
 	
 	
@@ -212,7 +212,7 @@ class ProjectsController extends AppController {
 		
 		$options = array(
 			'fields' => array('Project.id', 'Project.name'),
-			'conditions' => array('Project.has_subprojects' => true)
+			//'conditions' => array('Project.has_subprojects' => true)
 		);
 		if(!empty($project_id)) $options['conditions']['Project.id !='] = $project_id;
 		$parents = $this->Project->find('list', $options);
