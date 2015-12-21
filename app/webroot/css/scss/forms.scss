@@ -9,7 +9,11 @@ form {
 	display: block;
 	position:relative;
 	
-	
+	fieldset {
+		margin-bottom: 10px;
+		max-width: 500px;
+		padding: 20px;
+	}
 	
 	div {
 		margin-bottom: 14px;
@@ -45,7 +49,8 @@ form {
 	input[type=number],
 	input[type=password],
 	input[type=email],
-	textarea {
+	textarea,
+	.checklist_toggle {
 		display: block;
 		padding: 2px 4px;
 		border:1px solid #999;
@@ -99,7 +104,52 @@ form {
 		border:1px solid #999;
 		display: block;
 	}
-
+	
+	
+	.checklist {
+		float: left;
+		.checkbox {
+			input[type=checkbox] {
+				clear: none;
+			}
+		}
+		.checkbox {
+			margin-left: 0;
+		}
+	}
+	.dropdown_checklist {
+		@include clearfix;
+		.wrapper {	// keep the checklist from tilting under the label if the display section is growing
+			float: left;
+			.checklist{ float: none; }
+			.checklist_toggle {
+				cursor: pointer;
+				position: relative;
+				margin-bottom: 1px;
+				.display {
+					display: inline-block;
+					width: 252px;
+					overflow: hidden;
+				}
+				// borrowed from getbootstrap.com for dropdown checklists
+				.caret {
+					border-left: 4px solid transparent;
+					border-right: 4px solid transparent;
+					border-top: 4px dashed;
+					display: inline-block;
+					height: 0;
+					margin-left: 2px;
+					vertical-align: middle;
+					width: 0;
+					position: absolute;
+					right: 4px;
+					top: 46%;
+				}
+			}
+		}
+	}
+	
+	
 	option {
 		padding: 0 3px;
 	}
@@ -184,7 +234,7 @@ form {
 	}
 	
 	div.select {
-		
+		@include clearfix;
 		div.checkbox input, div.radio input {
 			float: none;
 			margin: 0;
@@ -201,7 +251,6 @@ form {
 		}
 
 		div.checkbox {
-			margin-left: 207px;
 			line-height: 14px;
 			margin-top: -0px;
 			margin-bottom: 0px;

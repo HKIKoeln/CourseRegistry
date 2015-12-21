@@ -1,3 +1,11 @@
+<div class="actions">
+	<?php
+	echo $this->Html->link('Review this record', array(
+		'action' => 'review',
+		$record[$modelName]['id']
+	));
+	?>
+</div>
 <div class="top">
 	<?php
 	if(!empty($detailsFieldlist['top'])) {

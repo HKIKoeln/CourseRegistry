@@ -88,6 +88,26 @@ class ProjectsController extends AppController {
 		$project = $this->Project->find('first', array('conditions' => array('Project.id' => $id)));
 		if(empty($id)) $this->redirect('/');
 		
+		if(!empty($this->request->data['Project'])) {
+			// check the ID has been autorized correctly
+			$sid = $this->Session->read('review.Project.id');
+			if(empty($sid) OR $id != $sid) $this->redirect('/');
+			
+			if($this->Project->validateAll($this->request->data)) {
+				$this->request->data = $this->Project->data;		// callback beforeValidate manipulates data
+				// serialize
+				
+				if($this->Project->ProjectReview->saveAll($this->request->data, array('validate' => false))) {
+					$this->Session->delete('review.Project.id');
+					$this->redirect(array('/'));
+				}
+			}else{
+				$this->set('errors', $this->Project->validationErrors);
+			}
+		}else{
+			$this->request->data = $project;
+			$this->Session->write('review.Project.id', $id);
+		}
 		$this->_setOptions($admin);
 		$this->render('form');
 	}
@@ -95,7 +115,6 @@ class ProjectsController extends AppController {
 	
 	public function schema($mode = null) {
 		$schema = $this->Project->getSchema($mode);
-		//debug($schema);exit;
 		$this->set('DHOECT', $schema);
 		$this->set('_serialize', array('DHOECT'));
 	}
@@ -121,8 +140,8 @@ class ProjectsController extends AppController {
 		
 		if(!empty($this->request->data['Project'])) {
 			// check the ID has been autorized correctly
-			$id = $this->Session->read('edit.Project.id');
-			if(!$id) $this->redirect(array(
+			$sid = $this->Session->read('edit.Project.id');
+			if(empty($sid) OR $id != $sid) $this->redirect(array(
 				'controller' => 'users',
 				'action' => 'dashboard'
 			));
@@ -159,7 +178,7 @@ class ProjectsController extends AppController {
 	}
 	
 	
-	protected function _setOptions($admin = false) {
+	protected function _setOptions($admin = false, $project_id = null) {
 		$users = array();
 		if($admin) $rawUsers = $this->Project->AppUser->find('all', array(
 			'contain' => array('Institution' => array('Country')),
@@ -189,12 +208,30 @@ class ProjectsController extends AppController {
 		));
 		ksort($institutions);
 		
+		$projectLinkTypes = $this->Project->ProjectLink->ProjectLinkType->find('list');
+		
+		$options = array(
+			'fields' => array('Project.id', 'Project.name'),
+			'conditions' => array('Project.has_subprojects' => true)
+		);
+		if(!empty($project_id)) $options['conditions']['Project.id !='] = $project_id;
+		$parents = $this->Project->find('list', $options);
+		foreach($parents as $id => $name) {
+			$parents[$id] = $id.' - '.$name;
+		}
+		
 		$this->_setTaxonomies();
 		
 		$this->set(compact(
 			'users',
 			'institutions',
-			'admin'
+			'admin',
+			'projectLinkTypes',
+			'parents'
+		));
+		$this->set('_serialize', array(
+			'institutions',
+			'projectLinkTypes'
 		));
 	}
 	

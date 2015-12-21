@@ -61,7 +61,7 @@ $filter = $this->Session->read('filter'); ?>
 			'required' => false,
 			'onchange' => false
 		));
-		echo $this->element('taxonomy/taxonomy_filter');
+		echo $this->element('taxonomy/taxonomy_filter', array('dropdownChecklist' => false));
 		
 		echo $this->Form->end(array(
 			'label' => 'Show Results',

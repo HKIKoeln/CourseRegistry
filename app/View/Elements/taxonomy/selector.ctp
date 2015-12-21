@@ -15,6 +15,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+
 if(!function_exists('getOpts')) {
 	function getOpts($habtmModel, $record, $request, $level = null) {
 		if(!empty($level)) $level = ' ' . $level;
@@ -41,53 +43,107 @@ if(!function_exists('getOpts')) {
 		return $opts;
 	}
 }
+
+$classes = (!empty($errors) AND !empty($errors[$habtmModel])) ? ' error' : '';
+$classes .= (!empty($dropdown)) ? ' dropdown_checklist' : '';
 ?>
 
-<?php $error = (!empty($errors) AND !empty($errors[$habtmModel])) ? ' error' : ''; ?>
-<div class="input taxonomy select required<?php echo $error; ?>" >
+<div class="input taxonomy select required<?php echo $classes; ?>">
 	<label for="<?php echo $habtmModel . $habtmModel; ?>">
 		<?php echo Inflector::humanize(Inflector::underscore(Inflector::pluralize($habtmModel))); ?>
 	</label>
-	<div><span id="<?php echo $habtmModel . '_toggle'; ?>" title="click to expand" class="checklist_toggle">Click to expand</span></div>
-	<div id="<?php echo $habtmModel . '_checklist'; ?>" style="display:none;">
-		<input id="<?php echo $habtmModel . $habtmModel; ?>"
-			type="hidden" value=""
-			name="data[<?php echo $habtmModel . '][' . $habtmModel; ?>]">
-		
+	<div class="wrapper">
 		<?php
-		$varname = Inflector::variable(Inflector::pluralize($habtmModel));
-		foreach($$varname as $pk => $pv) {
-			$level = null;
-			if(!empty($pv['children'])) $level = 'primary';
-			$opts = getOpts($habtmModel, $pv, $this->request->data, $level);
-			echo $this->Form->input($habtmModel . '.' . $habtmModel . $pv[$habtmModel]['id'], $opts);
+		if(!empty($dropdown)) {
+			?>
+			<div id="<?php echo $habtmModel . '_toggle'; ?>" class="checklist_toggle">
+				<span class="display">-- none selected --</span>
+				<span class="caret"> </span>
+			</div>
+			<?php
+		}
+		?>
+		<div id="<?php echo $habtmModel . '_checklist'; ?>"
+			class="checklist"
+			<?php if(!empty($dropdown)) echo ' style="display:none;"'; ?>>
+			<input id="<?php echo $habtmModel . $habtmModel; ?>"
+				type="hidden" value=""
+				name="data[<?php echo $habtmModel . '][' . $habtmModel; ?>]">
 			
-			if(!empty($pv['children'])) {
-				foreach($pv['children'] as $sk => $sv) {
-					$opts = getOpts($habtmModel, $sv, $this->request->data, 'secondary');
-					echo $this->Form->input($habtmModel . '.' . $habtmModel . $sv[$habtmModel]['id'], $opts);
-					
-					if(!empty($sv['children'])) {
-						foreach($sv['children'] as $tk => $tv) {
-							$opts = getOpts($habtmModel, $tv, $this->request->data, 'tertiary');
-							echo $this->Form->input($habtmModel . '.' . $habtmModel . $tv[$habtmModel]['id'], $opts);
+			<?php
+			$varname = Inflector::variable(Inflector::pluralize($habtmModel));
+			foreach($$varname as $pk => $pv) {
+				$level = null;
+				if(!empty($pv['children'])) $level = 'primary';
+				$opts = getOpts($habtmModel, $pv, $this->request->data, $level);
+				echo $this->Form->input($habtmModel . '.' . $habtmModel . $pv[$habtmModel]['id'], $opts);
+				
+				if(!empty($pv['children'])) {
+					foreach($pv['children'] as $sk => $sv) {
+						$opts = getOpts($habtmModel, $sv, $this->request->data, 'secondary');
+						echo $this->Form->input($habtmModel . '.' . $habtmModel . $sv[$habtmModel]['id'], $opts);
+						
+						if(!empty($sv['children'])) {
+							foreach($sv['children'] as $tk => $tv) {
+								$opts = getOpts($habtmModel, $tv, $this->request->data, 'tertiary');
+								echo $this->Form->input($habtmModel . '.' . $habtmModel . $tv[$habtmModel]['id'], $opts);
+							}
 						}
 					}
 				}
 			}
-		}
-		?>
+			?>
+		</div>
 	</div>
 </div>
 
+<?php
+if(!empty($dropdown)) {
+	?>
+	<script>window.jQuery || document.write('<script src="\/\/code.jquery.com\/jquery-1.11.3.min.js"><\/script>')</script>
+	<script>
+	if(!dropdownChecklist) {
+		var dropdownChecklist = 1;
+		jQuery(document).ready(function() {
+			var toggle = $('.checklist_toggle');
+			var checklist = $('.checklist');
+			toggle.each(function() {
+				$(this).on('click', function() {
+					$(this).next('.checklist').toggle();
+				});
+			});
+			
+			toggle.each(function(index) {
+				var checklist = $(this).next('.checklist');
+				dc_writeDisplay(this, checklist);
+				var currentToggle = this;
+				
+				// rewrite the display on-change
+				var inputlist = checklist.find('input[type=checkbox]');
+				inputlist.each(function(key) {
+					console.log($(this));
+					$(this).on('click', function() {
+						dc_writeDisplay(currentToggle, checklist);
+					});
+				});
+			});
+		});
+		
+		function dc_writeDisplay(toggle, checklist) {
+			var selected = checklist.find('input[type=checkbox]:checked');
+			var values = [];
+			selected.each(function(key) {
+				values.push($(this).next('label').text());
+			});
+			var display = values.join(', ');
+			if(!display) display = '-- none selected --';
+			$(toggle).find('.display').text(display);
+		}
+	}
+	</script>
 
-<?php $this->start('onload'); ?>
-var <?php echo $habtmModel . '_checklist'; ?> = document.getElementById('<?php echo $habtmModel . '_checklist'; ?>');
-var <?php echo $habtmModel . '_toggle'; ?> = document.getElementById('<?php echo $habtmModel . '_toggle'; ?>');
-<?php echo $habtmModel . '_toggle'; ?>.onclick = function() {
-	if(<?php echo $habtmModel . '_checklist'; ?>.style.display == 'block')
-		<?php echo $habtmModel . '_checklist'; ?>.style.display = 'none';
-	else
-		<?php echo $habtmModel . '_checklist'; ?>.style.display = 'block';
+	<?php
 }
-<?php $this->end(); ?>
+?>
+
+

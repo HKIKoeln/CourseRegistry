@@ -15,6 +15,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+ 
+ 
+if(empty($dropdownChecklist)) $dropdownChecklist = false;
 ?>
 <p class="taxonomy selection" id="activities_selection" onclick="toggleActivities();">
 	<?php
@@ -30,9 +34,9 @@
 </p>
 <div class="taxonomy keywords" id="activities_keywords" style="display:none;">
 	<?php
-	echo $this->element('courses/ie_apologies');
+	echo $this->element('ie_apologies');
 	
-	echo $this->element('courses/taxonomy/selector', array('habtmModel' => 'TadirahActivity'));
+	echo $this->element('taxonomy/selector', array('habtmModel' => 'TadirahActivity', 'dropdown' => $dropdownChecklist));
 	
 	echo $this->Form->button('Ok', array(
 		'type' => 'submit'
@@ -60,9 +64,9 @@
 </p>
 <div class="taxonomy keywords" id="techniques_keywords" style="display:none;">
 	<?php
-	echo $this->element('courses/ie_apologies');
+	echo $this->element('ie_apologies');
 	
-	echo $this->element('courses/taxonomy/selector', array('habtmModel' => 'TadirahTechnique'));
+	echo $this->element('taxonomy/selector', array('habtmModel' => 'TadirahTechnique', 'dropdown' => $dropdownChecklist));
 	
 	echo $this->Form->button('Ok', array(
 		'onclick' => 'this.form.submit();'
@@ -90,9 +94,9 @@
 </p>
 <div class="taxonomy keywords" id="objects_keywords" style="display:none;">
 	<?php
-	echo $this->element('courses/ie_apologies');
+	echo $this->element('ie_apologies');
 	
-	echo $this->element('courses/taxonomy/selector', array('habtmModel' => 'TadirahObject'));
+	echo $this->element('taxonomy/selector', array('habtmModel' => 'TadirahObject', 'dropdown' => $dropdownChecklist));
 	
 	echo $this->Form->button('Ok', array(
 		'onclick' => 'this.form.submit();'
