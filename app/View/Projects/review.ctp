@@ -15,6 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+ echo $_serialize[1];
 ?>
 <h2><?php echo ucfirst($this->action); ?> Project</h2>
 

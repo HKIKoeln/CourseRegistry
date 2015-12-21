@@ -229,10 +229,10 @@ class ProjectsController extends AppController {
 			'projectLinkTypes',
 			'parents'
 		));
-		$this->set('_serialize', array(
-			'institutions',
+		$this->set('_serialize', json_encode(compact(
+			//'institutions',
 			'projectLinkTypes'
-		));
+		)));
 	}
 	
 	

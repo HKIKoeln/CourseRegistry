@@ -29,20 +29,30 @@ function dh_project_links($view = null, $record = array(), $fieldDef = array()) 
 	$content = null;
 	if(empty($modelData)) return null;
 	foreach($modelData as $k => $row) {
-		$title = (!empty($row['title'])) ? $row['title'] : null;
-		$descr = (!empty($row['description'])) ? $row['description'] : null;
 		if(!empty($row['url'])) {
-			if($title == $record['Project']['name'] OR empty($title))
-				$title = ucwords($row['ProjectLinkType']['name']);
+			$pre = null;
+			$title = ucwords($row['ProjectLinkType']['name']);
+			$desc = (!empty($row['title']) AND $row['title'] != $record['Project']['name']) ? $row['title'] : null;
+			if(empty($desc)) {
+				$desc = (!empty($row['description'])) ? $row['description'] : null;
+			}else{
+				if(!empty($row['description'])) {
+					$pre = $title;
+					$title = $desc;
+					$desc = $row['description'];
+				}
+			}
+			
+			$content .= $pre;
 			$content .= $view->Html->link($title, $row['url'], array(
 				'target' => 'blank',
-				'title' => $descr
+				'title' => $desc
 			));
 			$content .= '<br>';
 		}else{
-			if(empty($descr)) $descr = $title;
-			$title = ucwords($row['ProjectLinkType']['name']) . ': <br>' . $descr;
-			$content .= $title . '<br>';
+			$content .= ucwords($row['ProjectLinkType']['name']) . ': <br>';
+			if(!empty($row['title'])) $content .= $row['title'] . '<br>';
+			if(!empty($row['description'])) $content .= $row['description'] . '<br>';
 		}
 	}
 	return $content;
