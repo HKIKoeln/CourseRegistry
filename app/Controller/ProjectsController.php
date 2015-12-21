@@ -17,7 +17,6 @@
  */
 
 class ProjectsController extends AppController {
-
 	
 	public function beforeFilter() {
 		parent::beforeFilter();
@@ -89,6 +88,7 @@ class ProjectsController extends AppController {
 		if(empty($id)) $this->redirect('/');
 		
 		if(!empty($this->request->data['Project'])) {
+			$this->loadModel('ProjectReview');
 			// check the ID has been autorized correctly
 			$sid = $this->Session->read('review.Project.id');
 			if(empty($sid) OR $id != $sid) $this->redirect('/');
@@ -97,7 +97,7 @@ class ProjectsController extends AppController {
 				$this->request->data = $this->Project->data;		// callback beforeValidate manipulates data
 				// serialize
 				
-				if($this->Project->ProjectReview->saveAll($this->request->data, array('validate' => false))) {
+				if($this->ProjectReview->saveAll($this->request->data, array('validate' => false))) {
 					$this->Session->delete('review.Project.id');
 					$this->redirect(array('/'));
 				}

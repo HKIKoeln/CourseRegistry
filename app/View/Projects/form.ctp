@@ -66,33 +66,33 @@ if(!empty($errors)) {
 	</div>
 	<?php
 }
-
-if($this->action == 'edit' OR $this->action == 'review') {
-	echo $this->Form->input('id', array('disabled' => true, 'type' => 'text'));
-}
-if($this->action == 'edit' AND !empty($admin)) {
-	echo '<p>Admin: leave this box unchecked to *NOT* update the "last-update" field when saving your revisions.</p>';
-	echo $this->Form->input('update', array(
-		'type' => 'checkbox',
-		'label' => 'Update Timestamp',
-		'checked' => false,
-		'value' => 1
-	));	// do or not update the timestamp 
-}
 ?>
-
-<br />
-
-<?php
-if(!empty($admin)) {
-	echo $this->Form->input('user_id', array(
-		'label' => 'Owner',
-		'empty' => ' -- nobody -- '
-	));
-	echo $this->Form->input('active', array('label' => 'Publish'));
-	echo $this->Form->input('review', array('label' => 'Rewiew neccessary'));
-}
-?>
+<fieldset>
+	<h3>Administration Metadata</h3>
+	<?php
+	if($this->action == 'edit' OR $this->action == 'review') {
+		echo $this->Form->input('id', array('disabled' => true, 'type' => 'text'));
+	}
+	if($this->action == 'edit' AND !empty($admin)) {
+		echo '<p>Admin: leave this box unchecked to *NOT* update the "last-update" field when saving your revisions.</p>';
+		echo $this->Form->input('update', array(
+			'type' => 'checkbox',
+			'label' => 'Update Timestamp',
+			'checked' => false,
+			'value' => 1
+		));	// do or not update the timestamp 
+	}
+	
+	if(!empty($admin)) {
+		echo $this->Form->input('user_id', array(
+			'label' => 'Owner',
+			'empty' => ' -- nobody -- '
+		));
+		echo $this->Form->input('active', array('label' => 'Publish'));
+		echo $this->Form->input('review', array('label' => 'Rewiew neccessary'));
+	}
+	?>
+</fieldset>
 <fieldset>
 	<h3>Project</h3>
 	<?php

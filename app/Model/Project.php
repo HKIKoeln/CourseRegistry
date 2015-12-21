@@ -76,6 +76,10 @@ class Project extends AppModel {
 		'ChildProject' => array(
 			'className' => 'Project',
 			'foreignKey' => 'parent_id'
+		),
+		'ProjectReview' => array(
+			'className' => 'ProjectReview',
+			'foreignKey' => 'parent_id'
 		)
 	);
 	
