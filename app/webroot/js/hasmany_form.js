@@ -87,9 +87,10 @@ function buildForm(container, schema, index, record) {
 	
 	var remove = document.createElement('button');
 	$(remove).attr({id:baseId + index + 'remove', data:baseId + '-' + index});
-	$(remove).text('remove this' + baseId);
+	$(remove).text('remove this ' + baseId);
 	$(remove).on('click', function() {
-		$($(this).attr('data')).remove();
+		$('#' + $(this).attr('data')).remove();
+		// possibly use detach to preserve the existing record ID? The other data may be dumped though...
 		return false;
 	});
 	$(remove).appendTo(fieldset);
