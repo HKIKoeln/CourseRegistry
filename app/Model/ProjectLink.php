@@ -38,5 +38,44 @@ class ProjectLink extends AppModel {
 		)
 	);
 	
+	
+	public function getFieldlist() {
+		return array(
+			'ProjectLink.id' => array('attributes' => array('type' => 'hidden')),
+			'ProjectLink.project_id' => array('attributes' => array('type' => 'hidden')),
+			'ProjectLink.project_link_type_id' => array(
+				'attributes' => array(
+					'type' => 'select',
+					'required' => true
+				),
+				'options' => 'projectLinkTypes',
+				'label' => 'Link Type',
+				'empty' => true
+			),
+			'ProjectLink.url' => array(
+				'attributes' => array(
+					'type' => 'text',
+					'required' => true
+				)
+			),
+			'ProjectLink.title' => array(
+				'attributes' => array(
+					'type' => 'text',
+					'placeholder' => 'Optional. (default: Link Type)'
+				),
+				'label' => 'Linktext'
+			),
+			'ProjectLink.description' => array(
+				'attributes' => array(
+					'type' => 'textarea',
+					'placeholder' => 'additional information (optional)'
+				)
+			)
+		);
+	}
+	
+	
+	
+	
 }
 ?>

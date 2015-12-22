@@ -30,21 +30,17 @@ function dh_project_links($view = null, $record = array(), $fieldDef = array()) 
 	if(empty($modelData)) return null;
 	foreach($modelData as $k => $row) {
 		if(!empty($row['url'])) {
-			$pre = null;
-			$title = ucwords($row['ProjectLinkType']['name']);
-			$desc = (!empty($row['title']) AND $row['title'] != $record['Project']['name']) ? $row['title'] : null;
-			if(empty($desc)) {
-				$desc = (!empty($row['description'])) ? $row['description'] : null;
+			$pre = $desc = null;
+			$text = ($row['title'] != $record['Project']['name']) ? $row['title'] : null;
+			if(empty($text)) {
+				$text = ucwords($row['ProjectLinkType']['name']);
 			}else{
-				if(!empty($row['description'])) {
-					$pre = $title;
-					$title = $desc;
-					$desc = $row['description'];
-				}
+				$pre = ucwords($row['ProjectLinkType']['name']) . ': ';
 			}
+			$desc = (!empty($row['description'])) ? $row['description'] : null;
 			
 			$content .= $pre;
-			$content .= $view->Html->link($title, $row['url'], array(
+			$content .= $view->Html->link($text, $row['url'], array(
 				'target' => 'blank',
 				'title' => $desc
 			));

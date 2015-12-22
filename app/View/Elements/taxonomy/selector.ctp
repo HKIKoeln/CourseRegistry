@@ -121,7 +121,6 @@ if(!empty($dropdown)) {
 				// rewrite the display on-change
 				var inputlist = checklist.find('input[type=checkbox]');
 				inputlist.each(function(key) {
-					console.log($(this));
 					$(this).on('click', function() {
 						dc_writeDisplay(currentToggle, checklist);
 					});

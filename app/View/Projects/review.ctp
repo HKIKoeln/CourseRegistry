@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
- echo $_serialize[1];
+
 ?>
 <h2><?php echo ucfirst($this->action); ?> Project</h2>
 
@@ -144,19 +144,98 @@ if(!empty($errors)) {
 	echo $this->element('taxonomy/selector', array('habtmModel' => 'TadirahObject', 'dropdown' => true));
 	?>
 </fieldset>
-<fieldset>
+<fieldset id="hyperlinks">
 	<h3>Hyperlinks</h3>
-	<?php
+	<?php /*
 	echo $this->Form->input('ProjectLink.projectpresentation');
 	echo $this->Form->input('ProjectLink.data');
 	echo $this->Form->input('ProjectLink.software');
 	echo $this->Form->input('ProjectLink.publication');
 	echo $this->Form->input('ProjectLink.additional_links', array('type' => 'textarea'));
-	?>
+	*/ ?>
 </fieldset>
 <fieldset>
-	<?php echo $this->Form->end('submit'); ?>
+	<?php echo $this->Form->end('save'); ?>
 </fieldset>
+
+
+<script>
+window.jQuery || document.write('<script src="\/\/code.jquery.com\/jquery-1.11.3.min.js"><\/script>')
+</script>
+<script>
+var projectLinks = [];
+<?php if(!empty($_serialize['projectLinks'])): ?>
+	projectLinks = <?php echo $_serialize['projectLinks']; ?>;
+<?php endif; ?>
+var projectLinkTypes = <?php echo $_serialize['projectLinkTypes']; ?>;
+var projectLinkFieldlist = <?php echo $_serialize['projectLinkFieldlist']; ?>;
+jQuery(document).ready(function() {
+	var hyperlinks = $('#hyperlinks');
+	$.each(projectLinks, function(index, record) {
+		// dynamically creating and extending the project hyperlink form section
+		$.each(projectLinkFieldlist, function(key, options) {
+			var keysplit = key.split('.');
+			var field = keysplit[0];
+			var model = 'Project';
+			if(keysplit[1]) {
+				field = keysplit[1];
+				model = keysplit[0];
+			}
+			var attributes, div, label, input, selectoptions;
+			attributes = options.attributes;
+			div = document.createElement('div');
+			
+			// field types
+			if(attributes.type == 'hidden') {
+				$(div).attr({style:'display:none;'});
+			}
+			else if(attributes.type == 'select') {
+				input = document.createElement('select');
+				$(div).addClass('input select');
+				selectoptions = window[options.options];
+				$.each(selectoptions, function(okey, ovalue) {
+					var option = document.createElement('option');
+					$(option).attr({value:okey}).text(ovalue);
+					$(option).attr(attributes).appendTo(input);
+				});
+			}
+			else if(attributes.type == 'textarea') {
+				input = document.createElement('textarea');
+				$(div).addClass('input textarea');
+			}
+			else{
+				input = document.createElement('input');
+				$(div).addClass('input text');
+			}
+			
+			if(attributes.type != 'hidden') {
+				if(!options.label) options.label = camelize(field);
+				label = document.createElement('label');
+				$(label).text(options.label);
+				$(div).append(label);
+			}
+			
+			$(input).attr(attributes).appendTo(div);
+			$(div).appendTo(hyperlinks);
+		});
+	});
+});
+
+function camelize(str) {
+	return str.toLowerCase()
+    // Replaces any - or _ characters with a space 
+    .replace( /[-_]+/g, ' ')
+    // Removes any non alphanumeric characters 
+    .replace( /[^\w\s]/g, '')
+    // Uppercases the first character in each group immediately following a space 
+    // (delimited by spaces) 
+    .replace( / (.)/g, function($1) { return $1.toUpperCase(); })
+    // Removes spaces 
+    .replace( / /g, '' )
+	// ucfirst
+	.replace(/^(.)/g, function($1) { return $1.toUpperCase(); });
+}
+</script>
 
 
 

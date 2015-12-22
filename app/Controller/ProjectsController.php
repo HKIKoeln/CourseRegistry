@@ -95,11 +95,12 @@ class ProjectsController extends AppController {
 			
 			if($this->Project->validateAll($this->request->data)) {
 				$this->request->data = $this->Project->data;		// callback beforeValidate manipulates data
+				
 				// serialize
 				
-				if($this->ProjectReview->saveAll($this->request->data, array('validate' => false))) {
-					$this->Session->delete('review.Project.id');
-					$this->redirect(array('/'));
+				if($this->ProjectReview->save($this->request->data, array('validate' => false))) {
+					// don't redirect, don't destroy the session - let people save their form
+					$this->Session->write('review.ProjectReview.id', $this->id);
 				}
 			}else{
 				$this->set('errors', $this->Project->validationErrors);
@@ -109,6 +110,10 @@ class ProjectsController extends AppController {
 			$this->Session->write('review.Project.id', $id);
 		}
 		$this->_setOptions($admin);
+		$this->_setSchemas();
+		
+		$this->viewVars['_serialize']['projectLinks'] = json_encode($project['ProjectLink']);
+		
 		$this->render('review');
 	}
 	
@@ -226,13 +231,17 @@ class ProjectsController extends AppController {
 			'users',
 			'institutions',
 			'admin',
-			'projectLinkTypes',
+			//'projectLinkTypes',
 			'parents'
 		));
-		$this->set('_serialize', json_encode(compact(
-			//'institutions',
-			'projectLinkTypes'
-		)));
+		$this->viewVars['_serialize']['projectLinkTypes'] = json_encode($projectLinkTypes);
+	}
+	
+	
+	protected function _setSchemas() {
+		$projectLinkFieldlist = $this->Project->ProjectLink->getFieldlist();
+		
+		$this->viewVars['_serialize']['projectLinkFieldlist'] = json_encode($projectLinkFieldlist);
 	}
 	
 	
