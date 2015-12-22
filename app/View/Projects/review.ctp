@@ -144,7 +144,7 @@ if(!empty($errors)) {
 	echo $this->element('taxonomy/selector', array('habtmModel' => 'TadirahObject', 'dropdown' => true));
 	?>
 </fieldset>
-<fieldset id="hyperlinks">
+<fieldset id="ProjectLink">
 	<h3>Hyperlinks</h3>
 	<?php /*
 	echo $this->Form->input('ProjectLink.projectpresentation');
@@ -162,79 +162,19 @@ if(!empty($errors)) {
 <script>
 window.jQuery || document.write('<script src="\/\/code.jquery.com\/jquery-1.11.3.min.js"><\/script>')
 </script>
+<?php echo $this->Html->script('hasmany_form.js'); ?>
+
 <script>
-var projectLinks = [];
-<?php if(!empty($_serialize['projectLinks'])): ?>
-	projectLinks = <?php echo $_serialize['projectLinks']; ?>;
-<?php endif; ?>
+var record = <?php echo $_serialize['project']; ?>;
+
+var projectLinks = record.ProjectLink;
 var projectLinkTypes = <?php echo $_serialize['projectLinkTypes']; ?>;
 var projectLinkFieldlist = <?php echo $_serialize['projectLinkFieldlist']; ?>;
-jQuery(document).ready(function() {
-	var hyperlinks = $('#hyperlinks');
-	$.each(projectLinks, function(index, record) {
-		// dynamically creating and extending the project hyperlink form section
-		$.each(projectLinkFieldlist, function(key, options) {
-			var keysplit = key.split('.');
-			var field = keysplit[0];
-			var model = 'Project';
-			if(keysplit[1]) {
-				field = keysplit[1];
-				model = keysplit[0];
-			}
-			var attributes, div, label, input, selectoptions;
-			attributes = options.attributes;
-			div = document.createElement('div');
-			
-			// field types
-			if(attributes.type == 'hidden') {
-				$(div).attr({style:'display:none;'});
-			}
-			else if(attributes.type == 'select') {
-				input = document.createElement('select');
-				$(div).addClass('input select');
-				selectoptions = window[options.options];
-				$.each(selectoptions, function(okey, ovalue) {
-					var option = document.createElement('option');
-					$(option).attr({value:okey}).text(ovalue);
-					$(option).attr(attributes).appendTo(input);
-				});
-			}
-			else if(attributes.type == 'textarea') {
-				input = document.createElement('textarea');
-				$(div).addClass('input textarea');
-			}
-			else{
-				input = document.createElement('input');
-				$(div).addClass('input text');
-			}
-			
-			if(attributes.type != 'hidden') {
-				if(!options.label) options.label = camelize(field);
-				label = document.createElement('label');
-				$(label).text(options.label);
-				$(div).append(label);
-			}
-			
-			$(input).attr(attributes).appendTo(div);
-			$(div).appendTo(hyperlinks);
-		});
-	});
-});
 
-function camelize(str) {
-	return str.toLowerCase()
-    // Replaces any - or _ characters with a space 
-    .replace( /[-_]+/g, ' ')
-    // Removes any non alphanumeric characters 
-    .replace( /[^\w\s]/g, '')
-    // Uppercases the first character in each group immediately following a space 
-    // (delimited by spaces) 
-    .replace( / (.)/g, function($1) { return $1.toUpperCase(); })
-    // Removes spaces 
-    .replace( / /g, '' )
-	// ucfirst
-	.replace(/^(.)/g, function($1) { return $1.toUpperCase(); });
-}
+jQuery(document).ready(function() {
+	var hyperlinks = $('#ProjectLink');
+	populateForm(hyperlinks, projectLinkFieldlist, projectLinks);
+});
 </script>
 
 

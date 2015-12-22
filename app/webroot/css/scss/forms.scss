@@ -59,6 +59,19 @@ form {
 		margin-bottom: 5px;
 	}
 	
+	fieldset fieldset {
+		label {
+			width: 168px;
+		}
+		input[type=text],
+		input[type=tel],
+		input[type=number],
+		input[type=password],
+		input[type=email],
+		textarea,
+		.checklist_toggle {}
+	}
+	
 	/*
 	textarea {
 		resize:none;
@@ -126,9 +139,13 @@ form {
 				cursor: pointer;
 				position: relative;
 				margin-bottom: 1px;
+				padding: 2px 4px 1px;
+				&:hover {
+					background-color: #eee;
+				}
 				.display {
 					display: inline-block;
-					width: 252px;
+					width: 258px;
 					overflow: hidden;
 				}
 				// borrowed from getbootstrap.com for dropdown checklists

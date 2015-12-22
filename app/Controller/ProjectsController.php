@@ -112,7 +112,7 @@ class ProjectsController extends AppController {
 		$this->_setOptions($admin);
 		$this->_setSchemas();
 		
-		$this->viewVars['_serialize']['projectLinks'] = json_encode($project['ProjectLink']);
+		$this->viewVars['_serialize']['project'] = json_encode($project);
 		
 		$this->render('review');
 	}

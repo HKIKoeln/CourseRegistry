@@ -1,21 +1,21 @@
 /*
 Syntax error: Undefined variable: "$font_color".
-        on line 101 of css/scss/forms.scss
+        on line 114 of css/scss/forms.scss
 
-96: 
-97: 	select {
-98: 		margin: 0 0 5px;
-99: 		padding: 1px;
-100: 		background-color:#eee;
-101: 		color:$font_color;
-102: 		vertical-align: middle;
-103: 		width: 287px;
-104: 		border:1px solid #999;
-105: 		display: block;
-106: 	}
+109: 
+110: 	select {
+111: 		margin: 0 0 5px;
+112: 		padding: 1px;
+113: 		background-color:#eee;
+114: 		color:$font_color;
+115: 		vertical-align: middle;
+116: 		width: 287px;
+117: 		border:1px solid #999;
+118: 		display: block;
+119: 	}
 
 Backtrace:
-css/scss/forms.scss:101
+css/scss/forms.scss:114
 C:/Ruby193/lib/ruby/gems/1.9.1/gems/sass-3.2.13/lib/sass/script/variable.rb:49:in `_perform'
 C:/Ruby193/lib/ruby/gems/1.9.1/gems/sass-3.2.13/lib/sass/script/node.rb:40:in `perform'
 C:/Ruby193/lib/ruby/gems/1.9.1/gems/sass-3.2.13/lib/sass/tree/visitors/perform.rb:298:in `visit_prop'
@@ -70,4 +70,4 @@ C:/Ruby193/lib/ruby/gems/1.9.1/gems/sass-3.2.13/vendor/listen/lib/listen/adapter
 body:before {
   white-space: pre;
   font-family: monospace;
-  content: "Syntax error: Undefined variable: \"$font_color\".\A         on line 101 of css/scss/forms.scss\A \A 96: \A 97: 	select {\A 98: 		margin: 0 0 5px;\A 99: 		padding: 1px;\A 100: 		background-color:#eee;\A 101: 		color:$font_color;\A 102: 		vertical-align: middle;\A 103: 		width: 287px;\A 104: 		border:1px solid #999;\A 105: 		display: block;\A 106: 	}"; }
+  content: "Syntax error: Undefined variable: \"$font_color\".\A         on line 114 of css/scss/forms.scss\A \A 109: \A 110: 	select {\A 111: 		margin: 0 0 5px;\A 112: 		padding: 1px;\A 113: 		background-color:#eee;\A 114: 		color:$font_color;\A 115: 		vertical-align: middle;\A 116: 		width: 287px;\A 117: 		border:1px solid #999;\A 118: 		display: block;\A 119: 	}"; }
