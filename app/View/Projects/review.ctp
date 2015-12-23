@@ -111,7 +111,7 @@ if(!empty($errors)) {
 			'datapath' => 'Project.review')); ?>
 		
 		
-		<?php echo $this->Form->input('ProjectReview.id', array('type' => 'hidden', 'datapath' => 'ProjectReview.id')); ?>
+		<?php echo $this->Form->input('ProjectReview.id', array('type' => 'hidden', 'datapath' => 'ProjectReviev.id')); ?>
 		<p>Check if this Review-Dataset has been inserted into it's associated Project:</p>
 		<?php echo $this->Form->input('ProjectReview.done', array('label' => 'Update Completed'));
 	}

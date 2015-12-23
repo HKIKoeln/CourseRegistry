@@ -10,67 +10,196 @@ function watchForm(form, record) {
 	$.each(inputs, function(index, input) {
 		// on-change function
 		$(input).change(function() {
-			var value = $(input).val();
-			if($(input).attr('type') == 'checkbox') {
-				if(!input.checked) value = '';
-				else value = $(input).next('label').text();
+			var modelName, relModelName, crossTable, objectId, objectFk, //object, mainObjectId;
+			var path = getPath($(input).attr('datapath'));
+			var relation = {src: path[0], type: false, target: false, cross: false};
+			
+			if($(input).attr('datarelation')) {
+				var split = $(input).attr('datarelation').split('.');
+				if(split[0]) relation['src'] = split[0];
+				if(split[1]) relation['type'] = split[1];	// habtm, hasmany, hasone(?), belongsto
+				if(split[2]) relation['target'] = split[2];
+				if(split[3] && relation.type === 'habtm') {
+					relation['cross'] = split[3];
+				}else{
+					// having an Inflector::pluralize() would be nice...
+					relation['cross'] = relation.src + 's' + relation.target;
+				}
+			}
+			var mainObjectFk = relation.src.toLowerCase() + '_id';
+			
+			
+			var idPath = path.slice(0);	// clone path
+			// build the path to the id of the main model
+			if(relation.type === 'habtm') {
+				mainObjectId = $('[datapath="'+relation.src+'.id'+'"]').val();
+				//object = record;
+				
+				var object = parseTree(record, idPath, relation);
+				
+				$.each(idPath, function(i, frag) {
+					if(frag === relation.cross) {
+						if(typeof object[0] !== 'undefined') {
+							var match = false;
+							$.each(object, function(n, set) {
+								object = set[frag];
+								if($(input).val() == object[idPath[i+1]]) {
+									console.log('Match!');
+									match = true;
+									return false;
+								}
+							});
+						}
+						// record does not exist - create one
+						objectFk = idPath[i+1];
+						if(!match) {
+							object = {};
+							object['id'] = '';
+							object[mainObjectFk] = mainObjectId;
+							object[objectFk] = $(input).val();
+						};
+						return false;
+					}else{
+						if(typeof object[frag] !== 'undefined') object = object[frag];
+					}
+				});
+			}else{
+				idPath[idPath.length - 1] = 'id';	// doesn't apply for tagging!
+				mainObjectId = $('[datapath="'+idPath.join('.')+'"]').val();
 			}
 			
-			var path = getPath($(input).attr('datapath'));
-			var idPath = path.slice(0);
-			idPath[idPath.length - 1] = 'id';	// doesn't apply for tagging!
-			var objectId = $('[datapath="'+idPath.join('.')+'"]').val();
+			var value = $(input).val();
+			if($(input).attr('type') === 'checkbox') {
+				if(relation.type === 'habtm') {
+					if(!input.checked) value = '';
+					//else value = $(input).next('label').text();
+				}else{
+					if(!input.checked) value = 0;
+				}
+			}
+			
 			// get the master value from the record tree
-			var master = record;
-			$.each(path, function(i, frag) {
-				if(typeof master[frag] !== 'undefined') master = master[frag];
-			});
+			var master = parseTree(record, path)
 			
 			var lastBranch = changeset;
 			var branches = [];
 			
 			$.each(path, function(i, frag) {
-				if(path.length == i + 1) {
-					if((!master && !value) || (master == value)) {
-						delete lastBranch[frag];
-						
-						// tidy up the tree
-						while(path.length > 0) {
-							var reverse = path.slice(0);	// clone the array
-							$.each(reverse.reverse(), function(n, frag) {
-								var reversekey = path.length - 1 - n;
-								if(branches[reversekey]
-								&& branches[reversekey][frag]) {
-									if(Object.keys(branches[reversekey][frag]).length === 1
-									&& branches[reversekey][frag]['id']) {
-										delete branches[reversekey][frag]['id'];
-									}
-									if($.isEmptyObject(branches[reversekey][frag])) {
-										delete branches[reversekey][frag];
-									}
-								}
-							});
-							path.pop();
+				if(relation.type === 'habtm') {
+					if(path.length == i + 2) {
+						if((!master && !value) || (master == value)) {
+							// matching requires something else...
+						}else{
+							// assign to changeset
+							if(typeof lastBranch[relation.cross] === 'undefined') lastBranch[relation.cross] = [];
+							var len = lastBranch[relation.cross].length;
+							lastBranch[relation.cross][len] = object;
+							return false;
 						}
 					}else{
-						// assign to changeset
-						lastBranch['id'] = objectId;
-						lastBranch[frag] = value;
+						if((!master && !value) || (master == value)) {
+							if(typeof lastBranch[frag] === 'undefined') return false;
+						}else{
+							if(typeof lastBranch[frag] === 'undefined') lastBranch[frag] = {};
+						}
+						branches[i] = lastBranch;
+						lastBranch = lastBranch[frag];
 					}
 				}else{
-					if((!master && !value) || (master == value)) {
-						if(typeof lastBranch[frag] === 'undefined') return false;
+					if(path.length == i + 1) {
+						if((!master && !value) || (master == value)) {
+							delete lastBranch[frag];
+							
+							// tidy up the tree
+							while(path.length > 0) {
+								var reverse = path.slice(0);	// clone the array
+								$.each(reverse.reverse(), function(n, frag) {
+									var reversekey = path.length - 1 - n;
+									if(branches[reversekey]
+									&& branches[reversekey][frag]) {
+										if(Object.keys(branches[reversekey][frag]).length === 1
+										&& branches[reversekey][frag]['id']) {
+											delete branches[reversekey][frag]['id'];
+										}
+										if($.isEmptyObject(branches[reversekey][frag])) {
+											delete branches[reversekey][frag];
+										}
+									}
+								});
+								path.pop();
+							}
+						}else{
+							lastBranch['id'] = mainObjectId;
+							lastBranch[frag] = value;
+						}
 					}else{
-						if(typeof lastBranch[frag] === 'undefined') lastBranch[frag] = {};
+						if((!master && !value) || (master == value)) {
+							if(typeof lastBranch[frag] === 'undefined') return false;
+						}else{
+							if(typeof lastBranch[frag] === 'undefined') lastBranch[frag] = {};
+						}
+						branches[i] = lastBranch;
+						lastBranch = lastBranch[frag];
 					}
-					branches[i] = lastBranch;
-					lastBranch = lastBranch[frag];
 				}
 			});
 			
 			$('#ProjectReviewChangesetJson').val(JSON.stringify(changeset, null, 4));
 		});
 	});
+}
+
+function parseTree(tree, path, relation) {
+	$.each(path, function(i, frag) {
+		
+		if(relation.type && frag === relation.cross) {
+			if(typeof tree[0] !== 'undefined') {
+				var match = false;
+				$.each(tree, function(n, set) {
+					tree = set[frag];
+					if($(input).val() == object[idPath[i+1]]) {
+						console.log('Match!');
+						match = true;
+						return false;
+					}
+				});
+			}
+			// record does not exist - create one
+			if(!match) {
+				tree = {};
+				tree['id'] = '';
+				tree[mainObjectFk] = mainObjectId;
+				tree[idPath[i+1]] = $(input).val();
+			};
+			return false;
+		}else{
+			// primary data tree (no relation)
+			if(typeof tree[frag] !== 'undefined') tree = tree[frag];
+		}
+		
+		
+		if(typeof tree[frag] !== 'undefined') tree = tree[frag];
+		// ##todo: nested arrays
+	});
+	// no match
+	return tree;
+}
+
+function matchTree(tree, path, value) {
+	var branches = [];
+	$.each(path, function(i, frag) {
+		
+		if((!tree && !value) || (tree == value)) {
+			// the property does not exist - return current branch
+			if(typeof tree[frag] === 'undefined') return false;
+		}else{
+			if(typeof tree[frag] === 'undefined') tree[frag] = {};
+		}
+		branches[i] = tree;
+		tree = tree[frag];
+	});
+	// no match
+	return tree;
 }
 
 function getPath(string) {
@@ -87,7 +216,7 @@ function populateForm(container, schema, data) {
 		window[container.id + '-formIndex'] = i;
 	});
 	
-	var add = document.createElement('button');
+	var add = document.createElement('a');
 	$(add).attr({id:$(container).attr('id') + 'add', class:'add button'});
 	$(add).text('add another ' + $(container).attr('id'));
 	$(add).on('click', function() {
@@ -167,7 +296,7 @@ function buildForm(container, schema, index, record) {
 	});
 	
 	// button to remove the last object - but only if all visible fields are empty!
-	var remove = document.createElement('button');
+	var remove = document.createElement('a');
 	$(remove).attr({id:baseId + index + 'remove', data:baseId + '-' + index, class:'remove button'});
 	$(remove).text('remove this ' + baseId);
 	$(remove).on('click', function() {

@@ -18,7 +18,7 @@
 
 
 if(!function_exists('getOpts')) {
-	function getOpts($habtmModel, $record, $request, $level = null) {
+	function getOpts($modelName, $habtmModel, $key, $record, $request, $level = null) {
 		if(!empty($level)) $level = ' ' . $level;
 		$opts = array(
 			'type' => 'checkbox',
@@ -27,7 +27,9 @@ if(!function_exists('getOpts')) {
 			'name' => "data[$habtmModel][$habtmModel][]",
 			'div' => array('class' => "checkbox$level"),
 			'hiddenField' => false,
-			'datapath' => $habtmModel . '.' . $record[$habtmModel]['id']
+			//'datapath' => $habtmModel . '.' . $key . '.' . $record[$habtmModel]['id'],
+			'datapath' => $habtmModel . '.' . Inflector::pluralize($modelName) . $habtmModel . '.' . Inflector::underscore($habtmModel) . '_id',
+			'datarelation' => $modelName.'.habtm.'.$habtmModel
 		);
 		if(!empty($request[$habtmModel][$habtmModel])) {
 			if(in_array($record[$habtmModel]['id'], $request[$habtmModel][$habtmModel])) {
@@ -76,17 +78,17 @@ $classes .= (!empty($dropdown)) ? ' dropdown_checklist' : '';
 			foreach($$varname as $pk => $pv) {
 				$level = null;
 				if(!empty($pv['children'])) $level = 'primary';
-				$opts = getOpts($habtmModel, $pv, $this->request->data, $level);
+				$opts = getOpts($modelName, $habtmModel, $pk, $pv, $this->request->data, $level);
 				echo $this->Form->input($habtmModel . '.' . $habtmModel . $pv[$habtmModel]['id'], $opts);
 				
 				if(!empty($pv['children'])) {
 					foreach($pv['children'] as $sk => $sv) {
-						$opts = getOpts($habtmModel, $sv, $this->request->data, 'secondary');
+						$opts = getOpts($modelName, $habtmModel, $sk, $sv, $this->request->data, 'secondary');
 						echo $this->Form->input($habtmModel . '.' . $habtmModel . $sv[$habtmModel]['id'], $opts);
 						
 						if(!empty($sv['children'])) {
 							foreach($sv['children'] as $tk => $tv) {
-								$opts = getOpts($habtmModel, $tv, $this->request->data, 'tertiary');
+								$opts = getOpts($modelName, $habtmModel, $tk, $tv, $this->request->data, 'tertiary');
 								echo $this->Form->input($habtmModel . '.' . $habtmModel . $tv[$habtmModel]['id'], $opts);
 							}
 						}
