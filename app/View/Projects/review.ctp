@@ -155,7 +155,7 @@ if(!empty($errors)) {
 	*/ ?>
 </fieldset>
 <fieldset>
-	<?php echo $this->Form->end('save'); ?>
+	<?php echo $this->Form->end('submit'); ?>
 </fieldset>
 
 

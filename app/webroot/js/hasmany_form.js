@@ -9,7 +9,7 @@ function populateForm(container, schema, data) {
 	});
 	
 	var add = document.createElement('button');
-	$(add).attr({id:$(container).attr('id') + 'add'});
+	$(add).attr({id:$(container).attr('id') + 'add', class:'add button'});
 	$(add).text('add another ' + $(container).attr('id'));
 	$(add).on('click', function() {
 		//$($(this).attr('data')).remove();
@@ -22,6 +22,7 @@ function buildForm(container, schema, index, record) {
 	var baseId = $(container).attr('id');
 	var fieldset = document.createElement('fieldset');
 	$(fieldset).attr({id:baseId + '-' + index});
+	
 	$.each(schema, function(key, options) {
 		var keysplit = key.split('.');
 		var field = keysplit[0];
@@ -31,14 +32,20 @@ function buildForm(container, schema, index, record) {
 			model = keysplit[0];
 		}
 		var attributes, div, label, input, selectoptions;
-		attributes = options.attributes;
+		div = document.createElement('div');
 		
+		attributes = options.attributes;
 		attributes.name = 'data[' + model + '][][' + field + ']';
-		// input id: modelname + ucfirst(field)
 		if(!attributes.id) {
 			attributes.id = model + index + camelize(field);
 		}
-		div = document.createElement('div');
+		if(attributes.type != 'hidden') {
+			if(!options.label) options.label = humanize(field);
+			label = document.createElement('label');
+			$(label).attr({for:attributes.id});
+			$(label).text(options.label);
+			$(div).append(label);
+		}
 		
 		// field types
 		if(attributes.type == 'hidden') {
@@ -73,24 +80,17 @@ function buildForm(container, schema, index, record) {
 			$(input).val(record[field]);
 		}
 		
-		if(attributes.type != 'hidden') {
-			if(!options.label) options.label = camelize(field);
-			label = document.createElement('label');
-			$(label).attr({for:attributes.id});
-			$(label).text(options.label);
-			$(div).append(label);
-		}
-		
 		$(input).attr(attributes).appendTo(div);
 		$(div).appendTo(fieldset);
 	});
 	
+	// button to remove the last object - but only if all visible fields are empty!
 	var remove = document.createElement('button');
-	$(remove).attr({id:baseId + index + 'remove', data:baseId + '-' + index});
+	$(remove).attr({id:baseId + index + 'remove', data:baseId + '-' + index, class:'remove button'});
 	$(remove).text('remove this ' + baseId);
 	$(remove).on('click', function() {
-		$('#' + $(this).attr('data')).remove();
-		// possibly use detach to preserve the existing record ID? The other data may be dumped though...
+		var target = $('#' + $(this).attr('data'));
+		target.remove();
 		return false;
 	});
 	$(remove).appendTo(fieldset);
@@ -110,5 +110,17 @@ function camelize(str) {
     // Removes spaces 
     .replace( / /g, '' )
 	// ucfirst
+	.replace(/^(.)/g, function($1) { return $1.toUpperCase(); });
+}
+function humanize(str) {
+	return str.toLowerCase()
+    // Replaces any - or _ characters with a space 
+    .replace( /[-_]+/g, ' ')
+    // Removes any non alphanumeric characters 
+    .replace( /[^\w\s]/g, '')
+    // Uppercases the first character in each group immediately following a space 
+    // (delimited by spaces) 
+    .replace( / (.)/g, function($1) { return $1.toUpperCase(); })
+    // ucfirst
 	.replace(/^(.)/g, function($1) { return $1.toUpperCase(); });
 }

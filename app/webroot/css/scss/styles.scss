@@ -16,7 +16,7 @@ $header_background_color: #003564;	/* DARIAH style */
 $content_background_color: #fff;
 $menu_background_color: #fff;
 
-$actions_link_color: #ac1313;
+$actions_link_color: #912C2C;
 $actions_link_hover_color: #c8a4a4;
 
 $menu_width: 236px;
@@ -304,6 +304,33 @@ $col_min_height: 400px;
 			}
 			.required > label[for=ProjectReviewEmail]:after {
 				content: " *";
+			}
+			
+			.button {
+				width: 155px;
+				&.add {
+					margin-left: 20px;
+					margin-top: 20px;
+				}
+				&.remove {
+					background-color: $actions_link_color;
+					&:hover {
+						background-color: $actions_link_hover_color;
+					}
+				}
+			}
+			input[type=submit] { 
+				clear: none;
+				font: bold 14px Arial, Sans-serif; 
+				-moz-border-radius: 4px;
+				-webkit-border-radius: 4px;
+				border-radius: 4px;
+				border: 1px solid #999;
+				background: $header_background_color; 
+				padding: 10px 80px; 
+				color: #fff;
+				width: auto;
+				float: right;
 			}
 		}
 	}
