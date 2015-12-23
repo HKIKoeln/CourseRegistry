@@ -82,23 +82,34 @@ if(!empty($errors)) {
 		));
 	}
 	
+	// show this field on the right pane if we're acting as an admin...
+	$options = array('type' => 'hidden');
+	
+	$options = array(
+		'type' => 'textarea',
+		'label' => 'Changeset',
+		'div' => array('class' => 'rightpane')
+	);
+	
+	echo $this->Form->input('ProjectReview.changeset_json', $options);
+	
 	if(!empty($admin)) {
-		echo '<p>Admin: leave this box unchecked to *NOT* update the "last-update" field when saving your revisions.</p>';
-		echo $this->Form->input('Project.update', array(
-			'type' => 'checkbox',
-			'label' => 'Update Timestamp',
-			'checked' => false,
-			'value' => 1
-		));	// do or not update the timestamp 
 		echo $this->Form->input('Project.user_id', array(
 			'label' => 'Owner',
-			'empty' => ' -- nobody -- '
+			'empty' => ' -- nobody -- ',
+			'datapath' => 'Project.user_id'
 		));
 		?>
 		<p>Hide this Project or not:</p>
-		<?php echo $this->Form->input('Project.active', array('label' => 'Publish')); ?>
+		<?php echo $this->Form->input('Project.active', array(
+			'label' => 'Publish',
+			'datapath' => 'Project.active')); ?>
 		<p>Mark this Project for further reviews:</p>
-		<?php echo $this->Form->input('Project.review', array('label' => 'Review Neccessary')); ?>
+		<?php echo $this->Form->input('Project.review', array(
+			'label' => 'Review Neccessary',
+			'datapath' => 'Project.review')); ?>
+		
+		
 		<p>Check if this Review-Dataset has been inserted into it's associated Project:</p>
 		<?php echo $this->Form->input('ProjectReview.done', array('label' => 'Update Completed'));
 	}
@@ -113,27 +124,31 @@ if(!empty($errors)) {
 <fieldset>
 	<h3>Project</h3>
 	<?php
-	echo $this->Form->input('Project.name', array('type' => 'textarea'));
-	echo $this->Form->input('Project.description');
-	echo $this->Form->input('Project.start_date');
-	echo $this->Form->input('Project.end_date');
-	echo $this->Form->input('Project.is_phd', array('label' => 'Is PhD Project'));
+	echo $this->Form->input('Project.name', array('type' => 'textarea',
+			'datapath' => 'Project.name'));
+	echo $this->Form->input('Project.description', array('datapath' => 'Project.description'));
+	echo $this->Form->input('Project.start_date', array('datapath' => 'Project.start_date'));
+	echo $this->Form->input('Project.end_date', array('datapath' => 'Project.end_date'));
+	echo $this->Form->input('Project.is_phd', array('label' => 'Is PhD Project',
+			'datapath' => 'Project.is_phd'));
 	?>
 </fieldset>
 <fieldset>
 	<h3>Hierarchy</h3>
-	<?php echo $this->Form->input('parent_id', array('empty' => ' - ')); ?>
+	<?php echo $this->Form->input('Project.parent_id', array('empty' => ' - ',
+			'datapath' => 'Project.parent_id')); ?>
 	<p>
 		If the parent project is not listed in our DH-Project Registry, 
 		please provide at least a link or any hint, as we might want to add it!
 	</p>
-	<?php echo $this->Form->input('parent_not_listed'); ?>
+	<?php echo $this->Form->input('Project.parent_not_listed', array('datapath' => 'Project.parent_not_listed')); ?>
 	<p>
 		If this project has subprojects, please check if these projects occur 
 		in the DH-Project Registry and add this projects\' ID to those.<br>
 		Please also provide the subproject IDs or any other hint (eg. link) in the field below:
 	</p>
-	<?php echo $this->Form->input('subproject_ids', array('type' => 'text')); ?>
+	<?php echo $this->Form->input('Project.subproject_ids', array('type' => 'text',
+			'datapath' => 'Project.subproject_ids')); ?>
 </fieldset>
 <fieldset>
 	<h3>Tagging</h3>
@@ -146,13 +161,6 @@ if(!empty($errors)) {
 </fieldset>
 <fieldset id="ProjectLink">
 	<h3>Hyperlinks</h3>
-	<?php /*
-	echo $this->Form->input('ProjectLink.projectpresentation');
-	echo $this->Form->input('ProjectLink.data');
-	echo $this->Form->input('ProjectLink.software');
-	echo $this->Form->input('ProjectLink.publication');
-	echo $this->Form->input('ProjectLink.additional_links', array('type' => 'textarea'));
-	*/ ?>
 </fieldset>
 <fieldset>
 	<?php echo $this->Form->end('submit'); ?>
@@ -174,6 +182,9 @@ var projectLinkFieldlist = <?php echo $_serialize['projectLinkFieldlist']; ?>;
 jQuery(document).ready(function() {
 	var hyperlinks = $('#ProjectLink');
 	populateForm(hyperlinks, projectLinkFieldlist, projectLinks);
+	
+	var form = $('#ProjectReviewForm');
+	watchForm(form, record);
 });
 </script>
 

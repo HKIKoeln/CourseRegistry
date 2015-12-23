@@ -68,13 +68,6 @@ if(!empty($errors)) {
 	}
 	
 	if(!empty($admin)) {
-		echo '<p>Admin: leave this box unchecked to *NOT* update the "last-update" field when saving your revisions.</p>';
-		echo $this->Form->input('Project.update', array(
-			'type' => 'checkbox',
-			'label' => 'Update Timestamp',
-			'checked' => false,
-			'value' => 1
-		));	// do or not update the timestamp 
 		echo $this->Form->input('Project.user_id', array(
 			'label' => 'Owner',
 			'empty' => ' -- nobody -- '

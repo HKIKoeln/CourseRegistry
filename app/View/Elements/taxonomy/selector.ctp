@@ -26,7 +26,8 @@ if(!function_exists('getOpts')) {
 			'label' => array('text' => $record[$habtmModel]['name'], 'title' => $record[$habtmModel]['description']),
 			'name' => "data[$habtmModel][$habtmModel][]",
 			'div' => array('class' => "checkbox$level"),
-			'hiddenField' => false
+			'hiddenField' => false,
+			'datapath' => $habtmModel . '.' . $record[$habtmModel]['id']
 		);
 		if(!empty($request[$habtmModel][$habtmModel])) {
 			if(in_array($record[$habtmModel]['id'], $request[$habtmModel][$habtmModel])) {

@@ -1,5 +1,68 @@
 
 
+function watchForm(form, record) {
+	var inputs = form.find(':input').not('[type=hidden], #ProjectReviewChangesetJson, #ProjectReviewEmail, #ProjectReviewComment, #ProjectReviewDone');
+	var changeset = {};
+	$.each(inputs, function(index, input) {
+		$(input).change(function() {
+			var value = $(input).val();
+			if($(input).attr('type') == 'checkbox') {
+				if(!input.checked) value = false;
+			}
+			var path = getPath($(input).attr('datapath'));
+			var master = record;
+			$.each(path, function(i, frag) {
+				if(typeof master[frag] !== 'undefined') master = master[frag];
+			});
+			
+			var lastBranch = changeset;
+			var branches = [];
+			
+			$.each(path, function(i, frag) {
+				if(path.length == i + 1) {
+					if((!master && !value) || (master == value)) {
+						delete lastBranch[frag];
+						
+						// tidy up the tree
+						while(path.length > 0) {
+							var reverse = path.slice(0);	// clone the array
+							$.each(reverse.reverse(), function(n, frag) {
+								var reversekey = path.length - 1 - n;
+								console.log(branches[reversekey]);
+								
+								if(branches[reversekey] && branches[reversekey][frag] && $.isEmptyObject(branches[reversekey][frag])) {
+									console.log('delete');
+									delete branches[reversekey][frag];
+								}
+							});
+							console.log(path);
+							path.pop();
+						}
+					}
+					else{
+						lastBranch[frag] = value;
+					}
+				}else{
+					if((!master && !value) || (master == value)) {
+						if(typeof lastBranch[frag] === 'undefined') return false;
+					}else{
+						if(typeof lastBranch[frag] === 'undefined') lastBranch[frag] = {};
+					}
+					branches[i] = lastBranch;
+					lastBranch = lastBranch[frag];
+				}
+			});
+			$('#ProjectReviewChangesetJson').val(JSON.stringify(changeset, null, 4));
+		});
+	});
+}
+
+function getPath(string) {
+	var path = [];
+	path = string.split('.');
+	return path;
+}
+
 function populateForm(container, schema, data) {
 	var i = 0;
 	$.each(data, function(index, record) {
@@ -36,6 +99,7 @@ function buildForm(container, schema, index, record) {
 		
 		attributes = options.attributes;
 		attributes.name = 'data[' + model + '][][' + field + ']';
+		attributes.datapath = model+'.'+index+'.'+field;
 		if(!attributes.id) {
 			attributes.id = model + index + camelize(field);
 		}

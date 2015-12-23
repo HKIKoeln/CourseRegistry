@@ -53,6 +53,11 @@ class Project extends AppModel {
 		AND	empty($results[0]['ParentProject']['id'])) {
 			unset($results[0]['ParentProject']);
 		}
+		if(	$primary === true
+		AND isset($results[0]['AppUser'])
+		AND	empty($results[0]['AppUser']['id'])) {
+			unset($results[0]['AppUser']);
+		}
 		return $results;
 	}
 	
