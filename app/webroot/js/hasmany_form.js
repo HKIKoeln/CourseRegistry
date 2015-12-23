@@ -3,13 +3,24 @@
 function watchForm(form, record) {
 	var inputs = form.find(':input').not('[type=hidden], #ProjectReviewChangesetJson, #ProjectReviewEmail, #ProjectReviewComment, #ProjectReviewDone');
 	var changeset = {};
+	var test = $('#ProjectReviewChangesetJson').val();
+	if(test) {
+		var changeset = JSON.parse($('#ProjectReviewChangesetJson').val());
+	}
 	$.each(inputs, function(index, input) {
+		// on-change function
 		$(input).change(function() {
 			var value = $(input).val();
 			if($(input).attr('type') == 'checkbox') {
-				if(!input.checked) value = false;
+				if(!input.checked) value = '';
+				else value = $(input).next('label').text();
 			}
+			
 			var path = getPath($(input).attr('datapath'));
+			var idPath = path.slice(0);
+			idPath[idPath.length - 1] = 'id';	// doesn't apply for tagging!
+			var objectId = $('[datapath="'+idPath.join('.')+'"]').val();
+			// get the master value from the record tree
 			var master = record;
 			$.each(path, function(i, frag) {
 				if(typeof master[frag] !== 'undefined') master = master[frag];
@@ -28,18 +39,22 @@ function watchForm(form, record) {
 							var reverse = path.slice(0);	// clone the array
 							$.each(reverse.reverse(), function(n, frag) {
 								var reversekey = path.length - 1 - n;
-								console.log(branches[reversekey]);
-								
-								if(branches[reversekey] && branches[reversekey][frag] && $.isEmptyObject(branches[reversekey][frag])) {
-									console.log('delete');
-									delete branches[reversekey][frag];
+								if(branches[reversekey]
+								&& branches[reversekey][frag]) {
+									if(Object.keys(branches[reversekey][frag]).length === 1
+									&& branches[reversekey][frag]['id']) {
+										delete branches[reversekey][frag]['id'];
+									}
+									if($.isEmptyObject(branches[reversekey][frag])) {
+										delete branches[reversekey][frag];
+									}
 								}
 							});
-							console.log(path);
 							path.pop();
 						}
-					}
-					else{
+					}else{
+						// assign to changeset
+						lastBranch['id'] = objectId;
 						lastBranch[frag] = value;
 					}
 				}else{
@@ -52,6 +67,7 @@ function watchForm(form, record) {
 					lastBranch = lastBranch[frag];
 				}
 			});
+			
 			$('#ProjectReviewChangesetJson').val(JSON.stringify(changeset, null, 4));
 		});
 	});
@@ -103,6 +119,7 @@ function buildForm(container, schema, index, record) {
 		if(!attributes.id) {
 			attributes.id = model + index + camelize(field);
 		}
+		
 		if(attributes.type != 'hidden') {
 			if(!options.label) options.label = humanize(field);
 			label = document.createElement('label');
@@ -113,6 +130,7 @@ function buildForm(container, schema, index, record) {
 		
 		// field types
 		if(attributes.type == 'hidden') {
+			input = document.createElement('input');
 			$(div).attr({style:'display:none;'});
 		}
 		else if(attributes.type == 'select') {

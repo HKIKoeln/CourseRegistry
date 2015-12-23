@@ -87,24 +87,28 @@ class ProjectsController extends AppController {
 		$project = $this->Project->find('first', array('conditions' => array('Project.id' => $id)));
 		if(empty($id)) $this->redirect('/');
 		
-		if(!empty($this->request->data['Project'])) {
+		if(	!empty($this->request->data['ProjectReview']['changeset_json'])
+		AND	$this->request->data['ProjectReview']['changeset_json'] != '{}') {
 			$this->loadModel('ProjectReview');
 			// check the ID has been autorized correctly
 			$sid = $this->Session->read('review.Project.id');
 			if(empty($sid) OR $id != $sid) $this->redirect('/');
+			$this->request->data['ProjectReview']['project_id'] = $id;
 			
-			if($this->Project->validateAll($this->request->data)) {
-				$this->request->data = $this->Project->data;		// callback beforeValidate manipulates data
+			
+			//if($this->ProjectReview->validateAll($this->request->data)) {
+			//	$this->request->data = $this->Project->data;		// callback beforeValidate manipulates data
 				
-				// serialize
+				
 				
 				if($this->ProjectReview->save($this->request->data, array('validate' => false))) {
 					// don't redirect, don't destroy the session - let people save their form
-					$this->Session->write('review.ProjectReview.id', $this->id);
+					$this->Session->write('review.Project.id', $id);
+					$this->request->data['Project']['id'] = $id;
 				}
-			}else{
-				$this->set('errors', $this->Project->validationErrors);
-			}
+			//}else{
+				//$this->set('errors', $this->Project->validationErrors);
+			//}
 		}else{
 			$this->request->data = $project;
 			$this->Session->write('review.Project.id', $id);
@@ -113,8 +117,6 @@ class ProjectsController extends AppController {
 		$this->_setSchemas();
 		
 		$this->viewVars['_serialize']['project'] = json_encode($project);
-		
-		$this->render('review');
 	}
 	
 	
