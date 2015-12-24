@@ -2,7 +2,8 @@
 
 function HasManyForm(formSelector, changesetSelector, exclude, record, schema) {
 	this.form = $(formSelector);
-	this.inputs = this.form.find(':input').not('[type=hidden], [value=submit], ' + exclude + ', ' + changesetSelector);
+	this.inputs;
+	this.exclude = exclude;
 	this.changeset = {};
 	this.changesetSelector = changesetSelector;
 	if($(changesetSelector).val()) this.changeset = JSON.parse($(changesetSelector).val());
@@ -14,83 +15,95 @@ function HasManyForm(formSelector, changesetSelector, exclude, record, schema) {
 
 HasManyForm.prototype.watchForm = function() {
 	var self = this;
+	this.inputs = this.form.find(':input').not('[type=hidden], [value=submit], ' + this.exclude + ', ' + this.changesetSelector);
 	$.each(self.inputs, function(index, input) {
-		var wf = {};	// the watchForm variables object - to be passed around...
-		if(typeof $(input).attr('datapath') === 'undefined')
-		console.log($(input));
-		wf.path = $(input).attr('datapath').split('.');
-		wf.relation = {src: wf.path[0], type: false, target: false, cross: false};
-		
-		if($(input).attr('datarelation')) {
-			var split = $(input).attr('datarelation').split('.');
-			if(split[0]) wf.relation['src'] = split[0];
-			if(split[1]) wf.relation['type'] = split[1];	// habtm, hasmany, hasone(?), belongsto
-			if(split[2]) wf.relation['target'] = split[2];
-			if(split[3] && wf.relation.type === 'habtm') {
-				wf.relation['cross'] = split[3];
-			}else{
-				// having an Inflector::pluralize() would be nice...
-				wf.relation['cross'] = wf.relation.src + 's' + wf.relation.target;
-			}
-		}
-		wf.mainObjectFk = wf.relation.src.toLowerCase() + '_id';
-		
+		var wf = self.initInput(input);
 		// the actual on-change method!
 		$(input).change(function() {
-			self.getValue(wf, input);
-			self.getRecord(wf);
-			self.createChangeset(wf);
-			$(self.changesetSelector).val(JSON.stringify(self.changeset, null, 4));
+			self.processInput(wf, input);
 		});
 	});
 };
 
+HasManyForm.prototype.processInput = function(wf, input) {
+	this.getValue(wf, input);
+	this.getRecord(wf);
+	this.createChangeset(wf);
+	$(this.changesetSelector).val(JSON.stringify(this.changeset, null, 4));
+};
+
+HasManyForm.prototype.initInput = function(input) {
+	var wf = {};	// the watchForm variables object - to be passed around...
+	console.log($(input));
+	wf.path = $(input).attr('datapath').split('.');
+	wf.relation = {src: wf.path[0], type: false, target: false, cross: false};
+	
+	if($(input).attr('datarelation')) {
+		var split = $(input).attr('datarelation').split('.');
+		if(split[0]) wf.relation['src'] = split[0];
+		if(split[1]) wf.relation['type'] = split[1];	// habtm, hasmany, hasone(?), belongsto
+		if(split[2]) wf.relation['target'] = split[2];
+		if(split[3] && wf.relation.type === 'habtm') {
+			wf.relation['cross'] = split[3];
+		}else{
+			// having an Inflector::pluralize() would be nice...
+			wf.relation['cross'] = wf.relation.src + 's' + wf.relation.target;
+		}
+	}
+	wf.mainObjectFk = wf.relation.src.toLowerCase() + '_id';
+	return wf;
+}
 
 HasManyForm.prototype.createChangeset = function(wf) {
+	var self = this;
 	var lastBranch = this.changeset;
 	var branches = [];
-	var path = wf.path;
-	$.each(path, function(i, frag) {
-		var stoplevel = 1;
-		// ##todo: extend this
+	var realPath = []
+	$.each(wf.path, function(i, frag) {
+		realPath.push(frag);
 		if(wf.path.length == i + 1) {
+			// delete the matching results from changeset
 			if(wf.matchResult.match) {
 				delete lastBranch[frag];
-				// tidy up the tree
-				while(path.length > 0) {
-					var reverse = path.slice(0);	// clone the array
-					$.each(reverse.reverse(), function(n, frag) {
-						var reversekey = path.length - 1 - n;
-						if(branches[reversekey]
-						&& branches[reversekey][frag]) {
-							if(Object.keys(branches[reversekey][frag]).length === 1
-							&& branches[reversekey][frag]['id']) {
-								delete branches[reversekey][frag]['id'];
-							}
-							if($.isEmptyObject(branches[reversekey][frag])) {
-								delete branches[reversekey][frag];
-							}
-						}
-					});
-					path.pop();
-				}
+				self.tidyTree(wf.path, branches);
 			}
-		}
-		else if(wf.path.length == i + 2) {
-			if(wf.relation.type === 'habtm') {
+		}else if(wf.path.length == i + 2) {
+			if(wf.relation.type === 'habtm' && frag === wf.relation.cross) {
 				if(wf.matchResult.match) {
 					// remove
+					branches[i] = lastBranch[frag];
+					if(typeof lastBranch[frag][0] !== 'undefined') {
+						$.each(lastBranch[frag], function(n, set) {
+							if((set[wf.path[i+1]] === wf.valueOption) || (set.id && set.id === wf.matchResult.obj.id)) {
+								realPath.push(n);
+								// delete the array element
+								lastBranch[frag].remove(n);
+								self.tidyTree(realPath, branches);
+								return false;
+							}
+						});
+					}
+					
 				}else{
 					// add
+					if(typeof lastBranch[wf.relation.cross] === 'undefined') lastBranch[wf.relation.cross] = [];
+					var len = lastBranch[wf.relation.cross].length;
+					lastBranch[wf.relation.cross][len] = wf.resultObject;
 				}
 				return false;
 			}else{
-				// apply resultObject
-				lastBranch[frag] = wf.resultObject;
+				// apply common resultObjects
+				if(!wf.matchResult.match) {
+					$.each(wf.resultObject, function(key, value) {
+						if(typeof lastBranch[frag] === 'undefined') lastBranch[frag] = {};
+						lastBranch[frag][key] = value;
+					});
+				}
 				// continue to stoplevel 2 and check match - eventually remove it there again :o)
+				branches[i] = lastBranch;
+				lastBranch = lastBranch[frag];
 			}
-		}
-		else{
+		}else{
 			if(wf.matchResult.match) {
 				if(typeof lastBranch[frag] === 'undefined') return false;
 			}else{
@@ -102,31 +115,70 @@ HasManyForm.prototype.createChangeset = function(wf) {
 	});
 };
 
+HasManyForm.prototype.tidyTree = function(p, branches) {
+	var path = p.slice(0);
+	while(path.length > 0) {
+		var reverse = path.slice(0);	// clone the array
+		$.each(reverse.reverse(), function(n, frag) {
+			var reversekey = path.length - 1 - n;
+			
+			if(branches[reversekey]
+			&& (branches[reversekey][frag] || branches[reversekey].hasOwnProperty(frag))) {
+				
+				if(Object.keys(branches[reversekey][frag]).length === 1
+				&& branches[reversekey][frag]['id']) {
+					delete branches[reversekey][frag]['id'];
+				}
+				
+				if(Object.keys(branches[reversekey][frag]).length === 1) {
+					var keys = Object.keys(branches[reversekey][frag])
+					if(branches[reversekey][frag][keys[0]].constructor === Array
+					&& branches[reversekey][frag][keys[0]].length === 0)
+						delete branches[reversekey][frag];
+				}
+				
+				if($.isEmptyObject(branches[reversekey][frag])) {
+					delete branches[reversekey][frag];
+				}
+			}
+			
+		});
+		path.pop();
+	}
+};
+
 HasManyForm.prototype.parseRecord = function(wf) {
 	var tree = this.record;
 	var path = wf.path;
+	var tagExists = false;
 	var result = {match:false, path:[], obj:{}};
 	$.each(path, function(i, frag) {
 		if(wf.relation.type === 'habtm' && frag === wf.relation.cross) {
-			// we're at the CrossTableModel level
 			// iterate over existing objects, create a new one if none matches
 			if(typeof tree[0] !== 'undefined') {
 				$.each(tree, function(n, set) {
 					tree = set[frag];
+					if(tree[path[i+1]] === wf.valueOption) tagExists = true;
 					if((!tree[path[i+1]] && !wf.value) || (wf.value == tree[path[i+1]])) {
 						result.match = true;
 						result.obj = tree;
 						result.path.push(n);
 						return false;	// the current tree branch matches - break tree loop
 					}
+					// tag exists, but current choice does not
+					if(tree[path[i+1]] === wf.valueOption && wf.value !== wf.valueOption) {
+						// the empty record (id only) bedoelt: delete!
+						result.obj['id'] = tree.id;
+						result.path.push(n);
+					}
 				});
 			}
 			// record does not exist - create one
-			if(!result.match) {
+			if(!tagExists) {
 				result.obj['id'] = '';
-				result.obj[mainObjectFk] = wf.mainObjectId;
+				result.obj[wf.mainObjectFk] = wf.mainObjectId;
 				result.obj[path[i+1]] = wf.value;
-			};
+			}
 			return false;	// break path loop
 		}
 		else{
@@ -147,15 +199,19 @@ HasManyForm.prototype.parseRecord = function(wf) {
 		}
 		result.path.push(frag);
 	});
-	// no match ##todo: what to do?
+	// removing a created tag that didn't exist before
+	if(wf.relation.type == 'habtm' && !wf.value && !tagExists) {
+		result.match = true;
+		result.obj['id'] = '';
+		result.obj[wf.mainObjectFk] = wf.mainObjectId;
+		result.obj[path[path.length - 1]] = wf.valueOption;
+	}
 	return result;
 }
 
 HasManyForm.prototype.getRecord = function(wf) {
 	// get the object, the path to the object and id of that object, where these changes go to
 	wf.resultObject = {};
-	wf.matchResult = this.parseRecord(wf);
-	
 	if(!wf.relation.type) {
 		// straight data - no relation
 		wf.idPath = wf.path.slice(0);
@@ -164,6 +220,7 @@ HasManyForm.prototype.getRecord = function(wf) {
 		// value should be fetched after change (take care where to invoke this function!)
 		wf.resultObject['id'] = wf.mainObjectId;
 		wf.resultObject[wf.path[wf.path.length - 1]] = wf.value;
+		wf.matchResult = this.parseRecord(wf);	// wf.mainObjectId must be defined before
 	}
 	else{
 		// relation types
@@ -172,6 +229,7 @@ HasManyForm.prototype.getRecord = function(wf) {
 		}else{
 			// ##todo: other relation types
 		}
+		wf.matchResult = this.parseRecord(wf);	// wf.mainObjectId must be defined before
 		wf.resultObject = wf.matchResult.obj;
 	}
 };
@@ -179,6 +237,7 @@ HasManyForm.prototype.getRecord = function(wf) {
 HasManyForm.prototype.getValue = function(wf, input) {
 	// determine the value, depending on input type
 	wf.value = $(input).val();
+	wf.valueOption = wf.value;
 	if($(input).attr('type') === 'checkbox') {
 		if(wf.relation.type === 'habtm') {
 			if(!input.checked) wf.value = '';
@@ -214,7 +273,7 @@ HasManyForm.prototype.buildForm = function(container, schema, index, record) {
 	var baseId = $(container).attr('id');
 	var fieldset = document.createElement('fieldset');
 	var self = this;
-	$(fieldset).attr({id:baseId + '-' + index});
+	$(fieldset).attr({id:baseId + index});
 	
 	$.each(schema, function(key, options) {
 		var keysplit = key.split('.');
@@ -282,10 +341,15 @@ HasManyForm.prototype.buildForm = function(container, schema, index, record) {
 	
 	// button to remove the last object - but only if all visible fields are empty!
 	var remove = document.createElement('a');
-	$(remove).attr({id:baseId + index + 'remove', data:baseId + '-' + index, class:'remove button'});
+	$(remove).attr({id:baseId + index + 'remove', data:baseId + index, class:'remove button'});
 	$(remove).text('remove this ' + baseId);
 	$(remove).on('click', function() {
 		var target = $('#' + $(this).attr('data'));
+		// get this object's id field
+		var ex = $('#' + $(this).attr('data') + 'Id');
+		var wf = self.initInput(ex);
+		self.processInput(wf, ex);
+		// cool. except for we don't get any changeset :-(
 		target.remove();
 		return false;
 	});
@@ -322,7 +386,12 @@ HasManyForm.prototype.humanize = function(str) {
 	.replace(/^(.)/g, function($1) { return $1.toUpperCase(); });
 }
 
-
+// Array Remove - By John Resig (MIT Licensed)
+Array.prototype.remove = function(from, to) {
+  var rest = this.slice((to || from) + 1 || this.length);
+  this.length = from < 0 ? this.length + from : from;
+  return this.push.apply(this, rest);
+};
 
 
 

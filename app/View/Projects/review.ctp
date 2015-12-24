@@ -194,7 +194,7 @@ jQuery(document).ready(function() {
 	var hyperlinks = $('#ProjectLink');
 	var hyperlinks = new HasManyForm(
 		null,null,null,
-		projectLinks,
+		record,
 		projectLinkFieldlist
 	);
 	hyperlinks.populateForm($('#ProjectLink'), projectLinkFieldlist, projectLinks);
