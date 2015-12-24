@@ -199,7 +199,7 @@ jQuery(document).ready(function() {
 	);
 	hyperlinks.populateForm($('#ProjectLink'), projectLinkFieldlist, projectLinks);
 	
-	parent.watchForm();
+	parentForm.watchForm();
 });
 </script>
 

@@ -2,8 +2,9 @@
 
 function HasManyForm(formSelector, changesetSelector, exclude, record, schema) {
 	this.form = $(formSelector);
-	this.inputs = this.form.find(':input').not('[type=hidden], ' + exclude + ', ' + changesetSelector);
+	this.inputs = this.form.find(':input').not('[type=hidden], [value=submit], ' + exclude + ', ' + changesetSelector);
 	this.changeset = {};
+	this.changesetSelector = changesetSelector;
 	if($(changesetSelector).val()) this.changeset = JSON.parse($(changesetSelector).val());
 	this.record = record;
 	this.schema = schema;
@@ -12,10 +13,13 @@ function HasManyForm(formSelector, changesetSelector, exclude, record, schema) {
 
 
 HasManyForm.prototype.watchForm = function() {
-	$.each(this.inputs, function(index, input) {
-		ar wf = {};	// the watchForm variables object - to be passed around...
+	var self = this;
+	$.each(self.inputs, function(index, input) {
+		var wf = {};	// the watchForm variables object - to be passed around...
+		if(typeof $(input).attr('datapath') === 'undefined')
+		console.log($(input));
 		wf.path = $(input).attr('datapath').split('.');
-		wf.relation = {src: path[0], type: false, target: false, cross: false};
+		wf.relation = {src: wf.path[0], type: false, target: false, cross: false};
 		
 		if($(input).attr('datarelation')) {
 			var split = $(input).attr('datarelation').split('.');
@@ -31,24 +35,22 @@ HasManyForm.prototype.watchForm = function() {
 		}
 		wf.mainObjectFk = wf.relation.src.toLowerCase() + '_id';
 		
-		v
-		
 		// the actual on-change method!
 		$(input).change(function() {
-			this.getValue(wf, input);
-			this.getRecord(wf);
-			this.createChangeset(wf);
-			
+			self.getValue(wf, input);
+			self.getRecord(wf);
+			self.createChangeset(wf);
+			$(self.changesetSelector).val(JSON.stringify(self.changeset, null, 4));
 		});
 	});
 };
 
 
 HasManyForm.prototype.createChangeset = function(wf) {
-	var lastbranch = this.changeset;
+	var lastBranch = this.changeset;
 	var branches = [];
 	var path = wf.path;
-	$.each(wf.path, function(i, frag) {
+	$.each(path, function(i, frag) {
 		var stoplevel = 1;
 		// ##todo: extend this
 		if(wf.path.length == i + 1) {
@@ -100,7 +102,9 @@ HasManyForm.prototype.createChangeset = function(wf) {
 	});
 };
 
-HasManyForm.prototype.parseRecord = function(wf, tree, path) {
+HasManyForm.prototype.parseRecord = function(wf) {
+	var tree = this.record;
+	var path = wf.path;
 	var result = {match:false, path:[], obj:{}};
 	$.each(path, function(i, frag) {
 		if(wf.relation.type === 'habtm' && frag === wf.relation.cross) {
@@ -130,7 +134,7 @@ HasManyForm.prototype.parseRecord = function(wf, tree, path) {
 			// return object or value according to path
 			// provide matching for primary data
 			if(path.length == i + 1) {
-				if((!tree[frag] && !value) || (tree[frag] == value)) {
+				if((!tree[frag] && !wf.value) || (tree[frag] == wf.value)) {
 					// the property does not exist - return current branch
 					result.match = true
 					if(typeof tree[frag] === 'undefined') return false;
@@ -150,7 +154,7 @@ HasManyForm.prototype.parseRecord = function(wf, tree, path) {
 HasManyForm.prototype.getRecord = function(wf) {
 	// get the object, the path to the object and id of that object, where these changes go to
 	wf.resultObject = {};
-	wf.matchResult = this.parseRecord(this.record, wf.path);
+	wf.matchResult = this.parseRecord(wf);
 	
 	if(!wf.relation.type) {
 		// straight data - no relation
@@ -189,8 +193,9 @@ HasManyForm.prototype.getValue = function(wf, input) {
 
 HasManyForm.prototype.populateForm = function(container, schema, data) {
 	var i = 0;
+	var self = this;
 	$.each(data, function(index, record) {
-		this.buildForm(container, schema, index, record);
+		self.buildForm(container, schema, index, record);
 		i = index + 1;
 		window[container.id + '-formIndex'] = i;
 	});
@@ -208,6 +213,7 @@ HasManyForm.prototype.populateForm = function(container, schema, data) {
 HasManyForm.prototype.buildForm = function(container, schema, index, record) {
 	var baseId = $(container).attr('id');
 	var fieldset = document.createElement('fieldset');
+	var self = this;
 	$(fieldset).attr({id:baseId + '-' + index});
 	
 	$.each(schema, function(key, options) {
@@ -225,11 +231,11 @@ HasManyForm.prototype.buildForm = function(container, schema, index, record) {
 		attributes.name = 'data[' + model + '][][' + field + ']';
 		attributes.datapath = model+'.'+index+'.'+field;
 		if(!attributes.id) {
-			attributes.id = model + index + this.camelize(field);
+			attributes.id = model + index + self.camelize(field);
 		}
 		
 		if(attributes.type != 'hidden') {
-			if(!options.label) options.label = this.humanize(field);
+			if(!options.label) options.label = self.humanize(field);
 			label = document.createElement('label');
 			$(label).attr({for:attributes.id});
 			$(label).text(options.label);
