@@ -1,16 +1,17 @@
 
 
+
+
 function watchForm(form, record) {
 	var inputs = form.find(':input').not('[type=hidden], #ProjectReviewChangesetJson, #ProjectReviewEmail, #ProjectReviewComment, #ProjectReviewDone');
 	var changeset = {};
-	var test = $('#ProjectReviewChangesetJson').val();
-	if(test) {
+	if($('#ProjectReviewChangesetJson').val()) {
 		var changeset = JSON.parse($('#ProjectReviewChangesetJson').val());
 	}
 	$.each(inputs, function(index, input) {
 		// on-change function
 		$(input).change(function() {
-			var modelName, relModelName, crossTable, objectId, objectFk, //object, mainObjectId;
+			var modelName, relModelName, crossTable, objectId, objectFk, mainObjectId;
 			var path = getPath($(input).attr('datapath'));
 			var relation = {src: path[0], type: false, target: false, cross: false};
 			
@@ -151,13 +152,12 @@ function watchForm(form, record) {
 
 function parseTree(tree, path, relation) {
 	$.each(path, function(i, frag) {
-		
 		if(relation.type && frag === relation.cross) {
 			if(typeof tree[0] !== 'undefined') {
 				var match = false;
 				$.each(tree, function(n, set) {
 					tree = set[frag];
-					if($(input).val() == object[idPath[i+1]]) {
+					if($(input).val() == object[path[i+1]]) {
 						console.log('Match!');
 						match = true;
 						return false;
@@ -169,7 +169,7 @@ function parseTree(tree, path, relation) {
 				tree = {};
 				tree['id'] = '';
 				tree[mainObjectFk] = mainObjectId;
-				tree[idPath[i+1]] = $(input).val();
+				tree[path[i+1]] = $(input).val();
 			};
 			return false;
 		}else{
