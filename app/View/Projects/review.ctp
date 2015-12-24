@@ -172,9 +172,10 @@ if(!empty($errors)) {
 <script>
 window.jQuery || document.write('<script src="\/\/code.jquery.com\/jquery-1.11.3.min.js"><\/script>')
 </script>
-<?php echo $this->Html->script('hasmany_form.js'); ?>
+<?php echo $this->Html->script('HasManyForm.js'); ?>
 
 <script>
+
 var record = <?php echo $_serialize['project']; ?>;
 
 var projectLinks = record.ProjectLink;
@@ -182,11 +183,23 @@ var projectLinkTypes = <?php echo $_serialize['projectLinkTypes']; ?>;
 var projectLinkFieldlist = <?php echo $_serialize['projectLinkFieldlist']; ?>;
 
 jQuery(document).ready(function() {
-	var hyperlinks = $('#ProjectLink');
-	populateForm(hyperlinks, projectLinkFieldlist, projectLinks);
+	var parentForm = new HasManyForm(
+		'#ProjectReviewForm',
+		'#ProjectReviewChangesetJson',
+		'#ProjectReviewChangesetJson, #ProjectReviewEmail, #ProjectReviewComment, #ProjectReviewDone',
+		record
+		// no schema, nothing to build or populate here
+	);
 	
-	var form = $('#ProjectReviewForm');
-	watchForm(form, record);
+	var hyperlinks = $('#ProjectLink');
+	var hyperlinks = new HasManyForm(
+		null,null,null,
+		projectLinks,
+		projectLinkFieldlist
+	);
+	hyperlinks.populateForm($('#ProjectLink'), projectLinkFieldlist, projectLinks);
+	
+	parent.watchForm();
 });
 </script>
 

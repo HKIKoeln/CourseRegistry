@@ -81,10 +81,8 @@ function watchForm(form, record) {
 			
 			// get the master value from the record tree
 			var master = parseTree(record, path)
-			
 			var lastBranch = changeset;
 			var branches = [];
-			
 			$.each(path, function(i, frag) {
 				if(relation.type === 'habtm') {
 					if(path.length == i + 2) {
