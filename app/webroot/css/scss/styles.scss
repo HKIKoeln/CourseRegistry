@@ -308,11 +308,11 @@ $col_min_height: 400px;
 			
 			.rightpane {
 				position: fixed;
-				right: 10px;
-				top: 20px;
+				left: 840px;
+				top: 40px;
 				textarea {
-					// fit content would be nice, but  not possible this way
-					// eventually provide a modal window to display this
+					width: 400px;
+					height: 500px;
 				}
 			}
 			

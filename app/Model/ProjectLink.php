@@ -41,12 +41,23 @@ class ProjectLink extends AppModel {
 	
 	public function getFieldlist() {
 		return array(
-			'ProjectLink.id' => array('attributes' => array('type' => 'hidden')),
-			'ProjectLink.project_id' => array('attributes' => array('type' => 'hidden')),
+			'ProjectLink.id' => array(
+				'attributes' => array(
+					'type' => 'hidden',
+					'datarelation' => 'Project.hasmany.ProjectLink'
+				)
+			),
+			'ProjectLink.project_id' => array(
+				'attributes' => array(
+					'type' => 'hidden',
+					'datarelation' => 'Project.hasmany.ProjectLink'
+				)
+			),
 			'ProjectLink.project_link_type_id' => array(
 				'attributes' => array(
 					'type' => 'select',
-					'required' => true
+					'required' => true,
+					'datarelation' => 'Project.hasmany.ProjectLink'
 				),
 				'options' => 'projectLinkTypes',
 				'label' => 'Link Type',
@@ -55,20 +66,23 @@ class ProjectLink extends AppModel {
 			'ProjectLink.url' => array(
 				'attributes' => array(
 					'type' => 'text',
-					'required' => true
+					'required' => true,
+					'datarelation' => 'Project.hasmany.ProjectLink'
 				)
 			),
 			'ProjectLink.title' => array(
 				'attributes' => array(
 					'type' => 'text',
-					'placeholder' => 'Optional. (default: Link Type)'
+					'placeholder' => 'Optional. (default: Link Type)',
+					'datarelation' => 'Project.hasmany.ProjectLink'
 				),
 				'label' => 'Linktext'
 			),
 			'ProjectLink.description' => array(
 				'attributes' => array(
 					'type' => 'textarea',
-					'placeholder' => 'additional information (optional)'
+					'placeholder' => 'additional information (optional)',
+					'datarelation' => 'Project.hasmany.ProjectLink'
 				)
 			)
 		);
