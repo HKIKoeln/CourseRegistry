@@ -1,6 +1,6 @@
 
 
-function HasManyForm(formSelector, changesetSelector, exclude, record, schema, parentForm) {
+function HasManyForm(formSelector, changesetSelector, exclude, record, parentForm) {
 	if(parentForm) {
 		this.form = parentForm.form;
 		this.inputs = parentForm.inputs;
@@ -8,7 +8,6 @@ function HasManyForm(formSelector, changesetSelector, exclude, record, schema, p
 		this.changeset = parentForm.changeset;
 		this.changesetSelector = parentForm.changesetSelector;
 		this.record = parentForm.record;
-		this.schema = parentForm.schema;
 	}else{
 		this.form = $(formSelector);
 		this.inputs;
@@ -16,7 +15,6 @@ function HasManyForm(formSelector, changesetSelector, exclude, record, schema, p
 		this.changeset = {};
 		this.changesetSelector = changesetSelector;
 		this.record = record;
-		this.schema = schema;
 	}
 }
 
