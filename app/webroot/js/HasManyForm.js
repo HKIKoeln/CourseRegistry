@@ -39,7 +39,6 @@ HasManyForm.prototype.processInput = function(wf, input, compareObject) {
 	this.getValue(wf, input);
 	this.getRecord(wf, compareObject);
 	this.createChangeset(wf, compareObject);
-	console.log(this.changeset);
 	// rewrite the resulting changeset
 	$(this.changesetSelector).val(JSON.stringify(this.changeset, null, 4));
 };
@@ -70,17 +69,11 @@ HasManyForm.prototype.createChangeset = function(wf, compareObject) {
 	var lastBranch = this.changeset;
 	var branches = [];
 	var realPath = [];
+	var compareObject = (wf.relation.type === 'hasmany' && wf.path[wf.path.length-1] === 'id');
 	$.each(wf.path, function(i, frag) {
 		realPath.push(frag);
 		if(wf.path.length == i + 1) {
-			// add objects to delete to the changeset
-			if(wf.relation.type === 'hasmany' && compareObject) {
-				if(compareObject === 'remove') {
-					lastBranch[frag] = wf.matchResult.obj;
-					return false;
-				}
-			}
-			else if(wf.matchResult.match) {
+			if(wf.matchResult.match & !compareObject) {
 				delete lastBranch[frag];
 				self.tidyTree(wf.path, branches);
 			}
@@ -112,34 +105,30 @@ HasManyForm.prototype.createChangeset = function(wf, compareObject) {
 				if(!compareObject) {
 					// apply common resultObjects
 					if(!wf.matchResult.match) {
+						if(typeof lastBranch[frag] === 'undefined') lastBranch[frag] = {};
 						$.each(wf.resultObject, function(key, value) {
-							if(typeof lastBranch[frag] === 'undefined') lastBranch[frag] = {};
 							lastBranch[frag][key] = value;
 						});
 					}
 					// continue to stoplevel 2 and check match - eventually remove it there again :o)
 				}
-				branches[i] = lastBranch;
-				lastBranch = lastBranch[frag];
 			}
 		}else if(wf.path.length == i + 3 && compareObject) {
 			if(typeof lastBranch[frag] === 'undefined') lastBranch[frag] = {};
 			lastBranch[frag][wf.path[i+1]] = wf.matchResult.obj;
 			return false;
 		}
-		else{
-			if(!compareObject) {
-				if(wf.matchResult.match) {
-					if(typeof lastBranch[frag] === 'undefined') return false;
-				}else{
-					if(typeof lastBranch[frag] === 'undefined') lastBranch[frag] = {};
-				}
-			}else{
-				if(typeof lastBranch[frag] === 'undefined') lastBranch[frag] = {};
-			}
-			branches[i] = lastBranch;
-			lastBranch = lastBranch[frag];
+		
+		
+		if(wf.matchResult.match) {
+			// error
+			if(typeof lastBranch[frag] === 'undefined') return false;
+		}else{
+			if(typeof lastBranch[frag] === 'undefined') lastBranch[frag] = {};
 		}
+		
+		branches[i] = lastBranch;
+		lastBranch = lastBranch[frag];
 	});
 };
 
@@ -158,11 +147,25 @@ HasManyForm.prototype.tidyTree = function(p, branches) {
 					delete branches[reversekey][frag]['id'];
 				}
 				
+				// habtm arrays
 				if(Object.keys(branches[reversekey][frag]).length === 1) {
+					// habtm arrays
 					var keys = Object.keys(branches[reversekey][frag])
 					if(branches[reversekey][frag][keys[0]].constructor === Array
-					&& branches[reversekey][frag][keys[0]].length === 0)
+					&& branches[reversekey][frag][keys[0]].length === 0) {
 						delete branches[reversekey][frag];
+					}
+				}
+				
+				// hasmany objects - otherwise delete objects set's the corresponding array value to NULL
+				if(branches[reversekey][frag] && branches[reversekey][frag].constructor === Array) {
+					var copy = branches[reversekey][frag]
+					$.each(copy, function(key, value) {
+						if(typeof value === 'undefined') branches[reversekey][frag].remove(key);
+					});
+					if(branches[reversekey][frag].length === 0) {
+						delete branches[reversekey][frag];
+					}
 				}
 				
 				if($.isEmptyObject(branches[reversekey][frag])) {
@@ -210,23 +213,23 @@ HasManyForm.prototype.parseRecord = function(wf, compareObject) {
 			}
 			return false;	// break path loop
 		}
-		else if(wf.relation.type === 'hasmany' && path.length == i + 1 && compareObject) {
-			// we're checking if a subobject has been added or removed
-			if(compareObject === 'remove') {
-				// the object has to be removed
-				if((!tree[frag] && !wf.value) || (wf.value == tree[frag])) {
-					result.match = true;
-					// create an empty object
-					result.obj['id'] = tree.id;
-				}else{
-					result.match = false;
-				}
-				result.path = path;
-				return false;
+		else if(wf.relation.type === 'hasmany' && path.length === i + 1 && path[i] === 'id') {
+			// we're checking if a subobject is being added or removed
+			if(tree[frag] && wf.value === tree[frag]) {
+				// removing an existing record, create a "delete-object"
+				result.match = false;
+				result.obj['id'] = tree.id;
+			}else if(!tree[frag] && !wf.value) {
+				// removing/adding a non-existing record, return the empty object (default)
+				result.match = false;	// add
+				result.match = true;	// remove
+				// how to identify these cases?
 			}
+			result.path = path;
+			return false;
 		}
 		else{
-			// primary data tree, skip on relation. OR evaluate on no relation(!)
+			// primary data tree, skip on relation. OR evaluate on "hasmany" & no relation(!)
 			// return object or value according to path
 			// provide matching for primary data
 			if(path.length == i + 1) {
@@ -244,11 +247,9 @@ HasManyForm.prototype.parseRecord = function(wf, compareObject) {
 		result.path.push(frag);
 	});
 	// removing a created tag that didn't exist before
-	if((wf.relation.type == 'habtm' || wf.relation.type === 'hasmany') && !wf.value && !tagExists) {
+	if((wf.relation.type == 'habtm') && !wf.value && !tagExists) {
 		result.match = true;
-		result.obj['id'] = '';
-		result.obj[wf.mainObjectFk] = wf.mainObjectId;
-		result.obj[path[path.length - 1]] = wf.valueOption;
+		// return empty default object
 	}
 	return result;
 }
