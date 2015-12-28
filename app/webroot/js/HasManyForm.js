@@ -35,10 +35,10 @@ HasManyForm.prototype.watchForm = function() {
 	});
 };
 
-HasManyForm.prototype.processInput = function(wf, input, compareObject) {
+HasManyForm.prototype.processInput = function(wf, input) {
 	this.getValue(wf, input);
-	this.getRecord(wf, compareObject);
-	this.createChangeset(wf, compareObject);
+	this.getRecord(wf);
+	this.createChangeset(wf);
 	// rewrite the resulting changeset
 	$(this.changesetSelector).val(JSON.stringify(this.changeset, null, 4));
 };
@@ -64,7 +64,7 @@ HasManyForm.prototype.initInput = function(input) {
 	return wf;
 }
 
-HasManyForm.prototype.createChangeset = function(wf, compareObject) {
+HasManyForm.prototype.createChangeset = function(wf) {
 	var self = this;
 	var lastBranch = this.changeset;
 	var branches = [];
@@ -178,7 +178,7 @@ HasManyForm.prototype.tidyTree = function(p, branches) {
 	}
 };
 
-HasManyForm.prototype.parseRecord = function(wf, compareObject) {
+HasManyForm.prototype.parseRecord = function(wf) {
 	var tree = this.record;
 	var path = wf.path;
 	var tagExists = false;
@@ -254,7 +254,7 @@ HasManyForm.prototype.parseRecord = function(wf, compareObject) {
 	return result;
 }
 
-HasManyForm.prototype.getRecord = function(wf, compareObject) {
+HasManyForm.prototype.getRecord = function(wf) {
 	// get the object, the path to the object and id of that object, where these changes go to
 	wf.resultObject = {};
 	if(!wf.relation.type || wf.relation.type === 'hasmany') {
@@ -265,7 +265,7 @@ HasManyForm.prototype.getRecord = function(wf, compareObject) {
 		// value should be fetched after change (take care where to invoke this function!)
 		wf.resultObject['id'] = wf.mainObjectId;
 		wf.resultObject[wf.path[wf.path.length - 1]] = wf.value;
-		wf.matchResult = this.parseRecord(wf, compareObject);	// wf.mainObjectId must be defined before
+		wf.matchResult = this.parseRecord(wf);	// wf.mainObjectId must be defined before
 	}
 	else{
 		// relation types
@@ -391,7 +391,7 @@ HasManyForm.prototype.buildForm = function(container, schema, index, record) {
 		// get this object's id field
 		var ex = $('#' + $(this).attr('data') + 'Id');
 		var wf = self.initInput(ex);
-		self.processInput(wf, ex, 'remove');
+		self.processInput(wf, ex);
 		// cool. except for we don't get any changeset :-(
 		target.remove();
 		return false;
