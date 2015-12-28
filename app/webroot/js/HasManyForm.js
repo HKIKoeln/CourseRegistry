@@ -8,6 +8,7 @@ function HasManyForm(formSelector, changesetSelector, exclude, record, parentFor
 		this.changeset = parentForm.changeset;
 		this.changesetSelector = parentForm.changesetSelector;
 		this.record = parentForm.record;
+		this.objectCount = parent.objectCount;
 	}else{
 		this.form = $(formSelector);
 		this.inputs;
@@ -15,6 +16,7 @@ function HasManyForm(formSelector, changesetSelector, exclude, record, parentFor
 		this.changeset = {};
 		this.changesetSelector = changesetSelector;
 		this.record = record;
+		this.objectCount = {};
 	}
 }
 
@@ -300,21 +302,24 @@ HasManyForm.prototype.populateForm = function(container, schema, data) {
 	var self = this;
 	$.each(data, function(index, record) {
 		self.buildForm(container, schema, index, record);
-		i = index + 1;
-		window[container.id + '-formIndex'] = i;
 	});
 	
 	var add = document.createElement('a');
 	$(add).attr({id:$(container).attr('id') + 'add', class:'add button'});
 	$(add).text('add another ' + $(container).attr('id'));
 	$(add).on('click', function() {
-		//$($(this).attr('data')).remove();
+		self.buildForm(container, schema);
 		return false;
 	});
 	$(add).appendTo(container);
 }
 
 HasManyForm.prototype.buildForm = function(container, schema, index, record) {
+	if(!index && index !== 0) {
+		if(typeof this.objectCount !== 'undefined')
+			index = this.objectCount[$(container).attr('id')+ '-formIndex'];
+		else index = 0;
+	}
 	var baseId = $(container).attr('id');
 	var fieldset = document.createElement('fieldset');
 	var self = this;
@@ -371,11 +376,13 @@ HasManyForm.prototype.buildForm = function(container, schema, index, record) {
 		if(record) {
 			// special rule for link text-field
 			if(model == 'ProjectLink' && field == 'title') {
-				if(window['record'].Project.name == record['title'] ) {
+				if(self.record.Project.name == record['title'] ) {
 					record['title'] = '';
 				}
 			}
 			$(input).val(record[field]);
+		}else{
+			$(input).val('foo');
 		}
 		
 		$(input).attr(attributes).appendTo(div);
@@ -392,13 +399,16 @@ HasManyForm.prototype.buildForm = function(container, schema, index, record) {
 		var ex = $('#' + $(this).attr('data') + 'Id');
 		var wf = self.initInput(ex);
 		self.processInput(wf, ex);
-		// cool. except for we don't get any changeset :-(
 		target.remove();
 		return false;
 	});
 	$(remove).appendTo(fieldset);
 	
 	$(fieldset).appendTo(container);
+	
+	// store the next fieldset index for this container
+	if(typeof this.objectCount === 'undefined') this.objectCount = {};
+	this.objectCount[$(container).attr('id')+ '-formIndex'] = index + 1;
 }
 
 HasManyForm.prototype.camelize = function(str) {
