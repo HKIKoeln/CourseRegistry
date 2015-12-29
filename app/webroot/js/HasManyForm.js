@@ -53,7 +53,6 @@ HasManyForm.prototype.initInput = function(input) {
 	var wf = {};	// the watchForm variables object - to be passed around...
 	wf.path = $(input).attr('datapath').split('.');
 	wf.relation = {src: wf.path[0], type: false, target: false, cross: false};
-	
 	if($(input).attr('datarelation')) {
 		var split = $(input).attr('datarelation').split('.');
 		if(split[0]) wf.relation['src'] = split[0];
@@ -450,8 +449,11 @@ HasManyForm.prototype.buildForm = function(container, schema, index, record) {
 	$(remove).appendTo(fieldset);
 	
 	// make sure the "add another..." button remains on the container bottom
-	if(!userAdded) $(fieldset).appendTo(container);
-	else $(fieldset).insertAfter($('#' + baseId + (index - 1)));
+	if(!userAdded) {
+		$(fieldset).appendTo(container);
+	}else{
+		$(fieldset).insertBefore($('#' + $(container).attr('id') + 'add'));
+	}
 	
 	// store the next fieldset index for this container
 	if(typeof this.objectCount === 'undefined') this.objectCount = {};
