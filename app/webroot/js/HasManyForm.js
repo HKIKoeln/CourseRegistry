@@ -2,6 +2,7 @@
 
 function HasManyForm(formSelector, changesetSelector, exclude, record, parentForm) {
 	if(parentForm) {
+		//this.parent = parentForm;
 		this.form = parentForm.form;
 		this.inputs = parentForm.inputs;
 		this.exclude = parentForm.exclude;
@@ -24,8 +25,11 @@ function HasManyForm(formSelector, changesetSelector, exclude, record, parentFor
 HasManyForm.prototype.watchForm = function() {
 	var self = this;
 	if($(this.changesetSelector).val()) {
-		this.changeset = JSON.parse($(this.changesetSelector).val());
-		// apply changeset to sub-objects, add/remove subobjects
+		// ##ToDo: this has to be applied to the entire form for the admin view
+		//this.changeset = JSON.parse($(this.changesetSelector).val());
+		
+		// for the time being: don't mess, reset everything! (discard entered data)
+		window.location.reload(true);
 	}
 	this.inputs = this.form.find(':input').not('[type=hidden], [value=submit], ' + this.exclude + ', ' + this.changesetSelector);
 	$.each(self.inputs, function(index, input) {
@@ -118,9 +122,15 @@ HasManyForm.prototype.createChangeset = function(wf) {
 		}else if(wf.path.length == i + 3 && compareObject) {
 			if(typeof lastBranch[frag] === 'undefined') lastBranch[frag] = {};
 			lastBranch[frag][wf.path[i+1]] = wf.matchResult.obj;
-			return false;
+			// if object added, return - if deleted go on to tidy the tree
+			if(!$.isEmptyObject(wf.matchResult.obj)) {
+				return false;
+			}else{
+				delete lastBranch[frag][wf.path[i+1]];
+				branches[i] = lastBranch;
+				self.tidyTree(wf.path, branches);
+			}
 		}
-		
 		
 		if(wf.matchResult.match) {
 			// error
@@ -215,18 +225,14 @@ HasManyForm.prototype.parseRecord = function(wf) {
 			}
 			return false;	// break path loop
 		}
-		else if(wf.relation.type === 'hasmany' && path.length === i + 1 && path[i] === 'id') {
-			// we're checking if a subobject is being added or removed
+		else if(wf.relation.type === 'hasmany' && path.length === i + 1 && frag === 'id') {
+			// we're checking if a subobject is being removed
 			if(tree[frag] && wf.value === tree[frag]) {
 				// removing an existing record, create a "delete-object"
 				result.match = false;
 				result.obj['id'] = tree.id;
-			}else if(!tree[frag] && !wf.value) {
-				// removing/adding a non-existing record, return the empty object (default)
-				result.match = false;	// add
-				result.match = true;	// remove
-				// how to identify these cases?
 			}
+			// removing/adding a non-existing record: we won't get here
 			result.path = path;
 			return false;
 		}
@@ -244,14 +250,31 @@ HasManyForm.prototype.parseRecord = function(wf) {
 				}
 			}
 			// return either the final object, the value or the empty object created 3 lines above
+			
+			// matching against empty hasmany objects
+			if(typeof tree[frag] === 'undefined') return false;
+			
 			tree = tree[frag];
 		}
 		result.path.push(frag);
 	});
-	// removing a created tag that didn't exist before
-	if((wf.relation.type == 'habtm') && !wf.value && !tagExists) {
+	// removing a created habtm tag that didn't exist before
+	if(wf.relation.type === 'habtm' && !wf.value && !tagExists) {
 		result.match = true;
 		// return empty default object
+	}
+	// the add method requires the parent foreignKey to be processed
+	if(wf.relation.type === 'hasmany' && wf.path[wf.path.length - 1] === wf.mainObjectFk && wf.value) {
+		// adding a nonexistant object
+		result.match = false;	// add
+		result.obj['id'] = '';
+		result.obj[wf.mainObjectFk] = wf.value;
+		// how to identify these cases? - add: parent_foreignKey - remove: id (empty) -> path-key!
+	}
+	if(wf.relation.type === 'hasmany' && wf.path[wf.path.length - 1] === 'id' && !wf.value) {
+		// removing a nonexistant object
+		result.path = wf.path;
+		result.match = true;	// remove
 	}
 	return result;
 }
@@ -273,8 +296,6 @@ HasManyForm.prototype.getRecord = function(wf) {
 		// relation types
 		if(wf.relation.type === 'habtm') {
 			wf.mainObjectId = $('[datapath="' + wf.relation.src + '.id' + '"]').val();
-		}else{
-			// ##todo: other relation types
 		}
 		wf.matchResult = this.parseRecord(wf);	// wf.mainObjectId must be defined before
 		wf.resultObject = wf.matchResult.obj;
@@ -298,31 +319,41 @@ HasManyForm.prototype.getValue = function(wf, input) {
 
 
 HasManyForm.prototype.populateForm = function(container, schema, data) {
-	var i = 0;
 	var self = this;
 	$.each(data, function(index, record) {
 		self.buildForm(container, schema, index, record);
 	});
 	
+	// extend the form - add new object
 	var add = document.createElement('a');
 	$(add).attr({id:$(container).attr('id') + 'add', class:'add button'});
 	$(add).text('add another ' + $(container).attr('id'));
 	$(add).on('click', function() {
 		self.buildForm(container, schema);
+		var i = self.objectCount[$(container).attr('id')+ '-formIndex'] - 1;
+		var idObj = $('#' + $(container).attr('id') + i + 'Id');
+		var idWf = self.initInput(idObj);
+		var obj = $('#' + $(container).attr('id') + i + idWf.relation.src + 'Id');
+		var wf = self.initInput(obj);
+		self.processInput(wf, obj);
+		// add to watched inputs
 		return false;
 	});
 	$(add).appendTo(container);
 }
 
 HasManyForm.prototype.buildForm = function(container, schema, index, record) {
+	var userAdded = false;
 	if(!index && index !== 0) {
 		if(typeof this.objectCount !== 'undefined')
 			index = this.objectCount[$(container).attr('id')+ '-formIndex'];
 		else index = 0;
+		userAdded = true;	// the user has created an additional form
 	}
 	var baseId = $(container).attr('id');
 	var fieldset = document.createElement('fieldset');
 	var self = this;
+	var newObject = {};
 	$(fieldset).attr({id:baseId + index});
 	
 	$.each(schema, function(key, options) {
@@ -373,6 +404,8 @@ HasManyForm.prototype.buildForm = function(container, schema, index, record) {
 			$(div).addClass('input text');
 		}
 		
+		$(input).attr(attributes);
+		
 		if(record) {
 			// special rule for link text-field
 			if(model == 'ProjectLink' && field == 'title') {
@@ -381,11 +414,23 @@ HasManyForm.prototype.buildForm = function(container, schema, index, record) {
 				}
 			}
 			$(input).val(record[field]);
-		}else{
-			$(input).val('foo');
+		}
+		else{
+			// adding a new object - use the parent_foreignKey to initialize the changeset generation
+			newObject = self.initInput(input);
+			if(field === newObject.mainObjectFk) {
+				var pos = $.inArray(newObject.relation.src, newObject.path);
+				if(pos === -1) {
+					// we're at the base level - get the project's id
+					$(input).val($('#' + newObject.relation.src + 'Id').val());
+				}else{
+					// ##ToDo: test this for deeper nested hasmany relations
+					$(input).val($('#' + newObject.path.slice(0, pos + 1) + 'Id').val());
+				}
+			}
 		}
 		
-		$(input).attr(attributes).appendTo(div);
+		$(input).appendTo(div);
 		$(div).appendTo(fieldset);
 	});
 	
@@ -404,7 +449,9 @@ HasManyForm.prototype.buildForm = function(container, schema, index, record) {
 	});
 	$(remove).appendTo(fieldset);
 	
-	$(fieldset).appendTo(container);
+	// make sure the "add another..." button remains on the container bottom
+	if(!userAdded) $(fieldset).appendTo(container);
+	else $(fieldset).insertAfter($('#' + baseId + (index - 1)));
 	
 	// store the next fieldset index for this container
 	if(typeof this.objectCount === 'undefined') this.objectCount = {};
@@ -414,7 +461,7 @@ HasManyForm.prototype.buildForm = function(container, schema, index, record) {
 HasManyForm.prototype.camelize = function(str) {
 	return str.toLowerCase()
     // Replaces any - or _ characters with a space 
-    .replace( /[-_]+/g, ' ')
+    .replace( /[-._]+/g, ' ')
     // Removes any non alphanumeric characters 
     .replace( /[^\w\s]/g, '')
     // Uppercases the first character in each group immediately following a space 

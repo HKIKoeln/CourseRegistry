@@ -18,6 +18,7 @@
 
 ?>
 <h2><?php echo ucfirst($this->action); ?> Project</h2>
+<p class="strong">Please do not reload the page to avoid losing your efforts.</p>
 
 <?php
 if($this->action == 'edit') {
@@ -89,6 +90,7 @@ if(!empty($errors)) {
 	$options = array(
 		'type' => 'textarea',
 		'label' => 'Changeset',
+		'readonly' => true,
 		'div' => array('class' => 'rightpane')
 	);
 	
