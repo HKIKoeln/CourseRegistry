@@ -89,7 +89,7 @@ if(!empty($errors)) {
 	
 	$options = array(
 		'type' => 'textarea',
-		'label' => 'Changeset',
+		'label' => 'Changeset (readonly)',
 		'readonly' => true,
 		'div' => array('class' => 'rightpane')
 	);

@@ -12,7 +12,7 @@ function HasManyForm(formSelector, changesetSelector, exclude, record, parentFor
 		this.objectCount = parent.objectCount;
 	}else{
 		this.form = $(formSelector);
-		this.inputs;
+		this.inputs = [];
 		this.exclude = exclude;
 		this.changeset = {};
 		this.changesetSelector = changesetSelector;
@@ -328,14 +328,24 @@ HasManyForm.prototype.populateForm = function(container, schema, data) {
 	$(add).attr({id:$(container).attr('id') + 'add', class:'add button'});
 	$(add).text('add another ' + $(container).attr('id'));
 	$(add).on('click', function() {
-		self.buildForm(container, schema);
+		// update changeset
 		var i = self.objectCount[$(container).attr('id')+ '-formIndex'] - 1;
 		var idObj = $('#' + $(container).attr('id') + i + 'Id');
 		var idWf = self.initInput(idObj);
 		var obj = $('#' + $(container).attr('id') + i + idWf.relation.src + 'Id');
 		var wf = self.initInput(obj);
 		self.processInput(wf, obj);
-		// add to watched inputs
+		// watch for changes
+		var inputs = self.buildForm(container, schema);
+		// I don't know why, but self.inputs is empty! 
+		// Thus we cannot add id to parent array to keep track of ALL added inputs.
+		$.each(inputs, function(index, input) {
+			var wf = self.initInput(input);
+			// the actual on-change method!
+			$(input).change(function() {
+				self.processInput(wf, input);
+			});
+		});
 		return false;
 	});
 	$(add).appendTo(container);
@@ -343,6 +353,7 @@ HasManyForm.prototype.populateForm = function(container, schema, data) {
 
 HasManyForm.prototype.buildForm = function(container, schema, index, record) {
 	var userAdded = false;
+	var inputs = [];
 	if(!index && index !== 0) {
 		if(typeof this.objectCount !== 'undefined')
 			index = this.objectCount[$(container).attr('id')+ '-formIndex'];
@@ -431,6 +442,8 @@ HasManyForm.prototype.buildForm = function(container, schema, index, record) {
 		
 		$(input).appendTo(div);
 		$(div).appendTo(fieldset);
+		
+		inputs.push(input);
 	});
 	
 	// button to remove the last object - but only if all visible fields are empty!
@@ -458,6 +471,8 @@ HasManyForm.prototype.buildForm = function(container, schema, index, record) {
 	// store the next fieldset index for this container
 	if(typeof this.objectCount === 'undefined') this.objectCount = {};
 	this.objectCount[$(container).attr('id')+ '-formIndex'] = index + 1;
+	
+	return inputs;
 }
 
 HasManyForm.prototype.camelize = function(str) {
