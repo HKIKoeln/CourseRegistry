@@ -166,6 +166,9 @@ if(!empty($errors)) {
 <fieldset id="ProjectLink">
 	<h3>Hyperlinks</h3>
 </fieldset>
+<fieldset id="ProjectExternalIdentifier">
+	<h3>External Identifiers</h3>
+</fieldset>
 <fieldset>
 	<?php echo $this->Form->end('submit'); ?>
 </fieldset>
@@ -184,6 +187,10 @@ var projectLinks = record.ProjectLink;
 var projectLinkTypes = <?php echo $_serialize['projectLinkTypes']; ?>;
 var projectLinkFieldlist = <?php echo $_serialize['projectLinkFieldlist']; ?>;
 
+var projectIdentifiers = record.ProjectExternalIdentifier;
+var projectExternalIdentifierTypes = <?php echo $_serialize['projectExternalIdentifierTypes']; ?>;
+var projectExternalIdentifierFieldlist = <?php echo $_serialize['projectExternalIdentifierFieldlist']; ?>;
+
 jQuery(document).ready(function() {
 	var parentForm = new HasManyForm(
 		'#ProjectReviewForm',
@@ -193,12 +200,17 @@ jQuery(document).ready(function() {
 		// no schema, nothing to build or populate here
 	);
 	
-	var hyperlinks = $('#ProjectLink');
 	var hyperlinks = new HasManyForm(
 		null,null,null,null,
 		parentForm
 	);
 	hyperlinks.populateForm($('#ProjectLink'), projectLinkFieldlist, projectLinks);
+	
+	var identifiers = new HasManyForm(
+		null,null,null,null,
+		parentForm
+	);
+	identifiers.populateForm($('#ProjectExternalIdentifier'), projectExternalIdentifierFieldlist, projectIdentifiers);
 	
 	parentForm.watchForm();
 });

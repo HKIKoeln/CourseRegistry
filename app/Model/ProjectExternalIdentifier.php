@@ -38,5 +38,42 @@ class ProjectExternalIdentifier extends AppModel {
 		)
 	);
 	
+	
+	public function getFieldlist() {
+		return array(
+			'ProjectExternalIdentifier.id' => array(
+				'attributes' => array(
+					'type' => 'hidden',
+					'datarelation' => 'Project.hasmany.ProjectExternalIdentifier'
+				)
+			),
+			'ProjectExternalIdentifier.project_id' => array(
+				'attributes' => array(
+					'type' => 'hidden',
+					'datarelation' => 'Project.hasmany.ProjectExternalIdentifier'
+				)
+			),
+			'ProjectExternalIdentifier.external_identifier_type_id' => array(
+				'attributes' => array(
+					'type' => 'select',
+					'required' => true,
+					'datarelation' => 'Project.hasmany.ProjectExternalIdentifier'
+				),
+				'options' => 'projectExternalIdentifierTypes',
+				'label' => 'Identifier Type',
+				'empty' => true
+			),
+			'ProjectExternalIdentifier.identifier' => array(
+				'attributes' => array(
+					'type' => 'text',
+					'required' => true,
+					'datarelation' => 'Project.hasmany.ProjectExternalIdentifier'
+				)
+			)
+		);
+	}
+	
+	
+	
 }
 ?>

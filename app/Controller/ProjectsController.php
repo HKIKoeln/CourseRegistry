@@ -96,6 +96,8 @@ class ProjectsController extends AppController {
 			$this->request->data['ProjectReview']['project_id'] = $id;
 			
 			
+			// weird things happen...
+			
 			//if($this->ProjectReview->validateAll($this->request->data)) {
 			//	$this->request->data = $this->Project->data;		// callback beforeValidate manipulates data
 				
@@ -216,6 +218,9 @@ class ProjectsController extends AppController {
 		ksort($institutions);
 		
 		$projectLinkTypes = $this->Project->ProjectLink->ProjectLinkType->find('list');
+		$projectExternalIdentifierTypes = $this->Project->ProjectExternalIdentifier->ExternalIdentifierType->find('list', array(
+			'conditions' => array('ExternalIdentifierType.project' => true)
+		));
 		
 		$options = array(
 			'fields' => array('Project.id', 'Project.name'),
@@ -233,17 +238,19 @@ class ProjectsController extends AppController {
 			'users',
 			'institutions',
 			'admin',
-			//'projectLinkTypes',
 			'parents'
 		));
 		$this->viewVars['_serialize']['projectLinkTypes'] = json_encode($projectLinkTypes);
+		$this->viewVars['_serialize']['projectExternalIdentifierTypes'] = json_encode($projectExternalIdentifierTypes);
 	}
 	
 	
 	protected function _setSchemas() {
 		$projectLinkFieldlist = $this->Project->ProjectLink->getFieldlist();
+		$projectExternalIdentifierFieldlist = $this->Project->ProjectExternalIdentifier->getFieldlist();
 		
 		$this->viewVars['_serialize']['projectLinkFieldlist'] = json_encode($projectLinkFieldlist);
+		$this->viewVars['_serialize']['projectExternalIdentifierFieldlist'] = json_encode($projectExternalIdentifierFieldlist);
 	}
 	
 	

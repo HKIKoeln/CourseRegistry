@@ -319,26 +319,28 @@ HasManyForm.prototype.getValue = function(wf, input) {
 
 HasManyForm.prototype.populateForm = function(container, schema, data) {
 	var self = this;
+	var baseId = $(container).attr('id');
 	$.each(data, function(index, record) {
 		self.buildForm(container, schema, index, record);
 	});
 	
 	// extend the form - add new object
 	var add = document.createElement('a');
-	$(add).attr({id:$(container).attr('id') + 'add', class:'add button'});
-	$(add).text('add another ' + $(container).attr('id'));
+	$(add).attr({id:baseId + 'add', class:'add button'});
+	$(add).text('add another ' + baseId);
 	$(add).on('click', function() {
-		// update changeset
-		var i = self.objectCount[$(container).attr('id')+ '-formIndex'] - 1;
-		var idObj = $('#' + $(container).attr('id') + i + 'Id');
-		var idWf = self.initInput(idObj);
-		var obj = $('#' + $(container).attr('id') + i + idWf.relation.src + 'Id');
-		var wf = self.initInput(obj);
-		self.processInput(wf, obj);
-		// watch for changes
 		var inputs = self.buildForm(container, schema);
 		// I don't know why, but self.inputs is empty! 
 		// Thus we cannot add id to parent array to keep track of ALL added inputs.
+		
+		// update changeset - get the index of the just created form object
+		var i = self.objectCount[baseId+ '-formIndex'] - 1;
+		var idObj = $('#' + baseId + i + 'Id');
+		var idWf = self.initInput(idObj);
+		var obj = $('#' + baseId + i + idWf.relation.src + 'Id');
+		var wf = self.initInput(obj);
+		self.processInput(wf, obj);
+		// watch for changes
 		$.each(inputs, function(index, input) {
 			var wf = self.initInput(input);
 			// the actual on-change method!
