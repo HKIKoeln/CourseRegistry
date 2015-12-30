@@ -85,7 +85,7 @@ class ProjectsController extends AppController {
 		if(empty($id)) $this->redirect('/');
 		$admin = false;
 		$project = $this->Project->find('first', array('conditions' => array('Project.id' => $id)));
-		if(empty($id)) $this->redirect('/');
+		if(empty($project)) $this->redirect('/');
 		
 		if(	!empty($this->request->data['ProjectReview']['changeset_json'])
 		AND	$this->request->data['ProjectReview']['changeset_json'] != '{}') {
@@ -95,22 +95,18 @@ class ProjectsController extends AppController {
 			if(empty($sid) OR $id != $sid) $this->redirect('/');
 			$this->request->data['ProjectReview']['project_id'] = $id;
 			
-			
-			// weird things happen...
-			
-			//if($this->ProjectReview->validateAll($this->request->data)) {
-			//	$this->request->data = $this->Project->data;		// callback beforeValidate manipulates data
-				
-				
-				
+			$this->ProjectReview->set($this->request->data['ProjectReview']);
+			if($this->ProjectReview->validates()) {
 				if($this->ProjectReview->save($this->request->data, array('validate' => false))) {
 					// don't redirect, don't destroy the session - let people save their form
 					$this->Session->write('review.Project.id', $id);
 					$this->request->data['Project']['id'] = $id;
+					$this->request->data['ProjectReview']['id'] = $this->ProjectReview->id;
 				}
-			//}else{
-				//$this->set('errors', $this->Project->validationErrors);
-			//}
+			}else{
+				$this->set('errors', $this->ProjectReview->validationErrors);
+				$this->request->data = $project;
+			}
 		}else{
 			$this->request->data = $project;
 			$this->Session->write('review.Project.id', $id);

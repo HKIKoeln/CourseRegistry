@@ -22,7 +22,7 @@ function HasManyForm(formSelector, changesetSelector, exclude, record, parentFor
 }
 
 
-HasManyForm.prototype.watchForm = function() {
+HasManyForm.prototype.watchForm = function(serialize, serializeTo) {
 	var self = this;
 	if($(this.changesetSelector).val()) {
 		// ##ToDo: this has to be applied to the entire form for the admin view
@@ -31,7 +31,7 @@ HasManyForm.prototype.watchForm = function() {
 		// for the time being: don't mess, reset everything! (discard entered data)
 		window.location.reload(true);
 	}
-	this.inputs = this.form.find(':input').not('[type=hidden], [value=submit], ' + this.exclude + ', ' + this.changesetSelector);
+	this.inputs = this.form.find(':input').not('[type=hidden], [type=submit], ' + this.exclude + ', ' + this.changesetSelector);
 	$.each(self.inputs, function(index, input) {
 		var wf = self.initInput(input);
 		// the actual on-change method!

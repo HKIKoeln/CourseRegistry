@@ -19,6 +19,7 @@
 ?>
 <h2><?php echo ucfirst($this->action); ?> Project</h2>
 <p class="strong">Please do not reload the page to avoid losing your efforts.</p>
+<p class="strong">Submitting the form saves your input, you may continue editing .</p>
 
 <?php
 if($this->action == 'edit') {
@@ -33,7 +34,6 @@ if($this->action == 'edit') {
 	));
 	?>
 	</p>
-	
 	<?php
 }
 if($this->action == 'review') {
@@ -42,7 +42,15 @@ if($this->action == 'review') {
 		<?php
 		echo $this->Html->link('View this record', array(
 			'action' => 'view',
-			$this->request->data[$modelName]['id']
+			$this->request->data['Project']['id']
+		));
+		?>
+		</p>
+		<p class="actions">
+		<?php
+		echo $this->Html->link('Reset the form (discard all user input!)', array(
+			'action' => 'review',
+			$this->request->data['Project']['id']
 		));
 		?>
 	</div>
@@ -51,7 +59,8 @@ if($this->action == 'review') {
 
 echo $this->Form->create('Project', array(
 	'novalidate' => 'novalidate',
-	'class' => 'review'
+	'class' => 'review',
+	'id' => 'ProjectReviewForm'
 ));
 
 if(!empty($errors)) {
@@ -71,12 +80,16 @@ if(!empty($errors)) {
 	</div>
 	<?php
 }
+
+
 ?>
+
+
 <fieldset>
 	<h3>Administration Metadata</h3>
 	<?php
 	if($this->action == 'edit' OR $this->action == 'review') {
-		echo $this->Form->input('id', array(
+		echo $this->Form->input('Project.id', array(
 			'disabled' => true,
 			'type' => 'text',
 			'label' => 'Project ID',
@@ -84,16 +97,24 @@ if(!empty($errors)) {
 		));
 	}
 	
-	// show this field on the right pane if we're acting as an admin...
-	$options = array('type' => 'hidden');
+	if($this->action == 'review')
+		echo $this->Form->input('ProjectReview.id', array('type' => 'hidden'));
+	if($this->action == 'edit')
+		echo $this->Form->input('ProjectReview.id', array(
+			'disabled' => true,
+			'type' => 'text',
+			'label' => 'Review ID',
+			'datapath' => 'ProjectReview.id'
+		));
 	
+	// show this field on the right pane if we're acting as an admin...
+	//$options = array('type' => 'hidden');
 	$options = array(
 		'type' => 'textarea',
 		'label' => 'Changeset (readonly)',
 		'readonly' => true,
 		'div' => array('class' => 'rightpane')
 	);
-	
 	echo $this->Form->input('ProjectReview.changeset_json', $options);
 	
 	if(!empty($admin)) {
@@ -125,52 +146,56 @@ if(!empty($errors)) {
 	));
 	?>
 </fieldset>
+
+<div id="replicate">
+	<fieldset>
+		<h3>Project</h3>
+		<?php
+		echo $this->Form->input('Project.name', array('type' => 'textarea',
+				'datapath' => 'Project.name'));
+		echo $this->Form->input('Project.description', array('datapath' => 'Project.description'));
+		echo $this->Form->input('Project.start_date', array('datapath' => 'Project.start_date'));
+		echo $this->Form->input('Project.end_date', array('datapath' => 'Project.end_date'));
+		echo $this->Form->input('Project.is_phd', array('label' => 'Is PhD Project',
+				'datapath' => 'Project.is_phd'));
+		?>
+	</fieldset>
+	<fieldset>
+		<h3>Hierarchy</h3>
+		<?php echo $this->Form->input('Project.parent_id', array('empty' => ' - ',
+				'datapath' => 'Project.parent_id')); ?>
+		<p>
+			If the parent project is not listed in our DH-Project Registry, 
+			please provide at least a link or any hint, as we might want to add it!
+		</p>
+		<?php echo $this->Form->input('Project.parent_not_listed', array('datapath' => 'Project.parent_not_listed')); ?>
+		<p>
+			If this project has subprojects, please check if these projects occur 
+			in the DH-Project Registry and add this projects\' ID to those.<br>
+			Please also provide the subproject IDs or any other hint (eg. link) in the field below:
+		</p>
+		<?php echo $this->Form->input('Project.subproject_ids', array('type' => 'text',
+				'datapath' => 'Project.subproject_ids')); ?>
+	</fieldset>
+	<fieldset>
+		<h3>Tagging</h3>
+		<?php
+		echo $this->element('taxonomy/selector', array('habtmModel' => 'NwoDiscipline', 'dropdown' => true));
+		echo $this->element('taxonomy/selector', array('habtmModel' => 'TadirahActivity', 'dropdown' => true));
+		echo $this->element('taxonomy/selector', array('habtmModel' => 'TadirahTechnique', 'dropdown' => true));
+		echo $this->element('taxonomy/selector', array('habtmModel' => 'TadirahObject', 'dropdown' => true));
+		?>
+	</fieldset>
+	<fieldset id="ProjectLink">
+		<h3>Hyperlinks</h3>
+	</fieldset>
+	<fieldset id="ProjectExternalIdentifier">
+		<h3>External Identifiers</h3>
+	</fieldset>
+</div>
+
 <fieldset>
-	<h3>Project</h3>
-	<?php
-	echo $this->Form->input('Project.name', array('type' => 'textarea',
-			'datapath' => 'Project.name'));
-	echo $this->Form->input('Project.description', array('datapath' => 'Project.description'));
-	echo $this->Form->input('Project.start_date', array('datapath' => 'Project.start_date'));
-	echo $this->Form->input('Project.end_date', array('datapath' => 'Project.end_date'));
-	echo $this->Form->input('Project.is_phd', array('label' => 'Is PhD Project',
-			'datapath' => 'Project.is_phd'));
-	?>
-</fieldset>
-<fieldset>
-	<h3>Hierarchy</h3>
-	<?php echo $this->Form->input('Project.parent_id', array('empty' => ' - ',
-			'datapath' => 'Project.parent_id')); ?>
-	<p>
-		If the parent project is not listed in our DH-Project Registry, 
-		please provide at least a link or any hint, as we might want to add it!
-	</p>
-	<?php echo $this->Form->input('Project.parent_not_listed', array('datapath' => 'Project.parent_not_listed')); ?>
-	<p>
-		If this project has subprojects, please check if these projects occur 
-		in the DH-Project Registry and add this projects\' ID to those.<br>
-		Please also provide the subproject IDs or any other hint (eg. link) in the field below:
-	</p>
-	<?php echo $this->Form->input('Project.subproject_ids', array('type' => 'text',
-			'datapath' => 'Project.subproject_ids')); ?>
-</fieldset>
-<fieldset>
-	<h3>Tagging</h3>
-	<?php
-	echo $this->element('taxonomy/selector', array('habtmModel' => 'NwoDiscipline', 'dropdown' => true));
-	echo $this->element('taxonomy/selector', array('habtmModel' => 'TadirahActivity', 'dropdown' => true));
-	echo $this->element('taxonomy/selector', array('habtmModel' => 'TadirahTechnique', 'dropdown' => true));
-	echo $this->element('taxonomy/selector', array('habtmModel' => 'TadirahObject', 'dropdown' => true));
-	?>
-</fieldset>
-<fieldset id="ProjectLink">
-	<h3>Hyperlinks</h3>
-</fieldset>
-<fieldset id="ProjectExternalIdentifier">
-	<h3>External Identifiers</h3>
-</fieldset>
-<fieldset>
-	<?php echo $this->Form->end('submit'); ?>
+	<?php echo $this->Form->end('save'); ?>
 </fieldset>
 
 
@@ -212,7 +237,8 @@ jQuery(document).ready(function() {
 	);
 	identifiers.populateForm($('#ProjectExternalIdentifier'), projectExternalIdentifierFieldlist, projectIdentifiers);
 	
-	parentForm.watchForm();
+	parentForm.watchForm('#replicate', '#ProjectReviewFormJson');
+	
 });
 </script>
 

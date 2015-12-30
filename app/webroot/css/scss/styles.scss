@@ -299,6 +299,10 @@ $col_min_height: 400px;
 		}
 		
 		form.review {
+			.validation-errors {
+				max-width: 500px;
+				padding: 20px;
+			}
 			.required > label:after {
 				content:"";
 			}
@@ -309,7 +313,7 @@ $col_min_height: 400px;
 			.rightpane {
 				position: fixed;
 				left: 840px;
-				top: 40px;
+				top: 130px;
 				textarea {
 					width: 400px;
 					height: 500px;
