@@ -20,6 +20,7 @@
 if(!function_exists('getOpts')) {
 	function getOpts($modelName, $habtmModel, $record, $request, $level = null) {
 		if(!empty($level)) $level = ' ' . $level;
+		$crossModel = Inflector::pluralize($modelName).$habtmModel;
 		$opts = array(
 			'type' => 'checkbox',
 			'value' => $record[$habtmModel]['id'],
@@ -29,17 +30,19 @@ if(!function_exists('getOpts')) {
 			'hiddenField' => false,
 			//'datapath' => "$HabtmModel.$CrossTableModel.$habtm_model_id",
 			// the js code is aware of the crossTable by the datarelation and starts iteration on the existing records
-			'datapath' => $habtmModel.'.'.Inflector::pluralize($modelName).$habtmModel.'.'.Inflector::underscore($habtmModel).'_id',
+			'datapath' => $habtmModel.'.'.$crossModel.'.'.Inflector::underscore($habtmModel).'_id',
 			'datarelation' => $modelName.'.habtm.'.$habtmModel
 		);
 		if(!empty($request[$habtmModel][$habtmModel])) {
 			if(in_array($record[$habtmModel]['id'], $request[$habtmModel][$habtmModel])) {
 				$opts['checked'] = true;
+				//$opts['data-cross-id'] = $crossModel . $record[$habtmModel][$crossModel]['id'];
 			}
 		}elseif(!empty($request[$habtmModel])) {
-			foreach($request[$habtmModel] as $k => $activity) {
-				if(!empty($activity['id']) AND $record[$habtmModel]['id'] == $activity['id']) {
+			foreach($request[$habtmModel] as $k => $entry) {
+				if(!empty($entry['id']) AND $record[$habtmModel]['id'] == $entry['id']) {
 					$opts['checked'] = true;
+					$opts['data-cross-id'] = $crossModel . $entry[$crossModel]['id'];
 					break;
 				}
 			}
@@ -125,13 +128,14 @@ if(!empty($dropdown)) {
 				// rewrite the display on-change
 				var inputlist = checklist.find('input[type=checkbox]');
 				inputlist.each(function(key) {
-					$(this).on('click', function() {
+					$(this).on('change', function() {
 						dc_writeDisplay(currentToggle, checklist);
 					});
 				});
 			});
 		});
 		
+		// dc - namespace for dropdown-checklist
 		function dc_writeDisplay(toggle, checklist) {
 			var selected = checklist.find('input[type=checkbox]:checked');
 			var values = [];

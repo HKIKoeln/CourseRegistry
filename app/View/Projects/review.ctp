@@ -18,7 +18,6 @@
 
 ?>
 <h2><?php echo ucfirst($this->action); ?> Project</h2>
-<p class="strong">Please do not reload the page to avoid losing your efforts.</p>
 <p class="strong">Submitting the form saves your input, you may continue editing .</p>
 
 <?php
@@ -40,7 +39,7 @@ if($this->action == 'review') {
 	?>
 	<div class="actions">
 		<?php
-		echo $this->Html->link('View this record', array(
+		echo $this->Html->link('View this record\'s summary', array(
 			'action' => 'view',
 			$this->request->data['Project']['id']
 		));
@@ -142,7 +141,8 @@ if(!empty($errors)) {
 	echo $this->Form->input('ProjectReview.email', array('label' => 'Reviewer Email'));
 	echo $this->Form->input('ProjectReview.comment', array(
 		'type' => 'textarea',
-		'placeholder' => 'Additional comments, hints etc. this form doesn\'t cover.'
+		'placeholder' => 'Additional comments, hints etc. this form doesn\'t cover.                           
+Eg. consider people involved or institutions and their respective roles and identifiers (see the summary for this).'
 	));
 	?>
 </fieldset>
@@ -190,6 +190,10 @@ if(!empty($errors)) {
 		<h3>Hyperlinks</h3>
 	</fieldset>
 	<fieldset id="ProjectExternalIdentifier">
+		<p>
+			Currently we're only supporting NARCIS project identifier (OND[number])<br>
+			Please leave a note in the comment field, if you got identifiers from registries other than NARCIS.
+		</p>
 		<h3>External Identifiers</h3>
 	</fieldset>
 </div>
@@ -217,7 +221,7 @@ var projectExternalIdentifierTypes = <?php echo $_serialize['projectExternalIden
 var projectExternalIdentifierFieldlist = <?php echo $_serialize['projectExternalIdentifierFieldlist']; ?>;
 
 jQuery(document).ready(function() {
-	var parentForm = new HasManyForm(
+	var reviewForm = new HasManyForm(
 		'#ProjectReviewForm',
 		'#ProjectReviewChangesetJson',
 		'#ProjectReviewChangesetJson, #ProjectReviewEmail, #ProjectReviewComment, #ProjectReviewDone',
@@ -225,19 +229,10 @@ jQuery(document).ready(function() {
 		// no schema, nothing to build or populate here
 	);
 	
-	var hyperlinks = new HasManyForm(
-		null,null,null,null,
-		parentForm
-	);
-	hyperlinks.populateForm($('#ProjectLink'), projectLinkFieldlist, projectLinks);
+	reviewForm.populateForm($('#ProjectLink'), projectLinkFieldlist, projectLinks);
+	reviewForm.populateForm($('#ProjectExternalIdentifier'), projectExternalIdentifierFieldlist, projectIdentifiers);
 	
-	var identifiers = new HasManyForm(
-		null,null,null,null,
-		parentForm
-	);
-	identifiers.populateForm($('#ProjectExternalIdentifier'), projectExternalIdentifierFieldlist, projectIdentifiers);
-	
-	parentForm.watchForm('#replicate', '#ProjectReviewFormJson');
+	reviewForm.watchForm('#replicate', '#ProjectReviewFormJson');
 	
 });
 </script>

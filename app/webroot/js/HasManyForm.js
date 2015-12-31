@@ -1,24 +1,13 @@
 
 
-function HasManyForm(formSelector, changesetSelector, exclude, record, parentForm) {
-	if(parentForm) {
-		//this.parent = parentForm;
-		this.form = parentForm.form;
-		this.inputs = parentForm.inputs;
-		this.exclude = parentForm.exclude;
-		this.changeset = parentForm.changeset;
-		this.changesetSelector = parentForm.changesetSelector;
-		this.record = parentForm.record;
-		this.objectCount = parent.objectCount;
-	}else{
-		this.form = $(formSelector);
-		this.inputs = [];
-		this.exclude = exclude;
-		this.changeset = {};
-		this.changesetSelector = changesetSelector;
-		this.record = record;
-		this.objectCount = {};
-	}
+function HasManyForm(formSelector, changesetSelector, exclude, record) {
+	this.form = $(formSelector);
+	this.inputs = [];
+	this.exclude = exclude;
+	this.changeset = {};
+	this.changesetSelector = changesetSelector;
+	this.record = record;
+	this.objectCount = {};
 }
 
 
@@ -26,10 +15,8 @@ HasManyForm.prototype.watchForm = function(serialize, serializeTo) {
 	var self = this;
 	if($(this.changesetSelector).val()) {
 		// ##ToDo: this has to be applied to the entire form for the admin view
-		//this.changeset = JSON.parse($(this.changesetSelector).val());
-		
-		// for the time being: don't mess, reset everything! (discard entered data)
-		window.location.reload(true);
+		this.changeset = JSON.parse($(this.changesetSelector).val());
+		this.parseChangeset(this.changeset);
 	}
 	this.inputs = this.form.find(':input').not('[type=hidden], [type=submit], ' + this.exclude + ', ' + this.changesetSelector);
 	$.each(self.inputs, function(index, input) {
@@ -40,6 +27,65 @@ HasManyForm.prototype.watchForm = function(serialize, serializeTo) {
 		});
 	});
 };
+
+HasManyForm.prototype.parseChangeset = function(changeset, path) {
+	var self = this;
+	if(typeof path === 'undefined') path = [];
+	var setLength = Object.keys(changeset).length;
+	$.each(changeset, function(key, value) {
+		path.push(key);
+		if(typeof value === 'object') {
+			self.parseChangeset(value, path);
+		}
+		else{
+			var input = $('[datapath="' + path.join('.') + '"]');
+			if(key !== 'id') {
+				// regular fields
+				if(input.length) self.setValue(input, value);
+			}
+			else{
+				// id key - handling for habtm checkboxes
+				if(!input.length && setLength === 1) {
+					// we're dealing with habtm checkboxes - go for the data-cross-id attribute
+					input = $('[data-cross-id=' + path[1] + value + ']');
+					if(typeof input !== 'undefined') {
+						// deselecting a pre-existing choice
+						self.setValue(input, false);
+					}
+				}else if(!input.length && setLength > 1 && !value) {
+					// adding a new record (id empty) to the cross table - find the checkbox by the subsequent tag-id
+					var success = false;
+					$.each(changeset, function(i, val) {
+						// get the checkboxes with the tagging-foreignKey in the path
+						input = $('[datapath="' + path[0]+'.'+path[1]+'.' + i + '"]');
+						if(input.length) {
+							$.each(input, function(n, elm) {
+								if($(elm).val() == val) {
+									self.setValue(elm, true);
+									success = true;
+									return false;	// break loop
+								}
+							});
+						}
+						if(success) return false;
+					});
+				}
+				// hasMany objects
+				if(path.join('.').match(/^[^.]+\.[0-9]+\.id$/g)) {
+					if(input.length && setLength === 1) {
+						// remove - id is the only property
+						$('#' + path[0]+path[1]).remove();
+					}else if(!input.length && setLength > 1) {
+						// add object
+						var schemaName = path[0].replace(/^(.)/g, function($1) { return $1.toLowerCase(); }) + 'Fieldlist';
+						var objectInputs = self.buildForm($('#' + path[0]), window[schemaName]);
+					}
+				}
+			}
+		}
+		path.pop();
+	});
+}
 
 HasManyForm.prototype.processInput = function(wf, input) {
 	this.getValue(wf, input);
@@ -316,6 +362,16 @@ HasManyForm.prototype.getValue = function(wf, input) {
 	return wf.value;
 };
 
+HasManyForm.prototype.setValue = function(input, value) {
+	// set the value, depending on input type
+	if($(input).attr('type') === 'checkbox') {
+		if(!value || value === '0') $(input).prop('checked', false).trigger('change');
+		else $(input).prop('checked', true).trigger('change');
+	}else{
+		$(input).val(value).trigger('change');
+	}
+};
+
 
 HasManyForm.prototype.populateForm = function(container, schema, data) {
 	var self = this;
@@ -356,8 +412,8 @@ HasManyForm.prototype.populateForm = function(container, schema, data) {
 HasManyForm.prototype.buildForm = function(container, schema, index, record) {
 	var userAdded = false;
 	var inputs = [];
-	if(!index && index !== 0) {
-		if(typeof this.objectCount !== 'undefined')
+	if(typeof index === 'undefined') {
+		if(typeof this.objectCount !== 'undefined' && !isNaN(this.objectCount[$(container).attr('id')+ '-formIndex']))
 			index = this.objectCount[$(container).attr('id')+ '-formIndex'];
 		else index = 0;
 		userAdded = true;	// the user has created an additional form

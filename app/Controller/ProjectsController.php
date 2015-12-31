@@ -102,10 +102,11 @@ class ProjectsController extends AppController {
 					$this->Session->write('review.Project.id', $id);
 					$this->request->data['Project']['id'] = $id;
 					$this->request->data['ProjectReview']['id'] = $this->ProjectReview->id;
+					$this->Session->setFlash('Your input has been saved. You may continue editing, until your session expires.');
 				}
 			}else{
 				$this->set('errors', $this->ProjectReview->validationErrors);
-				$this->request->data = $project;
+				$this->request->data['Project']['id'] = $id;
 			}
 		}else{
 			$this->request->data = $project;
