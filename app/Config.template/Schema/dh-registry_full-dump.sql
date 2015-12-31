@@ -1,7 +1,7 @@
 -- --------------------------------------------------------
 -- Host:                         127.0.0.1
--- Server Version:               5.6.24 - MySQL Community Server (GPL)
--- Server Betriebssystem:        Win32
+-- Server Version:               10.0.18-MariaDB-log - MariaDB Server
+-- Server Betriebssystem:        Linux
 -- HeidiSQL Version:             9.3.0.4984
 -- --------------------------------------------------------
 
@@ -21,7 +21,7 @@ CREATE TABLE IF NOT EXISTS `cities` (
   CONSTRAINT `FK_cities_countries` FOREIGN KEY (`country_id`) REFERENCES `countries` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=110 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
--- Exportiere Daten aus Tabelle dh-registry.cities: ~49 rows (ungefähr)
+-- Exportiere Daten aus Tabelle dh-registry.cities: ~51 rows (ungefähr)
 /*!40000 ALTER TABLE `cities` DISABLE KEYS */;
 INSERT INTO `cities` (`id`, `country_id`, `name`) VALUES
 	(1, 1, 'Rotterdam'),
@@ -2127,6 +2127,26 @@ INSERT INTO `person_project_roles` (`id`, `name`) VALUES
 /*!40000 ALTER TABLE `person_project_roles` ENABLE KEYS */;
 
 
+-- Exportiere Struktur von Tabelle dh-registry.person_roles
+DROP TABLE IF EXISTS `person_roles`;
+CREATE TABLE IF NOT EXISTS `person_roles` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
+
+-- Exportiere Daten aus Tabelle dh-registry.person_roles: ~6 rows (ungefähr)
+/*!40000 ALTER TABLE `person_roles` DISABLE KEYS */;
+INSERT INTO `person_roles` (`id`, `name`) VALUES
+	(1, 'Contact person'),
+	(2, 'Co-supervisor'),
+	(3, 'Researcher'),
+	(4, 'Project leader'),
+	(5, 'Supervisor'),
+	(6, 'Doctoral/PhD student');
+/*!40000 ALTER TABLE `person_roles` ENABLE KEYS */;
+
+
 -- Exportiere Struktur von Tabelle dh-registry.projects
 DROP TABLE IF EXISTS `projects`;
 CREATE TABLE IF NOT EXISTS `projects` (
@@ -3761,7 +3781,6 @@ CREATE TABLE IF NOT EXISTS `project_reviews` (
   `project_id` int(11) NOT NULL,
   `done` tinyint(1) NOT NULL DEFAULT '0',
   `changeset_json` text COLLATE utf8_unicode_ci,
-  `changeset_php` text COLLATE utf8_unicode_ci,
   `email` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `comment` text COLLATE utf8_unicode_ci,
   `created` datetime DEFAULT NULL,
