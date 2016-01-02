@@ -75,9 +75,7 @@ if(!empty($errors)) {
 		?>
 		
 		<p>Mark this Project for further reviews:</p>
-		<?php echo $this->Form->input('Project.review', array('label' => 'Review Neccessary')); ?>
-		<p>Check if this Review-Dataset has been inserted into it's associated Project:</p>
-		<?php echo $this->Form->input('ProjectReview.done', array('label' => 'Update Completed'));
+		<?php echo $this->Form->input('Project.review', array('label' => 'Review Neccessary'));
 	}
 	?>
 	<p>Hide this Project or not:</p>

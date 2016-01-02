@@ -1,4 +1,6 @@
-
+// ##ToDo - Flaws:
+// mixing up wf.mainObjectId for both the object's ID and the parent object ID
+// inconsistent use of wf.resultObject and wf.matchResult.obj in getRecord() and createChangeset()
 
 function HasManyForm(formSelector, changesetSelector, exclude, record) {
 	this.form = $(formSelector);

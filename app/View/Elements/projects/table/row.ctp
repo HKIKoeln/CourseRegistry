@@ -29,6 +29,10 @@ $toggle = ($showDetails OR empty($detailsFieldlist)) ? ''
 				'action' => 'edit',
 				$record[$modelName]['id']
 			));
+			echo $this->Html->link('invite', array(
+				'action' => 'review_invitation',
+				$record[$modelName]['id']
+			));
 		echo '</td>';
 	}
 	

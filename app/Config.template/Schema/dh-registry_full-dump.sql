@@ -1193,7 +1193,7 @@ CREATE TABLE IF NOT EXISTS `people` (
   `first_name` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `initials` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `academic_grade` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `title` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `email` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `created` datetime DEFAULT NULL,
   `updated` datetime DEFAULT NULL,
@@ -1204,7 +1204,7 @@ CREATE TABLE IF NOT EXISTS `people` (
 
 -- Exportiere Daten aus Tabelle dh-registry.people: ~368 rows (ungefähr)
 /*!40000 ALTER TABLE `people` DISABLE KEYS */;
-INSERT INTO `people` (`id`, `user_id`, `first_name`, `initials`, `name`, `academic_grade`, `email`, `created`, `updated`) VALUES
+INSERT INTO `people` (`id`, `user_id`, `first_name`, `initials`, `name`, `title`, `email`, `created`, `updated`) VALUES
 	(1, NULL, NULL, 'G.A.', 'van der Wal', 'Prof.dr.', NULL, '2015-05-26 01:44:59', '2015-05-26 01:44:59'),
 	(2, NULL, NULL, 'H.P.', 'Barendregt', 'Prof.dr.', NULL, '2015-05-26 01:44:59', '2015-05-26 01:44:59'),
 	(3, NULL, NULL, 'H.C.', 'Bunt', 'Prof.dr.', NULL, '2015-05-26 01:44:59', '2015-05-26 01:44:59'),
@@ -4053,7 +4053,7 @@ CREATE TABLE IF NOT EXISTS `users` (
   KEY `FK_users_user_roles_idx` (`user_role_id`),
   CONSTRAINT `FK_users_institutions` FOREIGN KEY (`institution_id`) REFERENCES `institutions` (`id`) ON UPDATE CASCADE,
   CONSTRAINT `FK_users_user_roles` FOREIGN KEY (`user_role_id`) REFERENCES `user_roles` (`id`) ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=26 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='Deprecated as this will be moved to the DARIAH AAI.\r\nCopy the non-auth relevant fields to a new table ''persons'', connect both records 1:1:\r\n    last_name\r\n    first_name\r\n    academic_grade\r\n    university_id -> institution_id\r\n    university\r\n';
+) ENGINE=InnoDB AUTO_INCREMENT=26 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='Deprecated as this will be moved to the DARIAH AAI.\r\nCopy the non-auth relevant fields to a new table ''persons'', connect both records 1:1:\r\n    last_name\r\n    first_name\r\n    title\r\n    university_id -> institution_id\r\n    university\r\n';
 
 -- Exportiere Daten aus Tabelle dh-registry.users: ~10 rows (ungefähr)
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;

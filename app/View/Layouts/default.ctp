@@ -29,7 +29,8 @@ $this->start('header');
 		'width' => 202,
 		'height' => 61
 	);
-	if($this->request->params['controller'] == 'projects') $logo = array(
+	//if($this->request->params['controller'] == 'projects') 
+	$logo = array(
 		'file' => 'logoEhG_small.png',
 		'alt' => 'The eHumanities Group',
 		'url' => 'https://www.knaw.nl/en/institutes/e-humanities-group',

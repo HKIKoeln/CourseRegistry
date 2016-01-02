@@ -81,6 +81,88 @@ class ProjectsController extends AppController {
 	}
 	
 	
+	private function _getAdress($key, $idOnly = false) {
+		$data = explode(' ', trim($this->request->data[$key]));
+		$count = count($data);
+		$mailId = str_replace(array('>','<'), '', array_pop($data));
+		if($idOnly) {
+			return $mailId;
+		}
+		if(!empty($data)) {
+			$name = implode(' ', $data);
+			return array($mailId => $name);
+		}
+		return array($mailId);
+	}
+	
+	
+	public function review_invitation($project_id = null) {
+		if(!empty($this->request->data)) {
+			if(empty($this->request->data['name'])) {
+				$to = $this->_getAdress('email');
+			}else{
+				$to = array($this->_getAdress('email', $idOnly = true) => $this->request->data['name']);
+			}
+			// email logic
+			App::uses('CakeEmail', 'Network/Email');
+			// format defaults to text
+			// email input: String with email, Array with email as key, name as value or email as value (without name)
+			$Email = new CakeEmail();
+			$Email->from($this->_getAdress('from_email'))
+			->to($to)
+			->bcc($this->_getAdress('from_email'))
+			->subject($this->request->data['subject'])
+			->send($this->request->data['body']);
+
+			$this->Session->setFlash('Invitation has been sent to ' . $this->_getAdress('email', $idOnly = true));
+			$this->redirect('/');
+		}
+		if(!empty($project_id)) {
+			$project = $this->Project->find('first', array(
+				'conditions' => array('Project.id' => $project_id),
+				'contain' => array('Person' => array('ProjectsPerson' => array('PersonProjectRole')))
+			));
+			$persons = array();
+			if(!empty($project['Person'])) {
+				foreach($project['Person'] as $person) {
+					$email = $role = null;
+					$databaseContacts = array();
+					if(!empty($person['email'])) $email = $person['email'];
+					if(	empty($email)
+					AND	!empty($person['ProjectsPerson']['email']))
+						$email = $person['ProjectsPerson']['email'];
+					$keys = array('title','name');
+					$name = array('title' => 'Mr/Mrs');
+					foreach($keys as $key) {
+						if(!empty($person[$key])) $name[$key] = $person[$key];
+					}
+					$namestring = implode(' ', $name);
+					if(!empty($person['ProjectsPerson'][0]['PersonProjectRole']['name'])) {
+						$role = $person['ProjectsPerson'][0]['PersonProjectRole']['name'];
+					}
+					if(!empty($email)) {
+						$combined = (!empty($name['name'])) ? '' . $namestring . ' <' . $email . '>' : $email;
+						$persons[] = array(
+							'combined' => $combined,
+							'name' => $namestring,
+							'email' => $email,
+							'role' => $namestring . ' (' . $role . ')'
+						);
+						foreach($persons as $key => $set) {
+							$databaseContacts[$key] = $set['role'];
+						}
+					}
+				}
+			}
+			$this->set(compact('databaseContacts'));
+			$this->viewVars['_serialize']['persons'] = json_encode($persons);
+			$this->request->data['id'] = $project_id;
+			if(!empty($persons)) $this->request->data['name'] = $persons[0]['name'];
+			if(!empty($persons)) $this->request->data['email'] = $persons[0]['combined'];
+		}
+	}
+	
+	
 	public function review($id = null) {
 		if(empty($id)) $this->redirect('/');
 		$admin = false;

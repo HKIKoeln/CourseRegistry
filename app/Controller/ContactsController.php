@@ -31,18 +31,17 @@ class ContactsController extends AppController {
 	}
 	
 	public function send() {
-			Configure::write('debug', 0);
-			$recipient = 'walter.scholger@uni-graz.at'; //Contact Address
-			if(Configure::read('debug' > 0)) $recipient = 'walter.scholger@uni-graz.at';
+			//$recipient = 'walter.scholger@uni-graz.at'; //Contact Address
+			//if(Configure::read('debug' > 0)) $recipient = 'walter.scholger@uni-graz.at';
+			$recipient = array('hendrik.schmeer@yahoo.de','b.safradin@gmail.com','scagliola@eshcc.eur.nl','andrea.scharnhorst@dans.knaw.nl');
 			if(!empty($this->request->data['Contact'])) {
-			// email logic
-			App::uses('CakeEmail', 'Network/Email');
-			$Email = new CakeEmail();
-			$Email->from($this->request->data['Contact']['email'])
-   				  ->to($recipient)
-   				  
- 			      ->subject('[DH-Registry Contact-Form] New Question')
-  				  ->send($this->request->data['Contact']['message']);
+				// email logic
+				App::uses('CakeEmail', 'Network/Email');
+				$Email = new CakeEmail();
+				$Email->from($this->request->data['Contact']['email'])
+   				->to($recipient)
+ 			    ->subject('[DH-Registry Contact-Form] New Question')
+  				->send($this->request->data['Contact']['message']);
 
 				$this->Session->setFlash('Your message has been sent!');
 				$this->redirect('/');

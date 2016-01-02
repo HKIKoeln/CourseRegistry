@@ -98,7 +98,7 @@ function dh_project_people($view = null, $record = array(), $fieldDef = array())
 	foreach($modelData as $k => $row) {
 		$content = $firstname = $name = null;
 		$firstname = (!empty($row['Person']['first_name'])) ? $row['Person']['first_name'] : $row['Person']['initials'];
-		$name = (!empty($row['Person']['academic_grade'])) ? $row['Person']['academic_grade'] . ' ' : '';
+		$name = (!empty($row['Person']['title'])) ? $row['Person']['title'] . ' ' : '';
 		$name .= (!empty($firstname)) ? $firstname . ' ' : '';
 		if(!empty($row['Person']['name'])) $name .= $row['Person']['name'];
 		$content = $name;
