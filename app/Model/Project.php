@@ -43,7 +43,8 @@ class Project extends AppModel {
 		'ParentProject' => array(
 			'className' => 'Project',
 			'foreignKey' => 'parent_id'
-		)
+		),
+		'Currency'
 	);
 	
 	// bugfix workaround - Containable was returning a complete Project array of null values!
@@ -153,6 +154,34 @@ class Project extends AppModel {
 		)
 	);
 	
+	
+	
+	public function getProject($id) {
+		return $this->find('first', array(
+			'conditions' => array('Project.id' => $id),
+			'contain' => array(
+				'ParentProject',
+				'ChildProject',
+				'ProjectExternalIdentifier' => array('ExternalIdentifierType'),
+				'ProjectLink' => array('ProjectLinkType'),
+				'ProjectsPerson' => array(
+					'PersonProjectRole', 'Person' => array(
+						'PersonExternalIdentifier' => array('ExternalIdentifierType')
+					)
+				),
+				'ProjectsInstitution' => array(
+					'InstitutionRole', 'Institution' => array(
+						'InstitutionExternalIdentifier' => array('ExternalIdentifierType'),
+						'City', 'Country'
+					)
+				),
+				'TadirahActivity',
+				'TadirahTechnique',
+				'TadirahObject',
+				'NwoDiscipline'
+			)
+		));
+	}
 	
 	public function getSchema($mode = null) {
 		$metadataSkipList = array('id','created','updated','schema','active','review');

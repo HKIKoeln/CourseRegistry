@@ -44,37 +44,19 @@ class ProjectsController extends AppController {
 		);
 		$this->paginate = array_merge($this->paginate, $paginate);
 		
-		$this->Auth->allow(array('index', 'view', 'review', 'reset', 'schema'));
+		if(Configure::read('debug') > 0) {
+			// whyever - allow('*') does not work
+			$this->Auth->allow(array('index', 'view', 'review', 'reset', 'schema', 'review_invitation'));
+		}else{
+			$this->Auth->allow(array('index', 'view', 'review', 'reset', 'schema'));
+		}
 	}
 	
 	
 	
 	public function view($id = null) {
 		if(empty($id) OR $id == 0) $this->redirect('index');
-		$record = $this->Project->find('first', array(
-			'conditions' => array('Project.id' => $id),
-			'contain' => array(
-				'ParentProject',
-				'ChildProject',
-				'ProjectExternalIdentifier' => array('ExternalIdentifierType'),
-				'ProjectLink' => array('ProjectLinkType'),
-				'ProjectsPerson' => array(
-					'PersonProjectRole', 'Person' => array(
-						'PersonExternalIdentifier' => array('ExternalIdentifierType')
-					)
-				),
-				'ProjectsInstitution' => array(
-					'InstitutionRole', 'Institution' => array(
-						'InstitutionExternalIdentifier' => array('ExternalIdentifierType'),
-						'City', 'Country'
-					)
-				),
-				'TadirahActivity',
-				'TadirahTechnique',
-				'TadirahObject',
-				'NwoDiscipline'
-			)
-		));
+		$record = $this->Project->getProject($id);
 		if(empty($record)) $this->redirect('index');
 		$this->set('record', $record);
 		$this->set('_serialize', array('record'));
@@ -108,14 +90,21 @@ class ProjectsController extends AppController {
 			// format defaults to text
 			// email input: String with email, Array with email as key, name as value or email as value (without name)
 			$Email = new CakeEmail();
-			$Email->from($this->_getAdress('from_email'))
-			->to($to)
-			->bcc($this->_getAdress('from_email'))
-			->subject($this->request->data['subject'])
-			->send($this->request->data['body']);
-
-			$this->Session->setFlash('Invitation has been sent to ' . $this->_getAdress('email', $idOnly = true));
-			$this->redirect('/');
+			try{
+				$Email->from($this->_getAdress('from_email'))
+				->to($to)
+				->bcc($this->_getAdress('from_email'))
+				->subject($this->request->data['subject'])
+				->send($this->request->data['body']);
+				
+				// executed on success:
+				
+				$this->Session->setFlash('Invitation has been sent to ' . $this->_getAdress('email', $idOnly = true));
+				$this->redirect('/');
+			}
+			catch(Exception $e) {
+				$this->Session->setFlash('Something went wrong: ' . $e->getMessage());
+			}
 		}
 		if(!empty($project_id)) {
 			$project = $this->Project->find('first', array(
@@ -124,9 +113,9 @@ class ProjectsController extends AppController {
 			));
 			$persons = array();
 			if(!empty($project['Person'])) {
+				$databaseContacts = array();
 				foreach($project['Person'] as $person) {
 					$email = $role = null;
-					$databaseContacts = array();
 					if(!empty($person['email'])) $email = $person['email'];
 					if(	empty($email)
 					AND	!empty($person['ProjectsPerson']['email']))
@@ -140,41 +129,40 @@ class ProjectsController extends AppController {
 					if(!empty($person['ProjectsPerson'][0]['PersonProjectRole']['name'])) {
 						$role = $person['ProjectsPerson'][0]['PersonProjectRole']['name'];
 					}
-					if(!empty($email)) {
-						$combined = (!empty($name['name'])) ? '' . $namestring . ' <' . $email . '>' : $email;
-						$persons[] = array(
-							'combined' => $combined,
-							'name' => $namestring,
-							'email' => $email,
-							'role' => $namestring . ' (' . $role . ')'
-						);
-						foreach($persons as $key => $set) {
-							$databaseContacts[$key] = $set['role'];
-						}
-					}
+					$persons[] = array(
+						'name' => $namestring,
+						'email' => $email,
+						'role' => $namestring . ' (' . $role . ')',
+						'person_id' => $person['id'],
+						'projects_person_id' => $person['ProjectsPerson']['id']
+					);
+				}
+				foreach($persons as $key => $set) {
+					$databaseContacts[$key] = $set['role'];
 				}
 			}
 			$this->set(compact('databaseContacts'));
 			$this->viewVars['_serialize']['persons'] = json_encode($persons);
 			$this->request->data['id'] = $project_id;
 			if(!empty($persons)) $this->request->data['name'] = $persons[0]['name'];
-			if(!empty($persons)) $this->request->data['email'] = $persons[0]['combined'];
+			if(!empty($persons)) $this->request->data['email'] = $persons[0]['email'];
 		}
 	}
 	
 	
 	public function review($id = null) {
-		if(empty($id)) $this->redirect('/');
+		if(empty($id)) $this->redirect('index');
 		$admin = false;
-		$project = $this->Project->find('first', array('conditions' => array('Project.id' => $id)));
-		if(empty($project)) $this->redirect('/');
+		$project = $this->Project->getProject($id);
+		//$project = $this->Project->find('first', array('conditions' => array('Project.id' => $id)));
+		if(empty($project)) $this->redirect('index');
 		
 		if(	!empty($this->request->data['ProjectReview']['changeset_json'])
 		AND	$this->request->data['ProjectReview']['changeset_json'] != '{}') {
 			$this->loadModel('ProjectReview');
 			// check the ID has been autorized correctly
 			$sid = $this->Session->read('review.Project.id');
-			if(empty($sid) OR $id != $sid) $this->redirect('/');
+			if(empty($sid) OR $id != $sid) $this->redirect('index');
 			$this->request->data['ProjectReview']['project_id'] = $id;
 			
 			$this->ProjectReview->set($this->request->data['ProjectReview']);
@@ -194,7 +182,7 @@ class ProjectsController extends AppController {
 			$this->request->data = $project;
 			$this->Session->write('review.Project.id', $id);
 		}
-		$this->_setOptions($admin);
+		$this->_setOptions($admin, $id);
 		$this->_setSchemas();
 		
 		$this->viewVars['_serialize']['project'] = json_encode($project);
@@ -301,15 +289,18 @@ class ProjectsController extends AppController {
 			'conditions' => array('ExternalIdentifierType.project' => true)
 		));
 		
+		$currencies = $this->Project->Currency->find('list');
+		
 		$options = array(
 			'fields' => array('Project.id', 'Project.name'),
+			'order' => array('Project.name' => 'ASC'),
 			//'conditions' => array('Project.has_subprojects' => true)
 		);
 		if(!empty($project_id)) $options['conditions']['Project.id !='] = $project_id;
 		$parents = $this->Project->find('list', $options);
-		foreach($parents as $id => $name) {
-			$parents[$id] = $id.' - '.$name;
-		}
+		//foreach($parents as $id => $name) {
+		//	$parents[$id] = $id.' - '.$name;
+		//}
 		
 		$this->_setTaxonomies();
 		
@@ -317,7 +308,8 @@ class ProjectsController extends AppController {
 			'users',
 			'institutions',
 			'admin',
-			'parents'
+			'parents',
+			'currencies'
 		));
 		$this->viewVars['_serialize']['projectLinkTypes'] = json_encode($projectLinkTypes);
 		$this->viewVars['_serialize']['projectExternalIdentifierTypes'] = json_encode($projectExternalIdentifierTypes);

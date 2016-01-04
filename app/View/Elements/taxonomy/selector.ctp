@@ -57,7 +57,11 @@ $classes .= (!empty($dropdown)) ? ' dropdown_checklist' : '';
 
 <div class="input taxonomy select required<?php echo $classes; ?>">
 	<label for="<?php echo $habtmModel . $habtmModel; ?>">
-		<?php echo Inflector::humanize(Inflector::underscore(Inflector::pluralize($habtmModel))); ?>
+		<?php
+		if(empty($label)) 
+		echo Inflector::humanize(Inflector::underscore(Inflector::pluralize($habtmModel)));
+		else echo $label;
+		?>
 	</label>
 	<div class="wrapper">
 		<?php

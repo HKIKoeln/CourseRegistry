@@ -32,13 +32,15 @@ $detailsFieldlist = array(
 			'label' => 'Sub-Projects',
 			'display' => 'dh_get_children'
 		),
-		'Project.links' => array('display' => 'dh_project_links'),
+		'Project.links' => array('display' => 'dh_project_links', 'label' => 'Hyperlinks'),
 		'Project.identifiers' => array(
 			'display' => 'dh_identifiers',
 			'modelName' => 'ProjectExternalIdentifier'
 		),
-		'Project.institutions' => array('display' => 'dh_project_institutions'),
-		'Project.persons' => array('display' => 'dh_project_people'),
+		'Project.institutions' => array('display' => 'dh_project_institutions',
+			'label' => 'Institutes involved'),
+		'Project.persons' => array('display' => 'dh_project_people',
+			'label' => 'Persons involved'),
 	),
 	'right' => array(
 		'Project.start_date' => array('label' => 'Start Date'),
@@ -47,21 +49,29 @@ $detailsFieldlist = array(
 			'label' => 'PhD Project',
 			'display' => 'bool'
 		),
+		'Project.phd_students' => array(
+			'label' => 'PhD Students involved'
+		),
+		// #todo: funding_body & size & currency (display method)
 		'Project.disciplines' => array(
 			'display' => 'dh_tags',
-			'modelName' => 'NwoDiscipline'
+			'modelName' => 'NwoDiscipline',
+			'label' => 'NWO Disciplines'
 		),
 		'Project.activities' => array(
 			'display' => 'dh_tags',
-			'modelName' => 'TadirahActivity'
+			'modelName' => 'TadirahActivity',
+			'label' => 'Research Activities'
 		),
 		'Project.techniques' => array(
 			'display' => 'dh_tags',
-			'modelName' => 'TadirahTechnique'
+			'modelName' => 'TadirahTechnique',
+			'label' => 'Research Techniques'
 		),
 		'Project.objects' => array(
 			'display' => 'dh_tags',
-			'modelName' => 'TadirahObject'
+			'modelName' => 'TadirahObject',
+			'label' => 'Research Objects'
 		)
 	)
 );

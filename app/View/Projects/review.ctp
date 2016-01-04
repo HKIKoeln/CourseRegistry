@@ -17,7 +17,7 @@
  */
 
 ?>
-<h2><?php echo ucfirst($this->action); ?> Project</h2>
+<h2>Review Project Information</h2>
 <p class="strong">Submitting the form saves your input, you may continue editing .</p>
 
 <?php
@@ -107,13 +107,16 @@ if(!empty($errors)) {
 		));
 	
 	// show this field on the right pane if we're acting as an admin...
-	//$options = array('type' => 'hidden');
-	$options = array(
-		'type' => 'textarea',
-		'label' => 'Changeset (readonly)',
-		'readonly' => true,
-		'div' => array('class' => 'rightpane')
-	);
+	if($admin) {
+		$options = array(
+			'type' => 'textarea',
+			'label' => 'Changeset (readonly)',
+			'readonly' => true,
+			'div' => array('class' => 'rightpane')
+		);
+	}else{
+		$options = array('type' => 'hidden');
+	}
 	echo $this->Form->input('ProjectReview.changeset_json', $options);
 	
 	if(!empty($admin)) {
@@ -156,45 +159,120 @@ Eg. consider people involved or institutions and their respective roles and iden
 		echo $this->Form->input('Project.description', array('datapath' => 'Project.description'));
 		echo $this->Form->input('Project.start_date', array('datapath' => 'Project.start_date'));
 		echo $this->Form->input('Project.end_date', array('datapath' => 'Project.end_date'));
-		echo $this->Form->input('Project.is_phd', array('label' => 'Is PhD Project',
+		echo $this->Form->input('Project.funding_body', array(
+			'label' => 'Funding Body(ies)',
+			'datapath' => 'Project.funding_body'));
+		echo $this->Form->input('Project.funding_size', array(
+			'label' => 'Size of Grant',
+			'datapath' => 'Project.funding_size'));
+		echo $this->Form->input('Project.currency_id', array(
+			'label' => 'Grant Currency',
+			'datapath' => 'Project.currency_id',
+			'empty' => true));
+		echo $this->Form->input('Project.is_phd', array(
+				'label' => 'Is PhD Project',
 				'datapath' => 'Project.is_phd'));
+		echo $this->Form->input('Project.phd_students', array(
+			'label' => 'PhD Students involved',
+			'datapath' => 'Project.phd_students'));
 		?>
 	</fieldset>
 	<fieldset>
 		<h3>Hierarchy</h3>
 		<?php echo $this->Form->input('Project.parent_id', array('empty' => ' - ',
-				'datapath' => 'Project.parent_id')); ?>
+				'datapath' => 'Project.parent_id',
+				'label' => 'Parent Project')); ?>
 		<p>
 			If the parent project is not listed in our DH-Project Registry, 
 			please provide at least a link or any hint, as we might want to add it!
 		</p>
-		<?php echo $this->Form->input('Project.parent_not_listed', array('datapath' => 'Project.parent_not_listed')); ?>
+		<?php echo $this->Form->input('Project.parent_not_listed', array(
+			'datapath' => 'Project.parent_not_listed',
+			'label' => 'Parent Project not listed')); ?>
 		<p>
 			If this project has subprojects, please check if these projects occur 
-			in the DH-Project Registry and add this projects\' ID to those.<br>
+			in the DH-Projectregistry and add this projects' ID to those.<br>
 			Please also provide the subproject IDs or any other hint (eg. link) in the field below:
 		</p>
 		<?php echo $this->Form->input('Project.subproject_ids', array('type' => 'text',
-				'datapath' => 'Project.subproject_ids')); ?>
+				'datapath' => 'Project.subproject_ids',
+				'label' => 'Subprojects')); ?>
 	</fieldset>
 	<fieldset>
 		<h3>Tagging</h3>
 		<?php
-		echo $this->element('taxonomy/selector', array('habtmModel' => 'NwoDiscipline', 'dropdown' => true));
-		echo $this->element('taxonomy/selector', array('habtmModel' => 'TadirahActivity', 'dropdown' => true));
-		echo $this->element('taxonomy/selector', array('habtmModel' => 'TadirahTechnique', 'dropdown' => true));
-		echo $this->element('taxonomy/selector', array('habtmModel' => 'TadirahObject', 'dropdown' => true));
+		echo $this->element('taxonomy/selector', array('habtmModel' => 'NwoDiscipline', 'dropdown' => true,
+			'label' => 'NWO Disciplines'));
+		?>
+		<h4>TaDiRAH</h4>
+		<p>
+			Taxonomy of Digital Research Activities in the Humanities. 
+			<?php echo $this->Html->link('Link', 'http://tadirah.dariah.eu/vocab/sobre.php', array('style' => 'display: inline')); ?>
+		</p>
+		<?php
+		echo $this->element('taxonomy/selector', array('habtmModel' => 'TadirahActivity', 'dropdown' => true,
+			'label' => 'Research Activities'));
+		echo $this->element('taxonomy/selector', array('habtmModel' => 'TadirahTechnique', 'dropdown' => true,
+			'label' => 'Research Techniques'));
+		echo $this->element('taxonomy/selector', array('habtmModel' => 'TadirahObject', 'dropdown' => true,
+			'label' => 'Research Objects'));
 		?>
 	</fieldset>
 	<fieldset id="ProjectLink">
-		<h3>Hyperlinks</h3>
+		<h3>Hyperlinks to relevant web-based resources</h3>
 	</fieldset>
 	<fieldset id="ProjectExternalIdentifier">
-		<p>
-			Currently we're only supporting NARCIS project identifier (OND[number])<br>
-			Please leave a note in the comment field, if you got identifiers from registries other than NARCIS.
-		</p>
 		<h3>External Identifiers</h3>
+		<p>
+			Currently the database only recognizes so-called<br>
+			NARCIS project identifiers (OND[number]).<br>
+			For information on NARCIS, see <?php echo $this->Html->link('www.narcis.nl','http://www.narcis.nl/', 
+			array('style' => 'display: inline')); ?><br>
+			Please leave a note in the comment field above, if your project has an identifier from another registry.
+		</p>
+	</fieldset>
+	
+	<?php
+	$this->set('record',$this->request->data);
+	include_once(APPLIBS.'project_display_functions.php');
+	?>
+	<fieldset>
+		<h3>Institutes involved</h3>
+		<p>
+			A review form for the Institution-Registry is not yet available (deeply nested data).<br>
+			Please review the given information though, and provide any additional 
+			information in the freetext field beyond.<br>
+			Consider also additional identifiers, eg. from VIAF, ISNI.
+		</p>
+		<?php
+		echo $this->element('definitionlist', array('fieldlist' => array(
+			'Project.institutions' => array(
+				'display' => 'dh_project_institutions',
+				'label' => 'Institutes involved'))));
+		echo $this->Form->input('ProjectReview.institutions_comment', array(
+			'type' => 'textarea',
+			'label' => 'Institution Comment'
+		));
+		?>
+	</fieldset>
+	<fieldset>
+		<h3>Persons involved</h3>
+		<p>
+			A review form for the Person-Registry is not yet available (deeply nested data).<br>
+			Please review the given information though, and provide any additional 
+			information in the freetext field beyond.<br>
+			Consider also additional identifiers, eg. from ORCID, VIAF, ISNI.
+		</p>
+		<?php
+		echo $this->element('definitionlist', array('fieldlist' => array(
+			'Project.persons' => array(
+				'display' => 'dh_project_people',
+				'label' => 'Persons involved'))));
+		echo $this->Form->input('ProjectReview.people_comment', array(
+			'type' => 'textarea',
+			'label' => 'Persons Comment'
+		));
+		?>
 	</fieldset>
 </div>
 
