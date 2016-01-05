@@ -14,6 +14,9 @@ form {
 		max-width: 500px;
 		padding: 20px;
 	}
+	&.full fieldset {
+		max-width: 700px;
+	}
 	
 	div {
 		margin-bottom: 14px;
@@ -292,7 +295,8 @@ form {
 			border-bottom: none;
 			background: #e4e4e4;
 			padding: 10px;
-			width: 266px;
+			width: 277px;
+			margin-left: 208px;
 		}
 		div.checkbox + div.checkbox {
 			border-top: none;
@@ -300,6 +304,11 @@ form {
 		div.checkbox:last-of-type {
 			border-bottom: 1px solid #999;
 			margin-bottom: 0;
+		}
+	}
+	&.full {
+		div.select div.checkbox {
+			//width: 438px;
 		}
 	}
 	

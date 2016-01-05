@@ -18,17 +18,47 @@
 ?>
 <h2>Review Invitation</h2>
 
+<p>
+	Last Invitation: 
+	<?php
+	if(!empty($project))
+		echo $project['Project']['last_invitation_date'] . ' - ' . $project['Project']['last_invitation_address'];
+	else echo ' - ';
+	?>
+</p>
+	
 <?php
 echo $this->Form->create(false, array('class' => 'full','novalidate' => 'novalidate'));
-echo $this->Form->input('id', array('type' => 'text', 'label' => 'Project ID'));
-echo $this->Form->input('database_contacts', array('type' => 'select'));
-echo $this->Form->input('name');
-echo $this->Form->input('email');
-echo $this->Form->input('from_email', array('value' => 'b.safradin@gmail.com'));
-echo $this->Form->input('subject', array('value' => '[DH Project-Registry] Review your project data'));
-echo $this->Form->input('body', array('type' => 'textarea'));
+?>
+<fieldset>
+	<?php
+	echo $this->Form->input('id', array('type' => 'text', 'label' => 'Project ID'));
+	echo $this->Form->input('database_contacts', array('type' => 'select'));
+	echo $this->Form->input('name');
+	echo $this->Form->input('email');
+	echo $this->Form->input('from_email', array('value' => 'b.safradin@gmail.com'));
+	echo $this->Form->input('subject', array('value' => '[DH Project-Registry] Review your project data'));
+	echo $this->Form->input('body', array('type' => 'textarea'));
+	?>
+</fieldset>
+<fieldset>
+	<?php
+	echo $this->Form->input('save_emailaddress_for', array(
+		'type' => 'select',
+		'options' => $databaseContacts
+	));
+	echo $this->Form->input('save_mail_as', array(
+		'type' => 'select',
+		'multiple' => 'checkbox',
+		'options' => array(0 => 'personal', 1 => 'projectspecific'),
+		'label' => 'Save Emailaddress As'));
+	?>
+</fieldset>
+<fieldset>
+<?php
 echo $this->Form->end('Go!');
 ?>
+</fieldset>
 
 <script>
 window.jQuery || document.write('<script src="\/\/code.jquery.com\/jquery-1.11.3.min.js"><\/script>')
@@ -36,14 +66,22 @@ window.jQuery || document.write('<script src="\/\/code.jquery.com\/jquery-1.11.3
 <script>
 var persons = <?php echo $_serialize['persons']; ?>;
 jQuery(document).ready(function() {
+	
 	createMessage($('#name').val(), <?php echo $this->request->data['id']; ?>);
+	
+	$('#SaveMailAs0').val('person_id.' + persons[$('#database_contacts').val()].person_id);
+	$('#SaveMailAs1').val('projects_person_id.' + persons[$('#database_contacts').val()].projects_person_id);
+	
 	$('#database_contacts').change(function() {
 		var option = $('#database_contacts').val();
-		var options = window['persons'];
 		$('#email').val(persons[option].email);
 		$('#name').val(persons[option].name);
 		createMessage(persons[option].name, <?php echo $this->request->data['id']; ?>);
+		$('#save_emailaddress_for').val(option);
+		$('#SaveMailAs0').val('person_id.' + persons[option].person_id);
+		$('#SaveMailAs1').val('projects_person_id.' + persons[option].projects_person_id);
 	});
+	
 	$('#name').change(function() {
 		createMessage($(this).val(), <?php echo $this->request->data['id']; ?>);
 	});
@@ -58,42 +96,40 @@ function createMessage(name, id) {
 \n\
 I am writing to you to ask for your support for the creation of an\n\
 exhaustive overview and search environment of Digital Humanities projects\n\
-that have been initiated in the Netherlands, or of international ones in\n\
-which a Dutch party was involved. After the successful completion of a\n\
-European Digital Humanities Course Registry \n\
-http://www.clariah.nl/en/dodh/course-registry,\n\
-the Erasmus Studio for e-research has taken up the challenge of creating\n\
-a similar structure for Digital Humanities projects.\n\
-As a student assistent of the Erasmus Studio it is my task to collect\n\
-and structure the data.\n\
+that have been initiated in the Netherlands, or of international DH projects\n\
+in which one ore more Dutch parties were involved.\n\
+This is a follow-up initiative modeled after the\n\
+European Digital Humanities Course Registry:\n\
+http://www.clariah.nl/en/dodh/course-registry.\n\
+As a student assistent of the Erasmus Studio (Erasmus University Rotterdam)\n\
+it is my task to collect and structure the data.\n\
 \n\
-Up to now we have succeeded in identifying 255 digital humanities projects.\n\
-However, not all projects provide the required information on their\n\
-websites so the database needs to be complemented.\n\
+Up to now we have succeeded in identifying 211 relevant projects.\n\
+However, not all project websites provide the information that our database\n\
+requires in order to be compatible with the open data model(s) used by similar\n\
+digital resources in the Netherlands.\n\
+As I have found your name and e-mail as the contact person for one or more\n\
+DH projects of your institute I would like to kindly ask your feedback on\n\
+whether I have represented your project(s) in the appropriate way.\n\
 \n\
-On the website I have found your name and e-mail as the contact person for\n\
-the project. I would like to kindly ask for your feedback on whether I have\n\
-represented your project in the appropriate way. Please take a look at the\n\
-overview on our website, and indicate whether there are features that are\n\
-missing or fields that should be edited.\n\
-\n\
-This is the link to the summary of your project on our website:\n\
+This link shows the summary of your project on our website:\n\
 http://dh-projectregistry.org/projects/view/##id##\n\
 \n\
-This is the link to the review form where you can edit:\n\
+We would like you to indicate suggestions for change and\n\
+additional information in this page:\n\
 http://dh-projectregistry.org/projects/review/##id##\n\
 \n\
-After the information on the DH projects is complete, the data will be\n\
-turned into a visualized searchable database with the support of the KNAW\n\
-e-humanities group. The result will be presented on a webpage of the\n\
-CLARIAH website.\n\
+Once all the information on the identified DH projects is complete,\n\
+the data will be turned into a visualized searchable database.\n\
+This functionality will be supplied by the KNAW e-humanities group.\n\
+The result will be presented on a webpage of the CLARIAH website,\n\
+the programme that is supporting the initiative.\n\
 \n\
 It would be great if we could get your support!\n\
 \n\
 Best wishes,\n\
 Barbara Safradin\n\
-Student-Assistant Erasmus Studio for E-research, Erasmus University\n\
-Rotterdam';
+Student-Assistant Erasmus Studio for E-research, Erasmus University Rotterdam';
 	
 	body = replaceAll(body, '##id##', id);
 	$('#body').val(replaceAll(body, '##name##', name));

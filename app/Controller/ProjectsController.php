@@ -79,6 +79,11 @@ class ProjectsController extends AppController {
 	
 	
 	public function review_invitation($project_id = null) {
+		if(empty($project_id)) $this->redirect('index');
+		$project = $this->Project->find('first', array(
+			'conditions' => array('Project.id' => $project_id),
+			'contain' => array('Person' => array('ProjectsPerson' => array('PersonProjectRole')))
+		));
 		if(!empty($this->request->data)) {
 			if(empty($this->request->data['name'])) {
 				$to = $this->_getAdress('email');
@@ -91,29 +96,53 @@ class ProjectsController extends AppController {
 			// email input: String with email, Array with email as key, name as value or email as value (without name)
 			$Email = new CakeEmail();
 			try{
-				$Email->from($this->_getAdress('from_email'))
+				$Email->from('noreply@dh-projectregistry.org')
+				->replyTo($this->_getAdress('from_email'))
 				->to($to)
 				->bcc($this->_getAdress('from_email'))
 				->subject($this->request->data['subject'])
 				->send($this->request->data['body']);
 				
 				// executed on success:
+				$data = array(
+					'id' => $project_id,
+					'last_invitation_date' => date('Y-m-d H:i:s'),
+					'last_invitation_address' => $this->_getAdress('email', $idOnly = true)
+				);
+				$this->Project->save($data, $validate = false);
+				
+				if(!empty($this->request->data['save_mail_as'])) {
+					$keys = array();
+					foreach($this->request->data['save_mail_as'] as $value) {
+						$split = explode('.', $value);
+						if(!empty($split[1])) {
+							$data = array(
+								'id' => $split[1],
+								'email' => $this->_getAdress('email', $idOnly = true)
+							);
+							switch($split[0]) {
+							case 'person_id':
+								$this->Project->Person->save($data, false);
+								break;
+							case 'projects_person_id':
+								$this->Project->ProjectsPerson->save($data, false);
+								break;
+							}
+						}
+						$keys[$split[0]] = $split[1];
+					}
+				}
 				
 				$this->Session->setFlash('Invitation has been sent to ' . $this->_getAdress('email', $idOnly = true));
-				$this->redirect('/');
+				$this->redirect('index');
 			}
 			catch(Exception $e) {
 				$this->Session->setFlash('Something went wrong: ' . $e->getMessage());
 			}
 		}
-		if(!empty($project_id)) {
-			$project = $this->Project->find('first', array(
-				'conditions' => array('Project.id' => $project_id),
-				'contain' => array('Person' => array('ProjectsPerson' => array('PersonProjectRole')))
-			));
-			$persons = array();
+		$persons = $databaseContacts = array();
+		if(!empty($project)) {
 			if(!empty($project['Person'])) {
-				$databaseContacts = array();
 				foreach($project['Person'] as $person) {
 					$email = $role = null;
 					if(!empty($person['email'])) $email = $person['email'];
@@ -141,12 +170,12 @@ class ProjectsController extends AppController {
 					$databaseContacts[$key] = $set['role'];
 				}
 			}
-			$this->set(compact('databaseContacts'));
-			$this->viewVars['_serialize']['persons'] = json_encode($persons);
-			$this->request->data['id'] = $project_id;
-			if(!empty($persons)) $this->request->data['name'] = $persons[0]['name'];
-			if(!empty($persons)) $this->request->data['email'] = $persons[0]['email'];
 		}
+		$this->set(compact('databaseContacts', 'project'));
+		$this->viewVars['_serialize']['persons'] = json_encode($persons);
+		$this->request->data['id'] = $project_id;
+		if(!empty($persons)) $this->request->data['name'] = $persons[0]['name'];
+		if(!empty($persons)) $this->request->data['email'] = $persons[0]['email'];
 	}
 	
 	
