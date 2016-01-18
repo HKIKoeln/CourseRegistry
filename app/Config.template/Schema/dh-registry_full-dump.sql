@@ -151,7 +151,7 @@ CREATE TABLE IF NOT EXISTS `courses` (
   CONSTRAINT `FK_courses_users` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=159 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
--- Exportiere Daten aus Tabelle dhregistry.courses: ~101 rows (ungefähr)
+-- Exportiere Daten aus Tabelle dhregistry.courses: ~103 rows (ungefähr)
 /*!40000 ALTER TABLE `courses` DISABLE KEYS */;
 INSERT INTO `courses` (`id`, `user_id`, `active`, `created`, `updated`, `name`, `country_id`, `city_id`, `institution_id`, `department`, `course_parent_type_id`, `course_type_id`, `language_id`, `access_requirements`, `enrollment_period`, `start_date`, `recurring`, `url`, `guide_url`, `ects`, `contact_mail`, `contact_name`, `lon`, `lat`) VALUES
 	(1, 1, 1, '2014-06-03 17:16:10', '2014-06-04 02:31:17', 'Digital research methods', 1, 1, 1, 'Media and communication', 2, 6, 2, 'none', '', '2014-09-01', 1, 'http://eshcc.sin-online.nl/studiegids/?action2=show_course&course=CM4104', '', 5, 'menchentrevino@eshcc.eur.nl', 'dr. E.Menchen-Trevino,; dr. T Timan', 4.526174, 51.917975),
@@ -690,7 +690,7 @@ CREATE TABLE IF NOT EXISTS `institutions` (
   CONSTRAINT `FK_institutions_institutions` FOREIGN KEY (`parent_id`) REFERENCES `institutions` (`id`) ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=1254 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='This will replace table universities, where universities will be referenced as: select * from institutions where parent_id is_null(). \r\nThings get interesting when projects become new institutions -> address?';
 
--- Exportiere Daten aus Tabelle dhregistry.institutions: ~322 rows (ungefähr)
+-- Exportiere Daten aus Tabelle dhregistry.institutions: ~207 rows (ungefähr)
 /*!40000 ALTER TABLE `institutions` DISABLE KEYS */;
 INSERT INTO `institutions` (`id`, `parent_id`, `city_id`, `country_id`, `is_university`, `name`, `description`, `url`, `address`, `lon`, `lat`, `created`, `updated`) VALUES
 	(1, NULL, 1, 1, 1, 'Erasmus Universiteit Rotterdam', NULL, NULL, NULL, NULL, NULL, '2015-05-25 20:50:35', '2015-06-04 15:02:24'),
@@ -1219,7 +1219,7 @@ CREATE TABLE IF NOT EXISTS `people` (
   CONSTRAINT `FK__users` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=369 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
--- Exportiere Daten aus Tabelle dhregistry.people: ~257 rows (ungefähr)
+-- Exportiere Daten aus Tabelle dhregistry.people: ~481 rows (ungefähr)
 /*!40000 ALTER TABLE `people` DISABLE KEYS */;
 INSERT INTO `people` (`id`, `user_id`, `first_name`, `initials`, `name`, `title`, `email`, `created`, `updated`) VALUES
 	(1, NULL, NULL, 'G.A.', 'van der Wal', 'Prof.dr.', NULL, '2015-05-26 01:44:59', '2015-05-26 01:44:59'),
@@ -1510,41 +1510,41 @@ INSERT INTO `people` (`id`, `user_id`, `first_name`, `initials`, `name`, `title`
 	(286, NULL, NULL, 'L.', 'Jardin', 'Prof. dr.', NULL, '2015-06-01 16:56:16', '2015-06-01 16:56:16'),
 	(287, NULL, NULL, 'J.', 'Pieters', NULL, NULL, '2015-06-01 16:56:30', '2015-06-01 16:56:30'),
 	(288, NULL, NULL, 'G.', 'Verhoeven', NULL, NULL, '2015-06-01 16:56:37', '2015-06-01 16:56:37'),
-	(289, NULL, NULL, 'P.', 'Lulof', 'associate professor', NULL, '2015-06-01 16:57:19', '2015-06-01 16:57:19'),
+	(289, NULL, NULL, 'P.', 'Lulof', 'associate professor', 'P.S.Lulof@uva.nl', '2015-06-01 16:57:19', '2016-01-07 13:58:46'),
 	(290, NULL, NULL, 'I.D. ', 'Pletinckx', NULL, NULL, '2015-06-01 16:58:03', '2015-06-01 16:58:03'),
 	(291, NULL, NULL, 'M.E.', 'Cohen', NULL, NULL, '2015-06-01 16:58:10', '2015-06-01 16:58:10'),
 	(292, NULL, NULL, 'W.H.N.', 'Hupperetz', 'Dr.', NULL, '2015-06-01 17:00:52', '2015-06-01 17:00:52'),
-	(293, NULL, NULL, 'B.', 'Besamusca', 'Dr.', NULL, '2015-06-01 17:01:30', '2015-06-01 17:01:30'),
-	(294, NULL, NULL, 'J.', 'van Eijnatten', NULL, NULL, '2015-06-01 17:02:06', '2015-06-01 17:02:06'),
-	(295, NULL, NULL, 'J.', 'Hein Hoogstad', 'assistent professor', NULL, '2015-06-01 17:04:35', '2015-06-01 17:04:35'),
-	(296, NULL, NULL, 'K.', 'van Dalen-Oskam', 'Prof. dr. ', NULL, '2015-06-01 17:04:57', '2015-06-01 17:04:57'),
+	(293, NULL, NULL, 'B.', 'Besamusca', 'Dr.', 'A.A.M.Besamusca@uu.nl', '2015-06-01 17:01:30', '2016-01-07 14:00:53'),
+	(294, NULL, NULL, 'J.', 'van Eijnatten', NULL, 'J.vanEijnatten@uu.nl', '2015-06-01 17:02:06', '2016-01-07 14:02:14'),
+	(295, NULL, NULL, 'J.', 'Hein Hoogstad', 'assistent professor', 'J.H.Hoogstad@uva.nl', '2015-06-01 17:04:35', '2016-01-07 14:17:23'),
+	(296, NULL, NULL, 'K.', 'van Dalen-Oskam', 'Prof. dr. ', 'K.H.vanDalen-Oskam@uva.nl', '2015-06-01 17:04:57', '2016-01-07 14:18:33'),
 	(297, NULL, NULL, 'C.', 'Martinez-Ortiz', 'Dr. ', NULL, '2015-06-01 17:05:54', '2015-06-01 17:05:54'),
 	(298, NULL, NULL, 'A.', 'van den Bosch', 'Prof. dr. ', NULL, '2015-06-01 17:06:32', '2015-06-01 17:06:32'),
 	(299, NULL, NULL, 'W.', 'Mijnhardt', NULL, NULL, '2015-06-01 17:08:00', '2015-06-01 17:08:00'),
 	(300, NULL, NULL, 'G.', 'Filarski', NULL, NULL, '2015-06-01 17:08:33', '2015-06-01 17:08:33'),
-	(301, NULL, NULL, 'S.', 'Elpers', NULL, NULL, '2015-06-01 17:08:50', '2015-06-01 17:08:50'),
+	(301, NULL, NULL, 'S.', 'Elpers', NULL, 'Sophie.Elpers@meertens.knaw.nl', '2015-06-01 17:08:50', '2016-01-07 14:19:52'),
 	(302, NULL, NULL, 'P.', 'Alkhoven', NULL, NULL, '2015-06-01 17:08:59', '2015-06-01 17:08:59'),
-	(303, NULL, NULL, 'R.', 'Haentjens Dekker', NULL, NULL, '2015-06-01 17:10:17', '2015-06-01 17:10:17'),
+	(303, NULL, NULL, 'R.', 'Haentjens Dekker', NULL, 'ronald.dekker@huygens.knaw.nl', '2015-06-01 17:10:17', '2016-01-07 14:21:27'),
 	(304, NULL, NULL, 'P.', 'Crogan', NULL, NULL, '2015-06-01 17:10:27', '2015-06-01 17:10:27'),
-	(305, NULL, NULL, 'J.', 'Raessens', NULL, NULL, '2015-06-01 17:13:24', '2015-06-01 17:13:24'),
+	(305, NULL, NULL, 'J.', 'Raessens', NULL, 'j.raessens@uu.nl', '2015-06-01 17:13:24', '2016-01-07 14:25:53'),
 	(306, NULL, NULL, 'S.', 'Lammes', NULL, NULL, '2015-06-03 13:21:22', '2015-06-03 13:21:22'),
-	(307, NULL, NULL, 'N.', 'Verhoeff', NULL, NULL, '2015-06-03 13:21:34', '2015-06-03 13:22:06'),
+	(307, NULL, NULL, 'N.', 'Verhoeff', NULL, 'N.Verhoeff@uu.nl', '2015-06-03 13:21:34', '2016-01-07 14:27:57'),
 	(308, NULL, NULL, 'R.', 'Duivenvoorde', NULL, NULL, '2015-06-03 13:22:03', '2015-06-03 13:22:12'),
 	(309, NULL, NULL, 'E.M.', 'Gillavry', NULL, NULL, '2015-06-03 13:22:16', '2015-06-03 13:22:26'),
 	(310, NULL, NULL, 'M.', 'Scholtens', NULL, NULL, '2015-06-03 13:22:42', '2015-06-03 13:22:42'),
 	(311, NULL, NULL, 'H.', 'Nijboer', NULL, NULL, '2015-06-03 13:22:52', '2015-06-03 13:22:52'),
-	(312, NULL, NULL, 'M.J.', 'Bok', NULL, NULL, '2015-06-03 13:23:39', '2015-06-03 13:23:39'),
+	(312, NULL, NULL, 'M.J.', 'Bok', NULL, 'M.J.Bok@uva.nl', '2015-06-03 13:23:39', '2016-01-07 14:31:26'),
 	(313, NULL, NULL, 'E.G.', 'Müller,', NULL, NULL, '2015-06-03 13:24:15', '2015-06-03 13:24:15'),
 	(314, NULL, NULL, 'S.', 'De Leeuw', NULL, NULL, '2015-06-03 13:24:38', '2015-06-03 13:24:38'),
-	(315, NULL, NULL, 'A.', 'Zuccala ', NULL, NULL, '2015-06-03 13:24:47', '2015-06-03 13:24:47'),
-	(316, NULL, NULL, 'G. ', 'Schelhaas', NULL, NULL, '2015-06-03 13:26:57', '2015-06-03 13:26:57'),
+	(315, NULL, NULL, 'A.', 'Zuccala ', NULL, 'a.a.zuccala@uva.nl', '2015-06-03 13:24:47', '2016-01-07 14:41:59'),
+	(316, NULL, NULL, 'G. ', 'Schelhaas', NULL, 'G.Schelhaas@uu.nl', '2015-06-03 13:26:57', '2016-01-07 14:43:55'),
 	(317, NULL, NULL, 'T.', 'Naaijkens', NULL, NULL, '2015-06-03 13:27:14', '2015-06-03 13:27:14'),
 	(318, NULL, NULL, 'S.', 'Gaule', NULL, NULL, '2015-06-03 13:27:53', '2015-06-03 13:27:53'),
-	(319, NULL, NULL, 'J.', 'Raessens', NULL, NULL, '2015-06-03 13:28:22', '2015-06-03 13:28:22'),
+	(319, NULL, NULL, 'J.', 'Raessens', NULL, 'j.raessens@uu.nl', '2015-06-03 13:28:22', '2016-01-07 14:45:33'),
 	(320, NULL, NULL, 'J.', 'Burgoyne', 'Dr.', NULL, '2015-06-03 13:30:02', '2015-06-05 14:42:27'),
 	(321, NULL, NULL, 'H.', 'Honing', 'Prof. dr.', NULL, '2015-06-03 13:30:18', '2015-06-03 13:30:18'),
 	(322, NULL, NULL, 'J.', 'Kursell', 'prof.dr.', NULL, '2015-06-03 13:30:41', '2015-06-03 13:30:41'),
-	(323, NULL, NULL, 'C.', 'van den Heuvel', 'Prof.dr.', NULL, '2015-06-03 13:31:10', '2015-06-03 13:32:12'),
+	(323, NULL, NULL, 'C.', 'van den Heuvel', 'Prof.dr.', 'Charles.van.den.heuvel@huygens.knaw.nl', '2015-06-03 13:31:10', '2016-01-07 23:13:32'),
 	(324, NULL, NULL, 'M.J.', 'Bok', 'Dr.', NULL, '2015-06-03 13:32:40', '2015-06-03 13:32:40'),
 	(325, NULL, NULL, 'S.', 'Derks', 'drs.', NULL, '2015-06-03 13:32:53', '2015-06-03 13:32:53'),
 	(326, NULL, NULL, 'M.', 'van den Doel', 'Dr.', NULL, '2015-06-03 13:33:16', '2015-06-03 13:33:16'),
@@ -1607,7 +1607,7 @@ CREATE TABLE IF NOT EXISTS `person_external_identifiers` (
   CONSTRAINT `person_external_identifiers_ibfk_2` FOREIGN KEY (`external_identifier_type_id`) REFERENCES `external_identifier_types` (`id`) ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=483 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ROW_FORMAT=COMPACT;
 
--- Exportiere Daten aus Tabelle dhregistry.person_external_identifiers: ~607 rows (ungefähr)
+-- Exportiere Daten aus Tabelle dhregistry.person_external_identifiers: ~359 rows (ungefähr)
 /*!40000 ALTER TABLE `person_external_identifiers` DISABLE KEYS */;
 INSERT INTO `person_external_identifiers` (`id`, `person_id`, `external_identifier_type_id`, `identifier`) VALUES
 	(1, 1, 5, 'PRS1234958'),
@@ -2174,31 +2174,31 @@ CREATE TABLE IF NOT EXISTS `projects` (
   CONSTRAINT `FK_projects_users` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=307 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
--- Exportiere Daten aus Tabelle dhregistry.projects: ~228 rows (ungefähr)
+-- Exportiere Daten aus Tabelle dhregistry.projects: ~214 rows (ungefähr)
 /*!40000 ALTER TABLE `projects` DISABLE KEYS */;
 INSERT INTO `projects` (`id`, `active`, `review`, `last_invitation_date`, `last_invitation_address`, `user_id`, `parent_id`, `created`, `updated`, `name`, `description`, `is_phd`, `phd_students`, `start_date`, `end_date`, `funding_body`, `funding_size`, `currency_id`) VALUES
 	(4, 0, 0, NULL, NULL, NULL, NULL, '2015-05-22 20:12:54', '2015-06-06 20:14:24', 'Alexandria', '', 0, 0, NULL, NULL, NULL, NULL, NULL),
-	(5, 1, 0, NULL, NULL, NULL, NULL, '2015-05-22 20:12:54', '2015-05-22 20:22:45', 'Archeology of Architecture: The Presentation and Publication of Virtual 3D Constructions of Lost Monuments', 'This research project focuses on the investigation and, eventually, the development of  a new, interchangeable format and method to publish digital 3/4D reconstruction of (ancient) architecture and cityscapes, with the reconstruction of two (lost) monuments in Rome as a point of departure.', 0, 0, '2013', '2014', NULL, NULL, NULL),
-	(6, 1, 0, NULL, NULL, NULL, NULL, '2015-05-22 20:12:54', '2015-05-22 20:22:48', 'Arthurian fiction', 'This research tool provides information on medieval Arthurian narratives and the manuscripts in which they are transmitted throughout Europe. The database consists of linked records on over two hundred texts, more than thousand manuscripts and two hundred persons. Texts which belong to the pseudo-historical tradition of Geoffrey of Monmouth and printed books are not include', 0, 0, '2004', '2008', NULL, NULL, NULL),
-	(7, 1, 0, NULL, NULL, NULL, NULL, '2015-05-22 20:12:54', '2015-05-22 20:27:29', 'Asymmetrical Encounters – Digital Humanities Approaches to Reference Cultures in Europe, 1815-1992', 'This project will explore the cultural aspects of European identity and how the reference cultures have changed between 1815-1992. The project members will use large volumes of textual materials, largely in the form of long runs of digitized newspapers, pamphlets etc., and apply multi-lingual text mining techniques to explore intercultural references across time and space.', 0, 0, NULL, NULL, NULL, NULL, NULL),
-	(8, 1, 0, NULL, NULL, NULL, NULL, '2015-05-22 20:12:54', '2015-05-22 20:22:52', 'Augmenting Masterpieces: Interfaces between the Psysical and Digital Collection of the Rijksmuseum ', 'This research project aims at creating a theoretical framework, formulating existing and desired features, testing user experience, developing prototypes of new interfaces for virtual and physical interaction in the museum context and creating a final product to be used for augmented museum tours.', 0, 0, '2013', '2014', NULL, NULL, NULL),
-	(11, 1, 0, NULL, NULL, NULL, NULL, '2015-05-22 20:12:54', '2015-05-22 20:27:29', 'Beyond the Book', 'The project researches which textual features play a role in how readable a work of fiction is for readers from a different culture. The aim is to design a visualization tool to show the level of \'international readability\' of novels', 0, 0, NULL, NULL, NULL, NULL, NULL),
-	(18, 1, 0, NULL, NULL, NULL, NULL, '2015-05-22 20:12:54', '2015-06-06 01:04:33', 'COMPARE', 'COMPAring floor plan lay-out of REconstructed Dutch farmhouses of the 1940s and 1950s, using visualization and pattern recognition techniques. \r\nThe project aims at recognizing and organizing maps by using innovative pattern recognition software, digital image processing and visualization techniques', 0, 0, '2014', NULL, NULL, NULL, NULL),
-	(19, 1, 0, NULL, NULL, NULL, NULL, '2015-05-22 20:12:54', '2015-05-22 20:27:29', 'CollateX', 'CollateX is an automatic text alignment tool that can be fitted into the workflow of a researcher in a number of ways.', 0, 0, NULL, NULL, NULL, NULL, NULL),
-	(20, 1, 0, NULL, NULL, NULL, NULL, '2015-05-22 20:12:54', '2015-05-22 20:17:35', 'Creative Territories: Exploring Innovation in Indie Game Production Contexts and Connections', 'The research aims to formulate and ‘map forward’ the key processes and connections that represent commercially viable, creatively sustainable and culturally valuable pathways for the development of this sector so that it lives beyond its early ‘bubble’ and makes a significant difference in video game production as both economically and culturally valuable form.', 0, 0, '2014', NULL, NULL, NULL, NULL),
-	(21, 1, 0, NULL, NULL, NULL, NULL, '2015-05-22 20:12:54', '2015-05-22 20:17:38', 'Charting the Digital: Digital Mapping Practices as New Media Cultures', 'the project aims to conduct a comparative analysis of a broad spectrum of digital mapping devices: in relation to (a) each other; (b) traditional cartography; (c) to other media forms that are concerned with mapping and navigation. The projects aims to examine how digital maps can be simultaneously understood as new media, technologies and cartographies. ', 0, 0, '2014', NULL, NULL, NULL, NULL),
-	(26, 1, 0, NULL, NULL, NULL, NULL, '2015-05-22 20:12:54', '2015-05-22 20:22:19', 'Digital canal', 'This project aims at developing a geocoder that works with non standardized descriptions and that takes into account the changing cityscape. ', 0, 0, '2012', '2013', NULL, NULL, NULL),
+	(5, 1, 0, '2016-01-07 13:58:46', 'P.S.Lulof@uva.nl', NULL, NULL, '2015-05-22 20:12:54', '2016-01-07 13:58:46', 'Archeology of Architecture: The Presentation and Publication of Virtual 3D Constructions of Lost Monuments', 'This research project focuses on the investigation and, eventually, the development of  a new, interchangeable format and method to publish digital 3/4D reconstruction of (ancient) architecture and cityscapes, with the reconstruction of two (lost) monuments in Rome as a point of departure.', 0, 0, '2013', '2014', NULL, NULL, NULL),
+	(6, 1, 0, '2016-01-07 14:00:53', 'A.A.M.Besamusca@uu.nl', NULL, NULL, '2015-05-22 20:12:54', '2016-01-07 14:00:53', 'Arthurian fiction', 'This research tool provides information on medieval Arthurian narratives and the manuscripts in which they are transmitted throughout Europe. The database consists of linked records on over two hundred texts, more than thousand manuscripts and two hundred persons. Texts which belong to the pseudo-historical tradition of Geoffrey of Monmouth and printed books are not include', 0, 0, '2004', '2008', NULL, NULL, NULL),
+	(7, 1, 0, '2016-01-07 14:02:14', 'J.vanEijnatten@uu.nl', NULL, NULL, '2015-05-22 20:12:54', '2016-01-07 14:02:14', 'Asymmetrical Encounters – Digital Humanities Approaches to Reference Cultures in Europe, 1815-1992', 'This project will explore the cultural aspects of European identity and how the reference cultures have changed between 1815-1992. The project members will use large volumes of textual materials, largely in the form of long runs of digitized newspapers, pamphlets etc., and apply multi-lingual text mining techniques to explore intercultural references across time and space.', 0, 0, NULL, NULL, NULL, NULL, NULL),
+	(8, 1, 0, '2016-01-07 14:17:23', 'J.H.Hoogstad@uva.nl', NULL, NULL, '2015-05-22 20:12:54', '2016-01-07 14:17:23', 'Augmenting Masterpieces: Interfaces between the Psysical and Digital Collection of the Rijksmuseum ', 'This research project aims at creating a theoretical framework, formulating existing and desired features, testing user experience, developing prototypes of new interfaces for virtual and physical interaction in the museum context and creating a final product to be used for augmented museum tours.', 0, 0, '2013', '2014', NULL, NULL, NULL),
+	(11, 1, 0, '2016-01-07 14:18:33', 'K.H.vanDalen-Oskam@uva.nl', NULL, NULL, '2015-05-22 20:12:54', '2016-01-07 14:18:33', 'Beyond the Book', 'The project researches which textual features play a role in how readable a work of fiction is for readers from a different culture. The aim is to design a visualization tool to show the level of \'international readability\' of novels', 0, 0, NULL, NULL, NULL, NULL, NULL),
+	(18, 1, 0, '2016-01-07 14:19:52', 'Sophie.Elpers@meertens.knaw.nl', NULL, NULL, '2015-05-22 20:12:54', '2016-01-07 14:19:52', 'COMPARE', 'COMPAring floor plan lay-out of REconstructed Dutch farmhouses of the 1940s and 1950s, using visualization and pattern recognition techniques. \r\nThe project aims at recognizing and organizing maps by using innovative pattern recognition software, digital image processing and visualization techniques', 0, 0, '2014', NULL, NULL, NULL, NULL),
+	(19, 1, 0, '2016-01-07 14:21:27', 'ronald.dekker@huygens.knaw.nl', NULL, NULL, '2015-05-22 20:12:54', '2016-01-07 14:21:27', 'CollateX', 'CollateX is an automatic text alignment tool that can be fitted into the workflow of a researcher in a number of ways.', 0, 0, NULL, NULL, NULL, NULL, NULL),
+	(20, 1, 0, '2016-01-07 14:25:53', 'j.raessens@uu.nl', NULL, NULL, '2015-05-22 20:12:54', '2016-01-07 14:25:53', 'Creative Territories: Exploring Innovation in Indie Game Production Contexts and Connections', 'The research aims to formulate and ‘map forward’ the key processes and connections that represent commercially viable, creatively sustainable and culturally valuable pathways for the development of this sector so that it lives beyond its early ‘bubble’ and makes a significant difference in video game production as both economically and culturally valuable form.', 0, 0, '2014', NULL, NULL, NULL, NULL),
+	(21, 1, 0, '2016-01-07 14:27:57', 'N.Verhoeff@uu.nl', NULL, NULL, '2015-05-22 20:12:54', '2016-01-07 14:27:57', 'Charting the Digital: Digital Mapping Practices as New Media Cultures', 'the project aims to conduct a comparative analysis of a broad spectrum of digital mapping devices: in relation to (a) each other; (b) traditional cartography; (c) to other media forms that are concerned with mapping and navigation. The projects aims to examine how digital maps can be simultaneously understood as new media, technologies and cartographies. ', 0, 0, '2014', NULL, NULL, NULL, NULL),
+	(26, 1, 0, '2016-01-07 14:31:26', 'M.J.Bok@uva.nl', NULL, NULL, '2015-05-22 20:12:54', '2016-01-07 14:31:26', 'Digital canal', 'This project aims at developing a geocoder that works with non standardized descriptions and that takes into account the changing cityscape. ', 0, 0, '2012', '2013', NULL, NULL, NULL),
 	(29, 1, 0, NULL, NULL, NULL, NULL, '2015-05-22 20:12:54', '2015-05-22 20:22:25', 'Dynamic drawings in enhanced publications', 'Dynamic Drawings visualizes old drawings into colorful 2D or 3D animations and explores new ways of publishing in which publications in print and digital form are used complementary.', 0, 0, '2012', '2013', NULL, NULL, NULL),
 	(30, 1, 0, NULL, NULL, NULL, NULL, '2015-05-22 20:12:54', '2015-05-22 20:22:29', 'Dutch Ships and Sailors', 'Dutch Ships and Sailors is a project that aims to provide an infrastructure for maritime historical datasets, linking correlating data through semantic web technology. It brings together datasets related to recruitment and shipping in the East-India trade (mainly 18th century) and in the shipping of the northern provinces of the Netherlands (mainly 19th century). For the northern provinces, the database contains data on the personnel recruited, the ships, and other variables (Monsterrollen Noordelijke Nederlanden).', 0, 0, '2013', '2014', NULL, NULL, NULL),
 	(33, 1, 0, NULL, NULL, NULL, NULL, '2015-05-22 20:12:54', '2015-05-22 20:27:29', 'eLaborate', 'eLaborate is an online work environment in which scholars can upload scans, transcribe and annotate text, and publish the results as on online text edition which is freely available to all users.', 0, 0, NULL, NULL, NULL, NULL, NULL),
 	(34, 1, 0, NULL, NULL, NULL, NULL, '2015-05-22 20:12:54', '2015-05-22 20:22:41', 'Evaluating the Humanities', 'The project aims to determine the degree to which university press prestige is a mythical concept. Moreover, it aims to provide insight into the selection process of arts and humanities books for new book citation indices.  The third objective is to map directed relationships from journals to university presses\n(via book reference strings). The fourth objective is to to combine the results of our quantitative analyses using Scopus data with a qualitative analysis of the academic/university press publishers ', 0, 0, '2012', '2013', NULL, NULL, NULL),
 	(35, 1, 0, NULL, NULL, NULL, NULL, '2015-05-22 20:12:54', '2015-05-22 20:27:29', 'EUscreenXL – Exploring Europe’s Television Heritage in Changing Context', 'EUscreenXL is a project and best practice network which aims at improving and developing the EUscreen portal. It is a consortium involving European audiovisual and broadcasting archives. EUscreenXL aligns audiovisual collections held throughout Europe and connects them within the audiovisual domain of Europeana, an online collection of millions of digitised items from European museums, libraries and archives.', 0, 0, NULL, NULL, NULL, NULL, NULL),
-	(36, 1, 0, NULL, NULL, NULL, NULL, '2015-05-22 20:12:54', '2015-05-22 20:24:51', 'Evaluating the Humanities - II. From bibliometrics to public valorization', 'The goal is to augment and/or enrich an unique database with \'altmetrics\' data, that is, \'alternative forms of metric data\' retrieved from the social Web.', 0, 0, '2013', '2014', NULL, NULL, NULL),
-	(38, 1, 0, NULL, NULL, NULL, NULL, '2015-05-22 20:12:54', '2015-05-22 20:18:09', 'Expertisecentrum Literair Vertalen', '', 0, 0, '2014', NULL, NULL, NULL, NULL),
+	(36, 1, 0, '2016-01-07 14:41:59', 'a.a.zuccala@uva.nl', NULL, NULL, '2015-05-22 20:12:54', '2016-01-07 14:41:59', 'Evaluating the Humanities - II. From bibliometrics to public valorization', 'The goal is to augment and/or enrich an unique database with \'altmetrics\' data, that is, \'alternative forms of metric data\' retrieved from the social Web.', 0, 0, '2013', '2014', NULL, NULL, NULL),
+	(38, 1, 0, '2016-01-07 14:43:55', 'G.Schelhaas@uu.nl', NULL, NULL, '2015-05-22 20:12:54', '2016-01-07 14:43:55', 'Expertisecentrum Literair Vertalen', '', 0, 0, '2014', NULL, NULL, NULL, NULL),
 	(39, 1, 0, NULL, NULL, NULL, NULL, '2015-05-22 20:12:54', '2015-05-22 20:27:29', 'From sentiment mining to mining embodied emotions', 'The project aims at researching digitized theater texts for ""emotional styles"" and develops  a more complex form of sentiment mining', 0, 0, NULL, NULL, NULL, NULL, NULL),
-	(41, 1, 0, NULL, NULL, NULL, NULL, '2015-05-22 20:12:54', '2015-05-22 20:27:29', 'Games and social change: In-between screens, places and communities', 'The network will also focus on other emergent game platforms (e.g. Alternate Reality Games (ARGs) and Urban Games) that use digital technologies to create games, ', 0, 0, NULL, NULL, NULL, NULL, NULL),
+	(41, 1, 0, '2016-01-07 14:45:33', 'j.raessens@uu.nl', NULL, NULL, '2015-05-22 20:12:54', '2016-01-07 14:45:33', 'Games and social change: In-between screens, places and communities', 'The network will also focus on other emergent game platforms (e.g. Alternate Reality Games (ARGs) and Urban Games) that use digital technologies to create games, ', 0, 0, NULL, NULL, NULL, NULL, NULL),
 	(42, 1, 0, NULL, NULL, NULL, NULL, '2015-05-22 20:12:54', '2015-05-22 20:27:29', 'GOLIATH – Genealogies of Literature, Autonomisation, Theory and History', 'This project aims to establish the foundations for a study of various aspects of the history of modern literature concept (12th-18th centuries)', 0, 0, NULL, NULL, NULL, NULL, NULL),
-	(44, 1, 0, NULL, NULL, NULL, NULL, '2015-05-22 20:12:54', '2015-05-22 20:24:30', '#Hooked! A Game for Uncovering the Mystery of Musical Catchiness', 'The project aims at developing a music game called Hooked, a game that is designed to serve a clever double purpose: on one hand a musical trivia quiz and on the other hand a scientific experiment to gather data for studying musical catchiness.', 0, 0, '2013', '2014', NULL, NULL, NULL),
+	(44, 1, 0, '2016-01-07 23:13:32', 'Charles.van.den.heuvel@huygens.knaw.nl', NULL, NULL, '2015-05-22 20:12:54', '2016-01-07 23:13:32', '#Hooked! A Game for Uncovering the Mystery of Musical Catchiness', 'The project aims at developing a music game called Hooked, a game that is designed to serve a clever double purpose: on one hand a musical trivia quiz and on the other hand a scientific experiment to gather data for studying musical catchiness.', 0, 0, '2013', '2014', NULL, NULL, NULL),
 	(46, 1, 0, NULL, NULL, NULL, NULL, '2015-05-22 20:12:54', '2015-05-22 20:27:29', 'INTER-VIEWS', 'In INTER-VIEWs the project partners (CLST, RU Nijmegen; DANS; Veterans Institute, Doorn; MPI, Nijmegen) have curated a corpus of 250 audio-interviews held with veterans of various conflicts , which can be searched through speech retrieval , and annotated and enriched by insights of the users through a so called search and annotation tool', 0, 0, NULL, NULL, NULL, NULL, NULL),
 	(47, 1, 0, NULL, NULL, NULL, NULL, '2015-05-22 20:12:54', '2015-05-22 20:24:13', 'KNAW - Mapping Notes and Nodes in Networks', 'The aim is to explore potential relationships in biographical data and cultural networks in the creative industry in Amsterdam and Rome in the Early Modern Period.', 0, 0, '2013', '2014', NULL, NULL, NULL),
 	(48, 1, 0, NULL, NULL, NULL, NULL, '2015-05-22 20:12:54', '2015-05-22 20:27:29', 'Language Technology for eLearning', 'The project will employ Language Technology resources and tools for the semi-automatic generation of descriptive metadata. It will develop new functionalities such as a key word extractor and a glossary candidate detector, tuned for the various languages addressed in the project (Bulgarian, Czech, Dutch, English, German, Maltese, Polish, Portuguese, Romanian).', 0, 0, NULL, NULL, NULL, NULL, NULL),
@@ -2350,7 +2350,7 @@ INSERT INTO `projects` (`id`, `active`, `review`, `last_invitation_date`, `last_
 	(264, 1, 0, NULL, NULL, NULL, NULL, '2015-05-28 19:38:12', '2015-05-28 19:52:22', 'CLIO-Infra project', NULL, 0, 0, '2011-01-01', NULL, NULL, NULL, NULL),
 	(265, 1, 0, NULL, NULL, NULL, NULL, '2015-05-28 19:38:12', '2015-05-28 19:52:25', 'Interface Studies', NULL, 0, 0, '2011-01-01', NULL, NULL, NULL, NULL),
 	(266, 1, 0, NULL, NULL, NULL, NULL, '2015-05-28 19:38:12', '2015-05-28 19:52:30', 'Digital Research Infrastructure for the Arts and Humanities (DARIAH)', 'In het project Digital Research Infrastructure for the Arts and Humanities (DARIAH) wordt een digitale werkbank voor alfawetenschappers in Europa gerealiseerd. Onderzoekers kunnen bij DARIAH terecht voor het vinden van data en tools, het archiveren van hun data, kennisuitwisseling en advies op het gebied van metadata en digitalisering. Het European Strategy Forum for Research Infrastructures (ESFRI) heeft het belang van de ontwikkeling van DARIAH onderstreept door het project op te nemen in zijn Roadmap 2006. Daarin zijn nog vier belangrijke initiatieven in de alfa- en gammawetenschappen opgenomen, waaronder een vergelijkbaar voorstel voor een data-infrastructuur voor de gammawetenschappen (CESSDA Major Upgrade) en voor taalkundige hulpbronnen (CLARIN) In het najaar van 2008 is gestart met het project Preparing DARIAH , waarin alle voorbereidingen voor de constructie worden getroffen. Voorbereidend werk betreft onder meer juridisch werk en het ontwikkelen en testen van een prototype. Het 2 jaar durende project wordt medegefinancierd door de Europese Commissie. In totaal zijn er 14 organisaties uit 10 landen als partner betrokken bij het project. Daarnaast hebben zich al verschillende organisaties uit andere landen aangemeld als geïnteresseerde. De DARIAH website geeft meer details over de activiteiten en de partners. Het Preparing DARIAH project is eind februari 2011 afgesloten. DARIAH bevindt zich nu in een overgangsfase en de verwachting is dat in 2012 de feitelijke constructie aanvangt.', 0, 0, '2012-03-01', NULL, NULL, NULL, NULL),
-	(268, 1, 0, NULL, NULL, NULL, 256, '2015-05-28 19:38:12', '2015-05-28 20:00:38', 'CEDAR From fragment to fabric ? Dutch census data in a web of global cultural and historic information', NULL, 1, 0, '2011-09-01', '2014-12-01', NULL, NULL, NULL),
+	(268, 1, 0, NULL, NULL, NULL, 256, '2015-05-28 19:38:12', '2015-05-28 20:00:38', 'CEDAR From fragment to fabric ? Dutch census data in a web of global cultural and historic information', 'Currently, Europe is confronted with industrial restructuring, migration, aging of population and financial crisis in a world of accelerated change. Learning from (social-economic) history helps to understand the interrelation between macro-economic change and individual lifestyles, policy regimes, labour markets, communities and national wealth. However, sources of historical information about the lives of individuals, communities, and nations are still scattered.\\nThis project takes Dutch census data as a starting point to build a semantic data-web of historical information. With such a web we will answer questions such as:\\n- What kind of patterns can we identify and interpret in expressions of regional identity?\\n- How to relate patterns of changes in skills and labour to technological progress and patterns of geographical migration?\\n- How to trace changes of local and national policies in the structure of communities and individual lives?\\nCensus data alone are not sufficient to answer these questions. This project applies a specific web-based data-model – exploiting the Resource Description Framework (RDF) technology– to make census data inter-linkable with other hubs of historical socio-economic and demographic data and beyond. Pattern recognition appears on two levels: first to enable the integration of hitherto isolated datasets, and second to apply integrated querying and analysis across this new, enriched information space. Data analysis interfaces, visual inventories of historical data and reports on open-linked data strategies for digital collections are results of this project. The project will result in generic methods and tools to weave historical and socio-economic datasets into an interlinked semantic data-web.', 1, 2, '2011-09-01', '2016-04-01', 'KNAW', 700000, 1),
 	(269, 1, 0, NULL, NULL, NULL, 256, '2015-05-28 19:38:12', '2015-05-28 20:00:38', 'The Riddle of Literary Quality', 'Het doel van het project is om op een empirische en computationele wijze tekstuele patronen vast te stellen in moderne Nederlandstalige fictie en na te gaan of er een correlatie bestaat tussen het voorkomen van bepaalde clusters van formele eigenschappen en de meningen die lezers over de onderzochte romans hebben. Voor de tekstkenmerken worden tools aangepast en ontwikkeld waarmee zoveel mogelijk eigenschappen van de tekst worden doorgemeten. De lezersmeningen zijn in de loop van 2012 verzameld in Het nationale lezersonderzoek, een grote online enquête.', 0, 0, '2012-01-01', '2016-09-01', NULL, NULL, NULL),
 	(270, 1, 0, NULL, NULL, NULL, 256, '2015-05-28 19:38:12', '2015-05-28 20:00:38', 'Tunes & Tales. Modeling Oral Transmission', NULL, 0, 0, '2011-09-01', NULL, NULL, NULL, NULL),
 	(271, 1, 0, NULL, NULL, NULL, 256, '2015-05-28 19:38:12', '2015-05-28 20:00:38', 'Enhanced Publications', NULL, 0, 0, '2011-01-01', NULL, NULL, NULL, NULL),
@@ -2716,9 +2716,9 @@ CREATE TABLE IF NOT EXISTS `projects_nwo_disciplines` (
   KEY `FK_projects_nwo_disciplines_nwo_disciplines` (`nwo_discipline_id`),
   CONSTRAINT `FK_projects_nwo_disciplines_nwo_disciplines` FOREIGN KEY (`nwo_discipline_id`) REFERENCES `nwo_disciplines` (`id`) ON UPDATE CASCADE,
   CONSTRAINT `FK_projects_nwo_disciplines_projects` FOREIGN KEY (`project_id`) REFERENCES `projects` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=108 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=110 DEFAULT CHARSET=utf8;
 
--- Exportiere Daten aus Tabelle dhregistry.projects_nwo_disciplines: ~48 rows (ungefähr)
+-- Exportiere Daten aus Tabelle dhregistry.projects_nwo_disciplines: ~50 rows (ungefähr)
 /*!40000 ALTER TABLE `projects_nwo_disciplines` DISABLE KEYS */;
 INSERT INTO `projects_nwo_disciplines` (`id`, `project_id`, `nwo_discipline_id`) VALUES
 	(11, 5, 2),
@@ -2768,7 +2768,9 @@ INSERT INTO `projects_nwo_disciplines` (`id`, `project_id`, `nwo_discipline_id`)
 	(104, 91, 1),
 	(105, 92, 16),
 	(106, 93, 11),
-	(107, 94, 16);
+	(107, 94, 16),
+	(108, 268, 6),
+	(109, 268, 12);
 /*!40000 ALTER TABLE `projects_nwo_disciplines` ENABLE KEYS */;
 
 
@@ -2795,7 +2797,7 @@ CREATE TABLE IF NOT EXISTS `projects_people` (
   CONSTRAINT `FK_projects_persons_projects` FOREIGN KEY (`project_id`) REFERENCES `projects` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=516 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
--- Exportiere Daten aus Tabelle dhregistry.projects_people: ~345 rows (ungefähr)
+-- Exportiere Daten aus Tabelle dhregistry.projects_people: ~621 rows (ungefähr)
 /*!40000 ALTER TABLE `projects_people` DISABLE KEYS */;
 INSERT INTO `projects_people` (`id`, `person_id`, `project_id`, `person_project_role_id`, `institution_id`, `person_institution_role_id`, `email`) VALUES
 	(1, 155, 217, 1, 1128, 5, 'joris.van.zundert@huygens.knaw.nl'),
@@ -3203,37 +3205,37 @@ INSERT INTO `projects_people` (`id`, `person_id`, `project_id`, `person_project_
 	(425, 271, 284, 6, 1149, NULL, NULL),
 	(426, 277, 292, 6, 1055, NULL, NULL),
 	(428, 282, 296, 6, 1055, NULL, NULL),
-	(429, 289, 5, 3, NULL, NULL, NULL),
+	(429, 289, 5, 3, NULL, NULL, 'P.S.Lulof@uva.nl'),
 	(430, 290, 5, 3, NULL, NULL, NULL),
 	(431, 291, 5, 3, NULL, NULL, NULL),
 	(432, 292, 5, 3, NULL, NULL, NULL),
-	(433, 293, 6, 5, 1179, NULL, NULL),
-	(434, 294, 7, 4, 1245, NULL, NULL),
-	(435, 295, 8, 4, 1218, NULL, NULL),
-	(436, 296, 11, 4, 1206, NULL, NULL),
+	(433, 293, 6, 5, 1179, NULL, 'A.A.M.Besamusca@uu.nl'),
+	(434, 294, 7, 4, 1245, NULL, 'J.vanEijnatten@uu.nl'),
+	(435, 295, 8, 4, 1218, NULL, 'J.H.Hoogstad@uva.nl'),
+	(436, 296, 11, 4, 1206, NULL, 'K.H.vanDalen-Oskam@uva.nl'),
 	(437, 297, 11, 3, 1206, NULL, NULL),
-	(438, 301, 18, 3, 1208, NULL, NULL),
+	(438, 301, 18, 3, 1208, NULL, 'Sophie.Elpers@meertens.knaw.nl'),
 	(439, 302, 18, 3, 1208, NULL, NULL),
-	(440, 303, 19, 1, 1210, NULL, NULL),
+	(440, 303, 19, 1, 1210, NULL, 'ronald.dekker@huygens.knaw.nl'),
 	(441, 304, 20, 4, 1226, NULL, NULL),
-	(442, 305, 20, 3, 1226, NULL, NULL),
+	(442, 305, 20, 3, 1226, NULL, 'j.raessens@uu.nl'),
 	(443, 306, 21, 4, 1226, NULL, NULL),
-	(444, 307, 21, 4, 1226, NULL, NULL),
+	(444, 307, 21, 4, 1226, NULL, 'N.Verhoeff@uu.nl'),
 	(445, 308, 26, 3, 9, NULL, NULL),
 	(446, 309, 26, 3, 9, NULL, NULL),
 	(447, 310, 26, 3, 9, NULL, NULL),
 	(448, 311, 26, 3, 9, NULL, NULL),
-	(449, 312, 26, 3, 9, NULL, NULL),
+	(449, 312, 26, 3, 9, NULL, 'M.J.Bok@uva.nl'),
 	(450, 313, 35, 4, 1222, NULL, NULL),
 	(451, 314, 35, 4, 1222, NULL, NULL),
-	(452, 315, 36, 4, 1223, NULL, NULL),
-	(454, 316, 38, 4, 1225, NULL, NULL),
+	(452, 315, 36, 4, 1223, NULL, 'a.a.zuccala@uva.nl'),
+	(454, 316, 38, 4, 1225, NULL, 'G.Schelhaas@uu.nl'),
 	(455, 317, 38, 4, 1225, NULL, NULL),
 	(456, 318, 41, 4, 1226, NULL, NULL),
-	(457, 319, 41, 4, 1226, NULL, NULL),
+	(457, 319, 41, 4, 1226, NULL, 'j.raessens@uu.nl'),
 	(458, 320, 44, 4, NULL, NULL, NULL),
 	(459, 321, 44, 4, NULL, NULL, NULL),
-	(460, 323, 44, 4, NULL, NULL, NULL),
+	(460, 323, 44, 4, NULL, NULL, 'Charles.van.den.heuvel@huygens.knaw.nl'),
 	(461, 323, 47, 4, NULL, NULL, NULL),
 	(462, 324, 47, 4, NULL, NULL, NULL),
 	(463, 325, 47, 4, NULL, NULL, NULL),
@@ -3294,10 +3296,35 @@ CREATE TABLE IF NOT EXISTS `projects_tadirah_activities` (
   KEY `FK_projects_tadirah_activities_tadirah_activities` (`tadirah_activity_id`),
   CONSTRAINT `FK_projects_tadirah_activities_projects` FOREIGN KEY (`project_id`) REFERENCES `projects` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `FK_projects_tadirah_activities_tadirah_activities` FOREIGN KEY (`tadirah_activity_id`) REFERENCES `tadirah_activities` (`id`) ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=26 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
--- Exportiere Daten aus Tabelle dhregistry.projects_tadirah_activities: ~0 rows (ungefähr)
+-- Exportiere Daten aus Tabelle dhregistry.projects_tadirah_activities: ~24 rows (ungefähr)
 /*!40000 ALTER TABLE `projects_tadirah_activities` DISABLE KEYS */;
+INSERT INTO `projects_tadirah_activities` (`id`, `project_id`, `tadirah_activity_id`) VALUES
+	(1, 268, 12),
+	(2, 268, 9),
+	(3, 268, 24),
+	(4, 268, 25),
+	(5, 268, 23),
+	(6, 268, 28),
+	(7, 268, 29),
+	(8, 268, 27),
+	(9, 268, 30),
+	(10, 268, 33),
+	(11, 268, 37),
+	(13, 268, 39),
+	(14, 268, 40),
+	(15, 268, 41),
+	(16, 268, 42),
+	(17, 268, 43),
+	(18, 268, 47),
+	(19, 268, 52),
+	(20, 268, 53),
+	(21, 268, 48),
+	(22, 268, 49),
+	(23, 268, 55),
+	(24, 268, 57),
+	(25, 268, 58);
 /*!40000 ALTER TABLE `projects_tadirah_activities` ENABLE KEYS */;
 
 
@@ -3312,10 +3339,16 @@ CREATE TABLE IF NOT EXISTS `projects_tadirah_objects` (
   KEY `FK_projects_tadirah_objects_tadirah_objects` (`tadirah_object_id`),
   CONSTRAINT `FK_projects_tadirah_objects_projects` FOREIGN KEY (`project_id`) REFERENCES `projects` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `FK_projects_tadirah_objects_tadirah_objects` FOREIGN KEY (`tadirah_object_id`) REFERENCES `tadirah_objects` (`id`) ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
--- Exportiere Daten aus Tabelle dhregistry.projects_tadirah_objects: ~0 rows (ungefähr)
+-- Exportiere Daten aus Tabelle dhregistry.projects_tadirah_objects: ~5 rows (ungefähr)
 /*!40000 ALTER TABLE `projects_tadirah_objects` DISABLE KEYS */;
+INSERT INTO `projects_tadirah_objects` (`id`, `project_id`, `tadirah_object_id`) VALUES
+	(1, 268, 6),
+	(2, 268, 17),
+	(3, 268, 29),
+	(4, 268, 34),
+	(5, 268, 32);
 /*!40000 ALTER TABLE `projects_tadirah_objects` ENABLE KEYS */;
 
 
@@ -3330,9 +3363,9 @@ CREATE TABLE IF NOT EXISTS `projects_tadirah_techniques` (
   KEY `FK_projects_tadirah_techniques_tadirah_techniques` (`tadirah_technique_id`),
   CONSTRAINT `FK_projects_tadirah_techniques_projects` FOREIGN KEY (`project_id`) REFERENCES `projects` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `FK_projects_tadirah_techniques_tadirah_techniques` FOREIGN KEY (`tadirah_technique_id`) REFERENCES `tadirah_techniques` (`id`) ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=236 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=240 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
--- Exportiere Daten aus Tabelle dhregistry.projects_tadirah_techniques: ~150 rows (ungefähr)
+-- Exportiere Daten aus Tabelle dhregistry.projects_tadirah_techniques: ~154 rows (ungefähr)
 /*!40000 ALTER TABLE `projects_tadirah_techniques` DISABLE KEYS */;
 INSERT INTO `projects_tadirah_techniques` (`id`, `project_id`, `tadirah_technique_id`) VALUES
 	(10, 4, 41),
@@ -3484,7 +3517,11 @@ INSERT INTO `projects_tadirah_techniques` (`id`, `project_id`, `tadirah_techniqu
 	(232, 55, 41),
 	(233, 199, 15),
 	(234, 200, 15),
-	(235, 201, 15);
+	(235, 201, 15),
+	(236, 268, 16),
+	(237, 268, 19),
+	(238, 268, 27),
+	(239, 268, 37);
 /*!40000 ALTER TABLE `projects_tadirah_techniques` ENABLE KEYS */;
 
 
@@ -3676,7 +3713,7 @@ CREATE TABLE IF NOT EXISTS `project_links` (
 /*!40000 ALTER TABLE `project_links` DISABLE KEYS */;
 INSERT INTO `project_links` (`id`, `project_id`, `project_link_type_id`, `url`, `title`, `description`) VALUES
 	(4, 4, 3, '', 'Alexandria', NULL),
-	(5, 5, 3, 'http://cdh.uva.nl/projects-2013-2014/archeology-of-architecture.html', 'Archeology of Architecture: The Presentation and Publication of Virtual 3D Constructions of Lost Monuments', NULL),
+	(5, 5, 3, 'http://www.4dresearchlab.nl', 'Archeology of Architecture: The Presentation and Publication of Virtual 3D Constructions of Lost Monuments', NULL),
 	(6, 6, 3, 'http://www.arthurianfiction.org/', 'Arthurian fiction', NULL),
 	(7, 7, 3, 'http://asymenc.wp.hum.uu.nl/', 'Asymmetrical Encounters – Digital Humanities Approaches to Reference Cultures in Europe, 1815-1992', NULL),
 	(8, 8, 3, 'http://cdh.uva.nl/projects-2013-2014/augmenting-masterpieces.html', 'Augmenting Masterpieces: Interfaces between the Psysical and Digital Collection of the Rijksmuseum ', NULL),
@@ -3795,12 +3832,13 @@ CREATE TABLE IF NOT EXISTS `project_reviews` (
   PRIMARY KEY (`id`),
   KEY `FK_project_reviews_projects` (`project_id`),
   CONSTRAINT `FK_project_reviews_projects` FOREIGN KEY (`project_id`) REFERENCES `projects` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
--- Exportiere Daten aus Tabelle dhregistry.project_reviews: ~1 rows (ungefähr)
+-- Exportiere Daten aus Tabelle dhregistry.project_reviews: ~2 rows (ungefähr)
 /*!40000 ALTER TABLE `project_reviews` DISABLE KEYS */;
 INSERT INTO `project_reviews` (`id`, `project_id`, `done`, `changeset_json`, `email`, `comment`, `people_comment`, `institutions_comment`, `created`, `updated`) VALUES
-	(1, 268, 0, '{\r\n    "Project": {\r\n        "id": "268",\r\n        "name": "Census data open linked – CEDA_R.\\nFrom fragment to fabric – Dutch census data in a web of global cultural and historic information",\r\n        "description": "Currently, Europe is confronted with industrial restructuring, migration, aging of population and financial crisis in a world of accelerated change. Learning from (social-economic) history helps to understand the interrelation between macro-economic change and individual lifestyles, policy regimes, labour markets, communities and national wealth. However, sources of historical information about the lives of individuals, communities, and nations are still scattered.\\nThis project takes Dutch census data as a starting point to build a semantic data-web of historical information. With such a web we will answer questions such as:\\n- What kind of patterns can we identify and interpret in expressions of regional identity?\\n- How to relate patterns of changes in skills and labour to technological progress and patterns of geographical migration?\\n- How to trace changes of local and national policies in the structure of communities and individual lives?\\nCensus data alone are not sufficient to answer these questions. This project applies a specific web-based data-model – exploiting the Resource Description Framework (RDF) technology– to make census data inter-linkable with other hubs of historical socio-economic and demographic data and beyond. Pattern recognition appears on two levels: first to enable the integration of hitherto isolated datasets, and second to apply integrated querying and analysis across this new, enriched information space. Data analysis interfaces, visual inventories of historical data and reports on open-linked data strategies for digital collections are results of this project. The project will result in generic methods and tools to weave historical and socio-economic datasets into an interlinked semantic data-web.",\r\n        "end_date": "2016-04-01",\r\n        "funding_body": "KNAW",\r\n        "funding_size": "700000",\r\n        "currency_id": "1",\r\n        "phd_students": "2",\r\n        "parent_not_listed": "the actual parent project is: Computational Humanities Programme, hosted by the eHumanities group"\r\n    },\r\n    "NwoDiscipline": {\r\n        "ProjectsNwoDiscipline": [\r\n            {\r\n                "id": "",\r\n                "project_id": "268",\r\n                "nwo_discipline_id": "6"\r\n            },\r\n            {\r\n                "id": "",\r\n                "project_id": "268",\r\n                "nwo_discipline_id": "12"\r\n            }\r\n        ]\r\n    },\r\n    "TadirahActivity": {\r\n        "ProjectsTadirahActivity": [\r\n            {\r\n                "id": "",\r\n                "project_id": "268",\r\n                "tadirah_activity_id": "9"\r\n            },\r\n            {\r\n                "id": "",\r\n                "project_id": "268",\r\n                "tadirah_activity_id": "12"\r\n            },\r\n            {\r\n                "id": "",\r\n                "project_id": "268",\r\n                "tadirah_activity_id": "24"\r\n            },\r\n            {\r\n                "id": "",\r\n                "project_id": "268",\r\n                "tadirah_activity_id": "25"\r\n            },\r\n            {\r\n                "id": "",\r\n                "project_id": "268",\r\n                "tadirah_activity_id": "23"\r\n            },\r\n            {\r\n                "id": "",\r\n                "project_id": "268",\r\n                "tadirah_activity_id": "28"\r\n            },\r\n            {\r\n                "id": "",\r\n                "project_id": "268",\r\n                "tadirah_activity_id": "29"\r\n            },\r\n            {\r\n                "id": "",\r\n                "project_id": "268",\r\n                "tadirah_activity_id": "27"\r\n            },\r\n            {\r\n                "id": "",\r\n                "project_id": "268",\r\n                "tadirah_activity_id": "30"\r\n            },\r\n            {\r\n                "id": "",\r\n                "project_id": "268",\r\n                "tadirah_activity_id": "33"\r\n            },\r\n            {\r\n                "id": "",\r\n                "project_id": "268",\r\n                "tadirah_activity_id": "37"\r\n            },\r\n            {\r\n                "id": "",\r\n                "project_id": "268",\r\n                "tadirah_activity_id": "39"\r\n            },\r\n            {\r\n                "id": "",\r\n                "project_id": "268",\r\n                "tadirah_activity_id": "40"\r\n            },\r\n            {\r\n                "id": "",\r\n                "project_id": "268",\r\n                "tadirah_activity_id": "41"\r\n            },\r\n            {\r\n                "id": "",\r\n                "project_id": "268",\r\n                "tadirah_activity_id": "42"\r\n            },\r\n            {\r\n                "id": "",\r\n                "project_id": "268",\r\n                "tadirah_activity_id": "43"\r\n            },\r\n            {\r\n                "id": "",\r\n                "project_id": "268",\r\n                "tadirah_activity_id": "47"\r\n            },\r\n            {\r\n                "id": "",\r\n                "project_id": "268",\r\n                "tadirah_activity_id": "52"\r\n            },\r\n            {\r\n                "id": "",\r\n                "project_id": "268",\r\n                "tadirah_activity_id": "53"\r\n            },\r\n            {\r\n                "id": "",\r\n                "project_id": "268",\r\n                "tadirah_activity_id": "48"\r\n            },\r\n            {\r\n                "id": "",\r\n                "project_id": "268",\r\n                "tadirah_activity_id": "49"\r\n            },\r\n            {\r\n                "id": "",\r\n                "project_id": "268",\r\n                "tadirah_activity_id": "55"\r\n            },\r\n            {\r\n                "id": "",\r\n                "project_id": "268",\r\n                "tadirah_activity_id": "58"\r\n            },\r\n            {\r\n                "id": "",\r\n                "project_id": "268",\r\n                "tadirah_activity_id": "57"\r\n            }\r\n        ]\r\n    },\r\n    "TadirahTechnique": {\r\n        "ProjectsTadirahTechnique": [\r\n            {\r\n                "id": "136"\r\n            },\r\n            {\r\n                "id": "",\r\n                "project_id": "268",\r\n                "tadirah_technique_id": "16"\r\n            },\r\n            {\r\n                "id": "",\r\n                "project_id": "268",\r\n                "tadirah_technique_id": "19"\r\n            },\r\n            {\r\n                "id": "",\r\n                "project_id": "268",\r\n                "tadirah_technique_id": "27"\r\n            },\r\n            {\r\n                "id": "",\r\n                "project_id": "268",\r\n                "tadirah_technique_id": "37"\r\n            }\r\n        ]\r\n    },\r\n    "TadirahObject": {\r\n        "ProjectsTadirahObject": [\r\n            {\r\n                "id": "",\r\n                "project_id": "268",\r\n                "tadirah_object_id": "6"\r\n            },\r\n            {\r\n                "id": "",\r\n                "project_id": "268",\r\n                "tadirah_object_id": "17"\r\n            },\r\n            {\r\n                "id": "",\r\n                "project_id": "268",\r\n                "tadirah_object_id": "29"\r\n            },\r\n            {\r\n                "id": "",\r\n                "project_id": "268",\r\n                "tadirah_object_id": "34"\r\n            },\r\n            {\r\n                "id": "",\r\n                "project_id": "268",\r\n                "tadirah_object_id": "32"\r\n            }\r\n        ]\r\n    }\r\n}', 'andrea.scharnhorst@dans.knaw.nl', 'Why do we map to those NWO categories? three of them are double (at the very end of the list).', 'Frank van Harmelen, Jan Luiten van Zanden, and Peter Doorn are the original PI\'s on the proposal. Jan Luiten van Zanden\'s role was filled in by Kees Mandemakers. Frank van Harmelen is supervisor and PI. Schlobach is co-supervisor, Scharnhorst is co-supervisor and project leader. Gueret is post-doc researcher.', '', '2016-01-05 17:55:36', '2016-01-05 17:56:43');
+	(1, 268, 1, '{\r\n    "Project": {\r\n        "id": "268",\r\n        "name": "Census data open linked – CEDA_R.\\nFrom fragment to fabric – Dutch census data in a web of global cultural and historic information",\r\n        "description": "Currently, Europe is confronted with industrial restructuring, migration, aging of population and financial crisis in a world of accelerated change. Learning from (social-economic) history helps to understand the interrelation between macro-economic change and individual lifestyles, policy regimes, labour markets, communities and national wealth. However, sources of historical information about the lives of individuals, communities, and nations are still scattered.\\nThis project takes Dutch census data as a starting point to build a semantic data-web of historical information. With such a web we will answer questions such as:\\n- What kind of patterns can we identify and interpret in expressions of regional identity?\\n- How to relate patterns of changes in skills and labour to technological progress and patterns of geographical migration?\\n- How to trace changes of local and national policies in the structure of communities and individual lives?\\nCensus data alone are not sufficient to answer these questions. This project applies a specific web-based data-model – exploiting the Resource Description Framework (RDF) technology– to make census data inter-linkable with other hubs of historical socio-economic and demographic data and beyond. Pattern recognition appears on two levels: first to enable the integration of hitherto isolated datasets, and second to apply integrated querying and analysis across this new, enriched information space. Data analysis interfaces, visual inventories of historical data and reports on open-linked data strategies for digital collections are results of this project. The project will result in generic methods and tools to weave historical and socio-economic datasets into an interlinked semantic data-web.",\r\n        "end_date": "2016-04-01",\r\n        "funding_body": "KNAW",\r\n        "funding_size": "700000",\r\n        "currency_id": "1",\r\n        "phd_students": "2",\r\n        "parent_not_listed": "the actual parent project is: Computational Humanities Programme, hosted by the eHumanities group"\r\n    },\r\n    "NwoDiscipline": {\r\n        "ProjectsNwoDiscipline": [\r\n            {\r\n                "id": "",\r\n                "project_id": "268",\r\n                "nwo_discipline_id": "6"\r\n            },\r\n            {\r\n                "id": "",\r\n                "project_id": "268",\r\n                "nwo_discipline_id": "12"\r\n            }\r\n        ]\r\n    },\r\n    "TadirahActivity": {\r\n        "ProjectsTadirahActivity": [\r\n            {\r\n                "id": "",\r\n                "project_id": "268",\r\n                "tadirah_activity_id": "9"\r\n            },\r\n            {\r\n                "id": "",\r\n                "project_id": "268",\r\n                "tadirah_activity_id": "12"\r\n            },\r\n            {\r\n                "id": "",\r\n                "project_id": "268",\r\n                "tadirah_activity_id": "24"\r\n            },\r\n            {\r\n                "id": "",\r\n                "project_id": "268",\r\n                "tadirah_activity_id": "25"\r\n            },\r\n            {\r\n                "id": "",\r\n                "project_id": "268",\r\n                "tadirah_activity_id": "23"\r\n            },\r\n            {\r\n                "id": "",\r\n                "project_id": "268",\r\n                "tadirah_activity_id": "28"\r\n            },\r\n            {\r\n                "id": "",\r\n                "project_id": "268",\r\n                "tadirah_activity_id": "29"\r\n            },\r\n            {\r\n                "id": "",\r\n                "project_id": "268",\r\n                "tadirah_activity_id": "27"\r\n            },\r\n            {\r\n                "id": "",\r\n                "project_id": "268",\r\n                "tadirah_activity_id": "30"\r\n            },\r\n            {\r\n                "id": "",\r\n                "project_id": "268",\r\n                "tadirah_activity_id": "33"\r\n            },\r\n            {\r\n                "id": "",\r\n                "project_id": "268",\r\n                "tadirah_activity_id": "37"\r\n            },\r\n            {\r\n                "id": "",\r\n                "project_id": "268",\r\n                "tadirah_activity_id": "39"\r\n            },\r\n            {\r\n                "id": "",\r\n                "project_id": "268",\r\n                "tadirah_activity_id": "40"\r\n            },\r\n            {\r\n                "id": "",\r\n                "project_id": "268",\r\n                "tadirah_activity_id": "41"\r\n            },\r\n            {\r\n                "id": "",\r\n                "project_id": "268",\r\n                "tadirah_activity_id": "42"\r\n            },\r\n            {\r\n                "id": "",\r\n                "project_id": "268",\r\n                "tadirah_activity_id": "43"\r\n            },\r\n            {\r\n                "id": "",\r\n                "project_id": "268",\r\n                "tadirah_activity_id": "47"\r\n            },\r\n            {\r\n                "id": "",\r\n                "project_id": "268",\r\n                "tadirah_activity_id": "52"\r\n            },\r\n            {\r\n                "id": "",\r\n                "project_id": "268",\r\n                "tadirah_activity_id": "53"\r\n            },\r\n            {\r\n                "id": "",\r\n                "project_id": "268",\r\n                "tadirah_activity_id": "48"\r\n            },\r\n            {\r\n                "id": "",\r\n                "project_id": "268",\r\n                "tadirah_activity_id": "49"\r\n            },\r\n            {\r\n                "id": "",\r\n                "project_id": "268",\r\n                "tadirah_activity_id": "55"\r\n            },\r\n            {\r\n                "id": "",\r\n                "project_id": "268",\r\n                "tadirah_activity_id": "58"\r\n            },\r\n            {\r\n                "id": "",\r\n                "project_id": "268",\r\n                "tadirah_activity_id": "57"\r\n            }\r\n        ]\r\n    },\r\n    "TadirahTechnique": {\r\n        "ProjectsTadirahTechnique": [\r\n            {\r\n                "id": "136"\r\n            },\r\n            {\r\n                "id": "",\r\n                "project_id": "268",\r\n                "tadirah_technique_id": "16"\r\n            },\r\n            {\r\n                "id": "",\r\n                "project_id": "268",\r\n                "tadirah_technique_id": "19"\r\n            },\r\n            {\r\n                "id": "",\r\n                "project_id": "268",\r\n                "tadirah_technique_id": "27"\r\n            },\r\n            {\r\n                "id": "",\r\n                "project_id": "268",\r\n                "tadirah_technique_id": "37"\r\n            }\r\n        ]\r\n    },\r\n    "TadirahObject": {\r\n        "ProjectsTadirahObject": [\r\n            {\r\n                "id": "",\r\n                "project_id": "268",\r\n                "tadirah_object_id": "6"\r\n            },\r\n            {\r\n                "id": "",\r\n                "project_id": "268",\r\n                "tadirah_object_id": "17"\r\n            },\r\n            {\r\n                "id": "",\r\n                "project_id": "268",\r\n                "tadirah_object_id": "29"\r\n            },\r\n            {\r\n                "id": "",\r\n                "project_id": "268",\r\n                "tadirah_object_id": "34"\r\n            },\r\n            {\r\n                "id": "",\r\n                "project_id": "268",\r\n                "tadirah_object_id": "32"\r\n            }\r\n        ]\r\n    }\r\n}', 'andrea.scharnhorst@dans.knaw.nl', 'Why do we map to those NWO categories? three of them are double (at the very end of the list).', 'Frank van Harmelen, Jan Luiten van Zanden, and Peter Doorn are the original PI\'s on the proposal. Jan Luiten van Zanden\'s role was filled in by Kees Mandemakers. Frank van Harmelen is supervisor and PI. Schlobach is co-supervisor, Scharnhorst is co-supervisor and project leader. Gueret is post-doc researcher.', '', '2016-01-05 17:55:36', '2016-01-05 17:56:43'),
+	(2, 7, 0, '{\r\n    "Project": {\r\n        "id": "7",\r\n        "name": "Asymmetrical Encounters. Digital Humanities Approaches to Reference Cultures in Europe, 1815-1992",\r\n        "description": "This project will explore the cultural aspects of European identity and how reference cultures have changed between 1815-1992. The project members will use large volumes of textual materials, largely in the form of long runs of digitized newspapers, pamphlets etc., and apply multi-lingual text mining techniques to explore intercultural references across time and space.",\r\n        "start_date": "01-09-2013",\r\n        "end_date": "30-09-2016",\r\n        "funding_body": "Humanities in the European Research Area (HERA)",\r\n        "funding_size": "999737",\r\n        "currency_id": "1"\r\n    },\r\n    "TadirahActivity": {\r\n        "ProjectsTadirahActivity": [\r\n            {\r\n                "id": "",\r\n                "project_id": "7",\r\n                "tadirah_activity_id": "22"\r\n            },\r\n            {\r\n                "id": "",\r\n                "project_id": "7",\r\n                "tadirah_activity_id": "23"\r\n            },\r\n            {\r\n                "id": "",\r\n                "project_id": "7",\r\n                "tadirah_activity_id": "26"\r\n            },\r\n            {\r\n                "id": "",\r\n                "project_id": "7",\r\n                "tadirah_activity_id": "2"\r\n            },\r\n            {\r\n                "id": "",\r\n                "project_id": "7",\r\n                "tadirah_activity_id": "4"\r\n            },\r\n            {\r\n                "id": "",\r\n                "project_id": "7",\r\n                "tadirah_activity_id": "30"\r\n            },\r\n            {\r\n                "id": "",\r\n                "project_id": "7",\r\n                "tadirah_activity_id": "33"\r\n            },\r\n            {\r\n                "id": "",\r\n                "project_id": "7",\r\n                "tadirah_activity_id": "32"\r\n            },\r\n            {\r\n                "id": "",\r\n                "project_id": "7",\r\n                "tadirah_activity_id": "39"\r\n            },\r\n            {\r\n                "id": "",\r\n                "project_id": "7",\r\n                "tadirah_activity_id": "5"\r\n            },\r\n            {\r\n                "id": "",\r\n                "project_id": "7",\r\n                "tadirah_activity_id": "40"\r\n            },\r\n            {\r\n                "id": "",\r\n                "project_id": "7",\r\n                "tadirah_activity_id": "41"\r\n            },\r\n            {\r\n                "id": "",\r\n                "project_id": "7",\r\n                "tadirah_activity_id": "42"\r\n            },\r\n            {\r\n                "id": "",\r\n                "project_id": "7",\r\n                "tadirah_activity_id": "7"\r\n            },\r\n            {\r\n                "id": "",\r\n                "project_id": "7",\r\n                "tadirah_activity_id": "48"\r\n            },\r\n            {\r\n                "id": "",\r\n                "project_id": "7",\r\n                "tadirah_activity_id": "50"\r\n            },\r\n            {\r\n                "id": "",\r\n                "project_id": "7",\r\n                "tadirah_activity_id": "52"\r\n            },\r\n            {\r\n                "id": "",\r\n                "project_id": "7",\r\n                "tadirah_activity_id": "53"\r\n            },\r\n            {\r\n                "id": "",\r\n                "project_id": "7",\r\n                "tadirah_activity_id": "60"\r\n            },\r\n            {\r\n                "id": "",\r\n                "project_id": "7",\r\n                "tadirah_activity_id": "55"\r\n            },\r\n            {\r\n                "id": "",\r\n                "project_id": "7",\r\n                "tadirah_activity_id": "57"\r\n            }\r\n        ]\r\n    },\r\n    "TadirahObject": {\r\n        "ProjectsTadirahObject": [\r\n            {\r\n                "id": "",\r\n                "project_id": "7",\r\n                "tadirah_object_id": "30"\r\n            }\r\n        ]\r\n    },\r\n    "ProjectLink": {\r\n        "1": {\r\n            "id": "",\r\n            "project_id": "7",\r\n            "project_link_type_id": "4",\r\n            "url": "http://opendutch.org/tmhn/"\r\n        }\r\n    }\r\n}', 'j.vaneijnatten@uu.nl', '', 'Jaap Verheul\r\nCaroline Sporleder\r\nToine Pieters\r\nUli Tiedau\r\nTessa Hausweddel\r\nMaarten van den Bos\r\nHermione Giffard', '', '2016-01-08 09:02:34', '2016-01-08 09:03:28');
 /*!40000 ALTER TABLE `project_reviews` ENABLE KEYS */;
 
 
@@ -3816,7 +3854,7 @@ CREATE TABLE IF NOT EXISTS `tadirah_activities` (
   CONSTRAINT `FK_tadirah_activities_tadirah_activities` FOREIGN KEY (`parent_id`) REFERENCES `tadirah_activities` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=61 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
--- Exportiere Daten aus Tabelle dhregistry.tadirah_activities: ~35 rows (ungefähr)
+-- Exportiere Daten aus Tabelle dhregistry.tadirah_activities: ~65 rows (ungefähr)
 /*!40000 ALTER TABLE `tadirah_activities` DISABLE KEYS */;
 INSERT INTO `tadirah_activities` (`id`, `parent_id`, `name`, `description`) VALUES
 	(1, 59, 'Capture', 'Capture generally refers to the activity of creating digital surrogates of existing cultural artefacts, or expressing existing artifacts in a digital representation (digitization). This could be a manual process (as in "transcribing") or an automated procedure (as in "imaging" or "data_recognition"). Such capture precedes "enrichment" and "analysis", at least from a systematic point of view, if not in practice. '),
@@ -4067,8 +4105,8 @@ CREATE TABLE IF NOT EXISTS `users` (
 -- Exportiere Daten aus Tabelle dhregistry.users: ~10 rows (ungefähr)
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
 INSERT INTO `users` (`id`, `user_role_id`, `institution_id`, `institution`, `email`, `password`, `email_verified`, `active`, `approved`, `is_admin`, `user_admin`, `last_login`, `password_token`, `email_token`, `approval_token`, `new_email`, `password_token_expires`, `email_token_expires`, `approval_token_expires`, `last_name`, `first_name`, `academic_title`, `telephone`, `authority`, `created`, `modified`) VALUES
-	(1, NULL, 8, NULL, 'b.safradin@gmail.com', '8a8b603b0be1321a5bfe79e04e191b7e8baf1b3b', 1, 1, 1, 1, 1, '2016-01-04 22:30:09', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Safradin', 'Barbara', '', '0031652394270', NULL, '2014-07-24 12:49:03', '2016-01-04 22:30:09'),
-	(2, NULL, 20, NULL, 'hendrik.schmeer@yahoo.de', 'fbf041b758ae335aeb1ff38b1092ee6e090cc4b5', 1, 1, 1, 1, 1, '2016-01-02 03:43:39', '831131c3d2l1fx4g', '187500tmjr7qlnqx', NULL, 'hschmeer@smail.uni-koeln.de', '2015-11-30 22:05:31', '2014-08-17 13:11:40', NULL, 'Schmeer', 'Hendrik', '', '004915774090678', NULL, NULL, '2016-01-02 03:43:39'),
+	(1, NULL, 8, NULL, 'b.safradin@gmail.com', '8a8b603b0be1321a5bfe79e04e191b7e8baf1b3b', 1, 1, 1, 1, 1, '2016-01-08 12:22:45', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Safradin', 'Barbara', '', '0031652394270', NULL, '2014-07-24 12:49:03', '2016-01-08 12:22:45'),
+	(2, NULL, 20, NULL, 'hendrik.schmeer@yahoo.de', 'fbf041b758ae335aeb1ff38b1092ee6e090cc4b5', 1, 1, 1, 1, 1, '2016-01-08 12:20:16', '831131c3d2l1fx4g', '187500tmjr7qlnqx', NULL, 'hschmeer@smail.uni-koeln.de', '2015-11-30 22:05:31', '2014-08-17 13:11:40', NULL, 'Schmeer', 'Hendrik', '', '004915774090678', NULL, NULL, '2016-01-08 12:20:16'),
 	(3, NULL, NULL, NULL, 'fien.danniau@ugent.be', NULL, 1, 1, 1, 0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Diannau', 'Fien', NULL, NULL, NULL, NULL, NULL),
 	(15, NULL, 1, NULL, 'scagliola@eshcc.eur.nl', NULL, 1, 1, 1, 1, 0, NULL, '037029yt4yyrg2uw', NULL, NULL, NULL, '2014-08-15 19:23:49', NULL, NULL, 'Scagliola', 'Stef', 'Dr. ', '', '', '2014-08-14 19:23:49', '2014-08-14 19:23:49'),
 	(16, NULL, 20, NULL, 'zoe.schubert@uni-koeln.de', NULL, 1, 1, 1, 1, 0, NULL, '037070djgfsduplu', NULL, NULL, NULL, '2014-08-15 19:24:30', NULL, NULL, 'Schubert', 'Zoe', '', '', '', '2014-08-14 19:24:30', '2014-08-14 19:24:30'),
