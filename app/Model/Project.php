@@ -44,7 +44,8 @@ class Project extends AppModel {
 			'className' => 'Project',
 			'foreignKey' => 'parent_id'
 		),
-		'Currency'
+		'Currency',
+		'ProjectType'
 	);
 	
 	// bugfix workaround - Containable was returning a complete Project array of null values!

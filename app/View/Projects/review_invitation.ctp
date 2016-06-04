@@ -37,7 +37,8 @@ echo $this->Form->create(false, array('class' => 'full','novalidate' => 'novalid
 	echo $this->Form->input('name');
 	echo $this->Form->input('email');
 	echo $this->Form->input('from_email', array('value' => 'b.safradin@gmail.com'));
-	echo $this->Form->input('subject', array('value' => '[DH Project-Registry] Review your project data'));
+	//echo $this->Form->input('subject', array('value' => '[DH Project-Registry] Review your project data'));
+	echo $this->Form->input('subject', array('value' => '[DH Project-Registry] Correct link to DH project for DH Project Registry'));
 	echo $this->Form->input('body', array('type' => 'textarea'));
 	?>
 </fieldset>
@@ -94,6 +95,37 @@ function replaceAll(str, find, replace) {
 function createMessage(name, id) {
 	var body = 'Dear ##name##,\n\
 \n\
+While sending reminders to contact persons of DH-projects to validate the data that we collected for our DH Project Registry,  some of you may have received a link to a project that is not theirs.\n\
+\n\
+# If this does not apply to you and you have received the right link and have checked whether the data on your DH project is correct, we would be very grateful if you could let us know by replying to this e-mail and stating that the data is correct. \n\
+\n\
+# If you have received the wrong link, please accept our apologies for the inconvenience.\n\
+We have checked the system a number of times, and all the links now seem to be connected to the right projects. We therefore would like to ask you again to click on this link: \n\
+http://dh-projectregistry.org/projects/view/##id##\n\
+That will connect you to a table with the data on your project. Please check the data, and if necessary correct it or complement it. \n\
+\n\
+If you are receiving this request and you are no longer involved in the project, or the project is not represented in the appropriate way, please bare some patience with us. We have searched the internet for information and harvested data from the NARCIS database. Yet, on the basis of previous attempts to reach out to researchers involved in DH projects, we have noticed that in many cases the information is outdated. We would be very grateful if in such cases you would inform us or send the link to the person or organisation that is at present responsible for the sustainability of the DH project. \n\
+\n\
+We are confident that with your help we can create a comprehensive overview of DH projects created in the Netherlands that reflects the diversity and creativity of our research community! \n\
+\n\
+If you have any queries please let us know, \n\
+\n\
+On behalf of the DH Project-Registry team, \n\
+\n\
+Kind regards, \n\
+Barbara Safradin \n\
+Student-Assistant Erasmus Studio for E-research, Erasmus University Rotterdam \n\
+\n\
+The DH Project Registry is an initiative of the Erasmus Studio (EUR) Stef Scagliola, the KNAW- E-Humanities group – Andrea Scharnhorst, DANS – Linda Reijnhout, and the University of Cologne – Hendrik Schmeer - and is funded by CLARIAH. \n\
+';
+
+	body = replaceAll(body, '##id##', id);
+	$('#body').val(replaceAll(body, '##name##', name));
+}
+/*
+function createMessage(name, id) {
+	var body = 'Dear ##name##,\n\
+\n\
 I am writing to you to ask for your support for the creation of an\n\
 exhaustive overview and search environment of Digital Humanities projects\n\
 that have been initiated in the Netherlands, or of international DH projects\n\
@@ -134,5 +166,5 @@ Student-Assistant Erasmus Studio for E-research, Erasmus University Rotterdam';
 	body = replaceAll(body, '##id##', id);
 	$('#body').val(replaceAll(body, '##name##', name));
 }
-
+*/
 </script>

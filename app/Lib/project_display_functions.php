@@ -134,13 +134,13 @@ function dh_identifiers($view = null, $record = array(), $fieldDef = array()) {
 			$output[] = $content;
 		}
 	}
-	if($modelName == 'ProjectExternalIdentifier') {
-		$href = '/projects/view/' . $record['Project']['id'];
-		$content = 'DARIAH-PROJECT_ID: ';
-		$content .= $view->Html->link($record['Project']['id'], $href);
-		$output[] = $content;
-	}
 	return (empty($output)) ? null : implode('<br>', $output);
+}
+
+
+function dh_permalink($view = null, $record = array(), $fieldDef = array()) {
+	$href = '/projects/view/' . $record['Project']['id'];
+	return $view->Html->link('to entry in this registry (ID: '.$record['Project']['id'].')', $href);
 }
 
 

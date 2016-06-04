@@ -20,29 +20,7 @@ class ProjectsController extends AppController {
 	
 	public function beforeFilter() {
 		parent::beforeFilter();
-		$paginate = array(
-			'Project' => array(
-				'contain' => array(
-					'ProjectsInstitution' => array(
-						'Institution',
-						'InstitutionRole'
-					),
-					'ProjectsPerson' => array(
-						'Person',
-						'PersonProjectRole',
-						'PersonInstitutionRole',
-						'Institution'
-					),
-					'ProjectLink' => array('ProjectLinkType'),
-					'ProjectExternalIdentifier' => array('ExternalIdentifierType'),
-					'NwoDiscipline',
-					'TadirahTechnique',
-					'TadirahActivity',
-					'TadirahObject'
-				)
-			)
-		);
-		$this->paginate = array_merge($this->paginate, $paginate);
+		
 		
 		if(Configure::read('debug') > 0) {
 			// whyever - allow('*') does not work
@@ -183,11 +161,10 @@ class ProjectsController extends AppController {
 		if(empty($id)) $this->redirect('index');
 		$admin = false;
 		$project = $this->Project->getProject($id);
-		//$project = $this->Project->find('first', array('conditions' => array('Project.id' => $id)));
+		
 		if(empty($project)) $this->redirect('index');
 		
-		if(	!empty($this->request->data['ProjectReview']['changeset_json'])
-		AND	$this->request->data['ProjectReview']['changeset_json'] != '{}') {
+		if(!empty($this->request->data['ProjectReview'])) {
 			$this->loadModel('ProjectReview');
 			// check the ID has been autorized correctly
 			$sid = $this->Session->read('review.Project.id');
@@ -385,49 +362,82 @@ class ProjectsController extends AppController {
 	
 	public function index() {
 		$filter = $this->_getFilter();
-		
-		$this->Paginator->settings = $this->paginate;
-		try{
-			$records = $this->Paginator->paginate('Project', $filter);
-		}catch(NotFoundException $e) {
-			$this->redirect(array(
-				'controller' => 'projects',
-				'action' => 'index'
-			));
-		}
-		
-		$projectYears = $this->Project->find('all', array(
-			'conditions' => array('Project.active' => 1),
-			'order' => array('Project.start_date ASC'),
-			'fields' => array('Project.start_date'),
-			'contain' => array()
-		));
-		$years = array(0 => 0);
-		if(!empty($projectYears)) {
-			foreach($projectYears as $year) {
-				$year = $year['Project']['start_date'];
-				if(!empty($year)) {
-					$year = (int) substr($year, 0, 4);
-					if(empty($years[$year])) {
-						$years[$year] = 1;
-					}else{
-						$years[$year] = $years[$year] + 1;
-					}
-				}else{
-					$years[0] = $years[0] + 1;
-				}
-			}
-		}
-		$maxCount = max($years);
-		$chartData = array(
-			'years' => $years,
-			'unitY' => floor(338 / $maxCount)
+		$paginate = array(
+			'Project' => array(
+				'contain' => array(
+					'ProjectsInstitution' => array(
+						'Institution',
+						'InstitutionRole'
+					),
+					'ProjectsPerson' => array(
+						'Person',
+						'PersonProjectRole',
+						'PersonInstitutionRole',
+						'Institution'
+					),
+					'ProjectType',
+					'ProjectLink' => array('ProjectLinkType'),
+					'ProjectExternalIdentifier' => array('ExternalIdentifierType'),
+					'NwoDiscipline',
+					'TadirahTechnique',
+					'TadirahActivity',
+					'TadirahObject'
+				),
+				'order' => array('Project.name' => 'ASC')
+			)
 		);
 		
-		if($this->Auth->user('is_admin')) $this->set('edit', true);
-		
-		$this->set(compact('records', 'chartData'));
-		$this->set('_serialize', array('records'));
+		if(empty($this->request->params['ext'])) {
+			
+			$this->paginate = array_merge($this->paginate, $paginate);
+			$this->paginate['Project']['limit'] = $this->paginate['limit'];
+			$this->Paginator->settings = $this->paginate;
+			
+			try{
+				$records = $this->Paginator->paginate('Project', $filter);
+			}catch(NotFoundException $e) {
+				$this->redirect(array(
+					'controller' => 'projects',
+					'action' => 'index'
+				));
+			}
+			
+			$projectYears = $this->Project->find('all', array(
+				'conditions' => array('Project.active' => 1),
+				'order' => array('Project.start_date ASC'),
+				'fields' => array('Project.start_date'),
+				'contain' => array()
+			));
+			$years = array(0 => 0);
+			if(!empty($projectYears)) {
+				foreach($projectYears as $year) {
+					$year = $year['Project']['start_date'];
+					if(!empty($year)) {
+						$year = (int) substr($year, 0, 4);
+						if(empty($years[$year])) {
+							$years[$year] = 1;
+						}else{
+							$years[$year] = $years[$year] + 1;
+						}
+					}else{
+						$years[0] = $years[0] + 1;
+					}
+				}
+			}
+			$maxCount = max($years);
+			$chartData = array(
+				'years' => $years,
+				'unitY' => floor(338 / $maxCount)
+			);
+			
+			if($this->Auth->user('is_admin')) $this->set('edit', true);
+			
+			$this->set(compact('records', 'chartData'));
+		}else{
+			$records = $this->Project->find('all', $paginate['Project']);
+			$this->set(compact('records'));
+			$this->set('_serialize', array('records'));
+		}
 	}
 	
 	
@@ -456,9 +466,6 @@ class ProjectsController extends AppController {
 		//$this->_namedFilters();
 		//$this->_filterToForm();
 		
-		//$this->_extendFilters();
-		
-		//$this->_setJoins();
 		
 		return $this->filter;
 	}

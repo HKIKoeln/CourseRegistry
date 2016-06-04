@@ -23,7 +23,7 @@ class CronShell extends AppShell {
 	);
 	
 	public function main() {
-        $this->out("Available tasks: \n\t CheckUrls [C]\n\t SendReminders[C]");
+        $this->out("Available tasks: \n\t CheckUrls [C]\n\t SendReminders[S]");
 		$this->out("Please note: \nperforming these tasks will send out emails to recipients, \nif the application is not in debug-mode./nYou can enter an alternative debug-mail recipient.");
 		$this->hr();
 		$task = $this->in('Choose an action', array('C','S','Q'), 'Q');

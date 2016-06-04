@@ -27,19 +27,35 @@ table {
 		a {
 			color: $background_color;
 			text-decoration: none;
-			display: block;
+			display: inline-block;
 			padding: 2px 4px;
 			&:hover {
 				color: $link_hover_color;
 			}
 		}
 		
-		a.asc:after {
-			content: ' ⇣';
+		a.asc:after, a.desc:after {
+			background: url(../img/chevron.png) no-repeat top left;
+			content: ' ascending';
+			font-size: 0px;
+			color: transparent;
+			width: 12px;
+			margin-left: 6px;
+			height: 15px;
+			overflow: hidden;
+			display: block;
+			float: right;
+		}
+		a.asc:hover:after {
+			background-position: bottom left;
 		}
 		
 		a.desc:after {
-			content: ' ⇡';
+			background-position: top right;
+			content: ' descending';
+		}
+		a.desc:hover:after {
+			background-position: bottom right;
 		}
 	}
 	
@@ -54,6 +70,7 @@ table {
 			padding: 10px;
 			text-align: left;
 			vertical-align: middle;
+			min-width: 100px;
 		}
 		&.mouseover {	/* dynamically hover the paired siblings using js, because CSS cannot select a previous sibling*/
 			background-color: #ddd;

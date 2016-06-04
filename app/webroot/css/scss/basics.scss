@@ -89,6 +89,10 @@ dl {
 .strong {
 	font-weight: bold;
 }
+.pre-wrap {
+	white-space: pre-wrap;
+}
+
 
 /* A flexible, but simple columns layout (up to 3) */
 /* One can include the following classes in a container (div.col) with fixed width to fix the columns width as well. */
