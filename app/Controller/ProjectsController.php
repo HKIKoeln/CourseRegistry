@@ -516,7 +516,8 @@ class ProjectsController extends AppController {
 				}
 				switch($model) {
 					case 'ProjectsInstitution':
-						$model = $field = 'Institution';
+						$model = 'Project';
+						$field = 'institution_id';
 						break;
 					case 'ProjectsNwoDiscipline':
 						$model = $field = 'NwoDiscipline';
@@ -545,8 +546,7 @@ class ProjectsController extends AppController {
 				'fields' => array('DISTINCT (ProjectsInstitution.project_id) AS ids_filtered'),
 				'contain' => array('ProjectsInstitution')
 			));
-			debug($subquery);
-			$this->filter['Project.id'] = Set::extract('/ProjectsInstitution/ids_filtered', $subquery);
+			$this->filter['Project.id'] = Set::classicExtract($subquery, '{n}.ProjectsInstitution.ids_filtered');
 			unset($this->filter['ProjectsInstitution.institution_id']);
 		}
 		if(!empty($this->filter['ProjectsNwoDiscipline.nwo_discipline_id'])) {

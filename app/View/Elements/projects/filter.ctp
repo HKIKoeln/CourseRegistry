@@ -15,7 +15,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-$filter = $this->Session->read('projects.filter'); ?>
+$filter = $this->Session->read('filter');
+?>
 	<li class="filter">Filters:</li>
 	<li class="filter">
 		<?php
