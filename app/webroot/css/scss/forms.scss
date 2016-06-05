@@ -142,12 +142,10 @@ form {
 	.checklist {
 		float: left;
 		.checkbox {
+			margin-left: 0;
 			input[type=checkbox] {
 				clear: none;
 			}
-		}
-		.checkbox {
-			margin-left: 0;
 		}
 	}
 	.dropdown_checklist {

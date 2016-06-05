@@ -188,7 +188,7 @@ class ProjectsController extends AppController {
 			$this->request->data = $project;
 			$this->Session->write('review.Project.id', $id);
 		}
-		$this->_setOptions($admin, $id);
+		$this->_setEditOptions($admin, $id);
 		$this->_setSchemas();
 		
 		$this->viewVars['_serialize']['project'] = json_encode($project);
@@ -255,12 +255,12 @@ class ProjectsController extends AppController {
 			$this->Session->write('edit.Project.id', $id);
 		}
 		
-		$this->_setOptions($admin);
+		$this->_setEditOptions($admin);
 		$this->render('form');
 	}
 	
 	
-	protected function _setOptions($admin = false, $project_id = null) {
+	protected function _setEditOptions($admin = false, $project_id = null) {
 		$users = array();
 		if($admin) $rawUsers = $this->Project->AppUser->find('all', array(
 			'contain' => array('Institution' => array('Country')),
@@ -331,6 +331,25 @@ class ProjectsController extends AppController {
 	}
 	
 	
+	protected function _setFilterOptions() {
+		$nwoDisciplines = $this->Project->NwoDiscipline->find('all', array('contain' => array()));
+		
+		$institutions = $this->Project->Institution->find('list', array(
+			'contain' => array('Country'),
+			'fields' => array('Institution.id', 'Institution.name', 'Country.name')
+		));
+		ksort($institutions);
+		
+		$projectTypes = $this->Project->ProjectType->find('list');
+		
+		$this->set(compact(
+			'nwoDisciplines',
+			'institutions',
+			'projectTypes'
+		));
+	}
+	
+	
 	protected function _setTaxonomies() {
 		$tadirahObjects = $this->Project->TadirahObject->find('all', array('contain' => array()));
 		$tadirahObjectsList = Hash::combine($tadirahObjects, '{n}.TadirahObject.id', '{n}.TadirahObject.name');
@@ -361,34 +380,32 @@ class ProjectsController extends AppController {
 	
 	
 	public function index() {
-		$filter = $this->_getFilter();
-		$paginate = array(
-			'Project' => array(
-				'contain' => array(
-					'ProjectsInstitution' => array(
-						'Institution',
-						'InstitutionRole'
-					),
-					'ProjectsPerson' => array(
-						'Person',
-						'PersonProjectRole',
-						'PersonInstitutionRole',
-						'Institution'
-					),
-					'ProjectType',
-					'ProjectLink' => array('ProjectLinkType'),
-					'ProjectExternalIdentifier' => array('ExternalIdentifierType'),
-					'NwoDiscipline',
-					'TadirahTechnique',
-					'TadirahActivity',
-					'TadirahObject'
-				),
-				'order' => array('Project.name' => 'ASC')
-			)
-		);
-		
 		if(empty($this->request->params['ext'])) {
-			
+			$filter = $this->_getFilter();
+			$paginate = array(
+				'Project' => array(
+					'contain' => array(
+						'ProjectsInstitution' => array(
+							'Institution',
+							'InstitutionRole'
+						),
+						'ProjectsPerson' => array(
+							'Person',
+							'PersonProjectRole',
+							'PersonInstitutionRole',
+							'Institution'
+						),
+						'ProjectType',
+						'ProjectLink' => array('ProjectLinkType'),
+						'ProjectExternalIdentifier' => array('ExternalIdentifierType'),
+						'NwoDiscipline',
+						'TadirahTechnique',
+						'TadirahActivity',
+						'TadirahObject'
+					),
+					'order' => array('Project.name' => 'ASC')
+				)
+			);
 			$this->paginate = array_merge($this->paginate, $paginate);
 			$this->paginate['Project']['limit'] = $this->paginate['limit'];
 			$this->Paginator->settings = $this->paginate;
@@ -431,9 +448,10 @@ class ProjectsController extends AppController {
 			);
 			
 			if($this->Auth->user('is_admin')) $this->set('edit', true);
-			
+			$this->_setFilterOptions();
 			$this->set(compact('records', 'chartData'));
 		}else{
+			// JSON or XML export
 			$records = $this->Project->find('all', $paginate['Project']);
 			$this->set(compact('records'));
 			$this->set('_serialize', array('records'));
@@ -454,13 +472,12 @@ class ProjectsController extends AppController {
 		// check for previously set filters
 		
 		// !!! SEPARATE courses & projects filters !!!
-		//$this->filter = $this->Session->read('projects.filter');
+		$this->filter = $this->Session->read('projects.filter');
 		
 		// get/maintain filters
 		//$this->_postedFilters();
-		//$this->_getFilterOptions_validateFilters();
 		
-		//$this->Session->write('filter', $this->filter);
+		$this->Session->write('projects.filter', $this->filter);
 		
 		// don't store named and extended filters in the session, but set the named to the form!
 		//$this->_namedFilters();

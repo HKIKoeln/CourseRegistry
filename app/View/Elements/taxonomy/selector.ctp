@@ -16,7 +16,6 @@
  * limitations under the License.
  */
 
-
 if(!function_exists('getOpts')) {
 	function getOpts($modelName, $habtmModel, $record, $request, $level = null) {
 		if(!empty($level)) $level = ' ' . $level;
@@ -83,6 +82,7 @@ $classes .= (!empty($dropdown)) ? ' dropdown_checklist' : '';
 			
 			<?php
 			$varname = Inflector::variable(Inflector::pluralize($habtmModel));
+			
 			foreach($$varname as $pk => $pv) {
 				$level = null;
 				if(!empty($pv['children'])) $level = 'primary';

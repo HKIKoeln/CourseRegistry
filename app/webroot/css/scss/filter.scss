@@ -57,6 +57,64 @@ form {
 	p {
 		font-size: 12px;
 	}
+	.checklist {
+		float: left;
+		margin-left: 0;
+		.checkbox {
+			float: left;
+			margin-left: 0;
+			clear: left;
+			margin-bottom: 0.5em;
+			input[type=checkbox] {
+				clear: none;
+				width: 20px;
+			}
+			label {
+				width: 198px;
+				margin: 0;
+				font-weight: normal;
+			}
+		}
+	}
+	.dropdown_checklist {
+		@include clearfix;
+		.wrapper {	// keep the checklist from tilting under the label if the display section is growing
+			
+			.checklist{ float: none; }
+			.checklist_toggle {
+				cursor: pointer;
+				position: relative;
+				margin-bottom: 1px;
+				margin-top: -3px;
+				padding: 0 4px 1px;
+				float: left;
+				&:hover {
+					background-color: #eee;
+				}
+				.display {
+					display: inline-block;
+					width: 131px;
+					overflow: hidden;
+					font-size: 10px;
+					font-weight: normal;
+				}
+				// borrowed from getbootstrap.com for dropdown checklists
+				.caret {
+					border-left: 4px solid transparent;
+					border-right: 4px solid transparent;
+					border-top: 4px dashed;
+					display: inline-block;
+					height: 0;
+					margin-left: 2px;
+					vertical-align: middle;
+					width: 0;
+					position: absolute;
+					right: 4px;
+					top: 46%;
+				}
+			}
+		}
+	}
 	p.taxonomy.selection {
 		font-size: 10px;
 		&:hover {

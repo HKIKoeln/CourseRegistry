@@ -2,7 +2,7 @@
 
 include_once(APPLIBS.'project_display_functions.php');
 
-
+$this->append('menu', $this->element('projects/filter'));
 
 $fieldlist = array(
 	'Project.name' => array(
@@ -45,6 +45,13 @@ $this->set(compact('fieldlist', 'detailsFieldlist'));
 
 echo $this->element('slider');
 echo $this->element('pager');
+?>
+<div class="paging sort">
+	Sort: 
+	<?php echo $this->Paginator->sort('Project.name', 'alphabetical'); ?> |
+	<?php echo $this->Paginator->sort('Project.start_date', 'chronological'); ?>
+</div>
+<?php
 echo $this->element('projects/index');
 echo $this->element('pager');
 

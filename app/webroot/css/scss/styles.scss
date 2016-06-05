@@ -288,7 +288,7 @@ $col_min_height: 400px;
 		@import "content_tables";
 		@import "paging";
 		@import "forms";
-		
+
 		@include taxonomySelector;
 		
 		.record_details {

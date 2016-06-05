@@ -7,6 +7,36 @@ $paging_background: #fff;
 $paging_background_hover: $background_color_2;
 $paging_border_color: $border_color;
 
+.sort {
+	padding: 5px 8px;
+	a:hover {
+		text-decoration: underline;
+	}
+	a.asc:after, a.desc:after {
+		background: url(../img/chevron.png) no-repeat top left;
+		content: ' ascending';
+		font-size: 0px;
+		color: transparent;
+		width: 12px;
+		margin-left: 6px;
+		height: 15px;
+		overflow: hidden;
+		display: block;
+		float: right;
+	}
+	a.asc:hover:after {
+		background-position: bottom left;
+	}
+	
+	a.desc:after {
+		background-position: top right;
+		content: ' descending';
+	}
+	a.desc:hover:after {
+		background-position: bottom right;
+	}
+}
+
 .paging {
 	color: $paging_font_color;
 	border: 1px solid $paging_border_color;
