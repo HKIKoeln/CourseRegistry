@@ -469,22 +469,105 @@ class ProjectsController extends AppController {
 	
 	
 	protected function _setupFilter() {
-		// check for previously set filters
-		
-		// !!! SEPARATE courses & projects filters !!!
-		$this->filter = $this->Session->read('projects.filter');
-		
-		// get/maintain filters
-		//$this->_postedFilters();
-		
-		$this->Session->write('projects.filter', $this->filter);
-		
-		// don't store named and extended filters in the session, but set the named to the form!
+		parent::_setupFilter();
+// don't store named and extended filters in the session, but set the named to the form!
 		//$this->_namedFilters();
-		//$this->_filterToForm();
+		$this->_filterToForm();
 		
+		$this->_setJoins();
 		
 		return $this->filter;
+	}
+	
+	
+	// from ['Model']['field'] notation to Model.field notation...
+	protected function _postedFilters() {
+		// get filters from form data - mention all possible fields explicitly to avoid any trickery
+		if(!empty($this->request->data)) {
+			if(!empty($this->request->data['Project'])) {
+				$form = $this->request->data['Project'];
+				
+				if(empty($form['institution_id'])) unset($this->filter['ProjectsInstitution.institution_id']);
+				else $this->filter['ProjectsInstitution.institution_id'] = $form['institution_id'];
+				
+				if(empty($form['project_type_id'])) unset($this->filter['Project.project_type_id']);
+				else $this->filter['Project.project_type_id'] = $form['project_type_id'];
+			}
+			// the HABTM filters
+			if(!empty($this->request->data['NwoDiscipline'])) {
+				if(!empty($this->request->data['NwoDiscipline']['NwoDiscipline']))
+					$this->filter['ProjectsNwoDiscipline.nwo_discipline_id'] = $this->request->data['NwoDiscipline']['NwoDiscipline'];
+				else unset($this->filter['ProjectsNwoDiscipline.nwo_discipline_id']);
+			}
+		}
+	}
+	
+	// ... and back from Model.field notation to ['Model']['field'] notation
+	protected function _filterToForm() {
+		// bring the mangled filter variables back into the filter-form
+		if(!empty($this->filter)) {
+			foreach($this->filter as $key => $value) {
+				$expl = explode('.', $key);
+				$model = 'Project';
+				$field = $expl[0];
+				if(!empty($expl[1])) {
+					$model = $expl[0];
+					$field = $expl[1];
+				}
+				switch($model) {
+					case 'ProjectsInstitution':
+						$model = $field = 'Institution';
+						break;
+					case 'ProjectsNwoDiscipline':
+						$model = $field = 'NwoDiscipline';
+						break;
+				}
+				$this->request->data[$model][$field] = $value;
+			}
+		}
+	}
+	
+	protected function _setJoins() {
+		// set joins for HABTM queries during pagination
+		if(!empty($this->filter['ProjectsInstitution.institution_id'])) {
+			$subquery = $this->Project->find('all', array(
+				'joins' => array(
+					array(
+						'alias' => 'ProjectsInstitution',
+						'table' => 'projects_institutions',
+						'type' => 'INNER',
+						'conditions' => 'ProjectsInstitution.project_id = Project.id'
+					)
+				),
+				'conditions' => array(
+					'ProjectsInstitution.institution_id' => $this->filter['ProjectsInstitution.institution_id']
+				),
+				'fields' => array('DISTINCT (ProjectsInstitution.project_id) AS ids_filtered'),
+				'contain' => array('ProjectsInstitution')
+			));
+			debug($subquery);
+			$this->filter['Project.id'] = Set::extract('/ProjectsInstitution/ids_filtered', $subquery);
+			unset($this->filter['ProjectsInstitution.institution_id']);
+		}
+		if(!empty($this->filter['ProjectsNwoDiscipline.nwo_discipline_id'])) {
+			$subquery = $this->Project->find('all', array(
+				'joins' => array(
+					array(
+						'alias' => 'ProjectsNwoDiscipline',
+						'table' => 'projects_nwo_disciplines',
+						'type' => 'INNER',
+						'conditions' => 'ProjectsNwoDiscipline.project_id = Project.id'
+					)
+				),
+				'conditions' => array(
+					'ProjectsNwoDiscipline.nwo_discipline_id' => $this->filter['ProjectsNwoDiscipline.nwo_discipline_id']
+				),
+				'fields' => array('DISTINCT (ProjectsNwoDiscipline.project_id) AS ids_filtered'),
+				'contain' => array('ProjectsNwoDiscipline')
+			));
+			$this->filter['Project.id'] = Set::extract('/ProjectsNwoDiscipline/ids_filtered', $subquery);
+			unset($this->filter['ProjectsNwoDiscipline.nwo_discipline_id']);
+		}
 	}
 	
 }

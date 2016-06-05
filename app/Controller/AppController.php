@@ -118,8 +118,13 @@ class AppController extends Controller {
 	protected function _setupFilter() {
 		// check for previously set filters
 		$this->filter = $this->Session->read('filter');
+		$this->_postedFilters();
+		$this->Session->write('filter', $this->filter);
 		return $this->filter;
 	}
+	
+	
+	protected function _postedFilter() {}
 	
 }
 
