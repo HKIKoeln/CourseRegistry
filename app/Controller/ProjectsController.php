@@ -347,19 +347,38 @@ class ProjectsController extends AppController {
 				}
 			}
 		}
-		$left = array();
+		
 		foreach($set as $k => $item) {
 			$inst = $item['Institution'];
 			// get the parent
 			$children = $this->_getInstitutionChildren($inst['parent_id'], $set);
 			if(!empty($children)) {
 				// get the parent's name & ancestors - parent is yet not present in array
-				$result[$inst['parent_id']]['name'] = 'bogus';
-				$result[$inst['parent_id']]['children'] = $children;
+				$result = array_merge($result, $this->_getInstitutionAnchestors($inst['parent_id'], $children));
 			}
 		}
 		debug($result);
 		exit;
+	}
+	
+	protected function _getInstitutionAnchestors($id, $child) {
+		$inst = $this->Project->Institution->find('first', array(
+			'conditions' => array('Institution.id' => $id)
+		));
+		$result = array();
+		if($inst) {
+			$result = array($inst['Institution']['id'] => array(
+				'name' => $inst['Institution']['name'],
+				'linked_Projects' => 'Nee',
+				'children' => $child
+			));
+			if(!empty($inst['Institution']['parent_id'])) {
+				$result = $this->_getInstitutionAnchestors($inst['Institution']['parent_id'], $result);
+			}
+		}else{
+			return array('name' => 'RECORD DOES NOT EXIST!');
+		}
+		return $result;
 	}
 	
 	protected function _getInstitutionChildren($id, &$set) {
