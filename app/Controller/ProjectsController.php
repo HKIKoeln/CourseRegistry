@@ -24,7 +24,7 @@ class ProjectsController extends AppController {
 		
 		if(Configure::read('debug') > 0) {
 			// whyever - allow('*') does not work
-			$this->Auth->allow(array('index', 'view', 'review', 'reset', 'schema', 'review_invitation'));
+			$this->Auth->allow(array('index', 'view', 'review', 'reset', 'schema', 'review_invitation', 'institutions'));
 		}else{
 			$this->Auth->allow(array('index', 'view', 'review', 'reset', 'schema'));
 		}
@@ -331,6 +331,34 @@ class ProjectsController extends AppController {
 	}
 	
 	
+	public function institutions() {
+		$institutions = $this->Project->Institution->find('list', array(
+			//'contain' => array('Country'),
+			//'fields' => array('Institution.id', 'Institution.name', 'Country.name'),
+			'order' => 'Institution.name ASC',
+			'conditions' => array(
+				'OR' => array(
+					'Institution.id >=' => 1000,
+					'Institution.country_id' => 1	// the Netherlands
+				),
+				'Institution.parent_id' => null
+			)
+		));
+		
+		$result = $this->_getInstitutionChildren($institutions);
+		
+		debug($result);
+		exit;
+	}
+	
+	protected function _getInstitutionChildren($institutions) {
+		$result = array();
+		foreach($institutions as $id => $name) {
+			
+		}
+		return $result;
+	}
+	
 	protected function _setFilterOptions() {
 		$nwoDisciplines = $this->Project->NwoDiscipline->find('all', array(
 			'contain' => array(),
@@ -342,10 +370,12 @@ class ProjectsController extends AppController {
 			//'fields' => array('Institution.id', 'Institution.name', 'Country.name'),
 			'order' => 'Institution.name ASC',
 			'conditions' => array(
-				'Institution.id >=' => 1000
+				'OR' => array(
+					'Institution.id >=' => 1000,
+					'Institution.country_id' => 1	// the Netherlands
+				)
 			)
 		));
-		ksort($institutions);
 		
 		$projectTypes = $this->Project->ProjectType->find('list', array('order' => 'ProjectType.name ASC'));
 		
