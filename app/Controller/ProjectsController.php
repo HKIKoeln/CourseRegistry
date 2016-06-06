@@ -358,6 +358,13 @@ class ProjectsController extends AppController {
 				),
 				'order' => 'Institution.name ASC'
 			));
+			if(!empty($children)) {
+				$children = $this->_getInstitutionChildren($children);
+			}
+			$result[$id] = array(
+				'name' => $name,
+				'children' => $children
+			);
 		}
 		return $result;
 	}
