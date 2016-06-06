@@ -11,30 +11,35 @@ $paging_border_color: $border_color;
 	padding: 5px 8px;
 	a:hover {
 		text-decoration: underline;
+		color: $link_hover_color;
 	}
 	a.asc:after, a.desc:after {
-		background: url(../img/chevron.png) no-repeat top left;
-		content: ' ascending';
-		font-size: 0px;
-		color: transparent;
-		width: 12px;
-		margin-left: 6px;
-		height: 15px;
-		overflow: hidden;
-		display: block;
-		float: right;
-	}
-	a.asc:hover:after {
-		background-position: bottom left;
-	}
-	
-	a.desc:after {
-		background-position: top right;
-		content: ' descending';
-	}
-	a.desc:hover:after {
-		background-position: bottom right;
-	}
+			content: ' ascending';
+			border-left: 4px solid transparent;
+			border-right: 4px solid transparent;
+			border-bottom: 9px dashed $link_color;
+			display: inline-block;
+			height: 3px;
+			margin-left: 8px;
+			vertical-align: middle;
+			width: 0;
+			float: right;
+			overflow: hidden;
+		}
+		a.asc:hover:after {
+			border-bottom: 9px dashed $link_hover_color;
+		}
+		
+		a.desc:after {
+			border-bottom: none;
+			border-top: 9px dashed $link_color;
+			content: ' descending';
+			height: 0;
+			margin-top: 3px;
+		}
+		a.desc:hover:after {
+			border-top: 9px dashed $link_hover_color;
+		}
 }
 
 .paging {

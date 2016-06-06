@@ -29,47 +29,37 @@ table {
 			text-decoration: none;
 			display: inline-block;
 			padding: 2px 4px;
-			position: relative;
 			&:hover {
 				color: $link_hover_color;
 			}
 		}
 		
 		a.asc:after, a.desc:after {
+			content: ' ascending';
 			border-left: 4px solid transparent;
 			border-right: 4px solid transparent;
-			border-top: 4px dashed $table_header_font_color;
+			border-bottom: 9px dashed $link_hover_color;
 			display: inline-block;
-			height: 0;
-			margin-left: 2px;
+			height: 3px;
+			margin-left: 8px;
 			vertical-align: middle;
 			width: 0;
-			position: absolute;
-			right: 4px;
-			top: 46%;
-			/*
-			background: url(../img/chevron.png) no-repeat top left;
-			content: ' ascending';
-			font-size: 0px;
-			color: transparent;
-			width: 12px;
-			margin-left: 6px;
-			height: 15px;
-			overflow: hidden;
-			display: block;
 			float: right;
-			*/
+			overflow: hidden;
 		}
 		a.asc:hover:after {
-			background-position: bottom left;
+			border-bottom: 9px dashed $table_header_font_color;
 		}
 		
 		a.desc:after {
-			background-position: top right;
+			border-bottom: none;
+			border-top: 9px dashed $link_hover_color;
 			content: ' descending';
+			height: 0;
+			margin-top: 3px;
 		}
 		a.desc:hover:after {
-			background-position: bottom right;
+			border-top: 9px dashed $table_header_font_color;
 		}
 	}
 	
