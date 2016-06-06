@@ -332,45 +332,50 @@ class ProjectsController extends AppController {
 	
 	
 	public function institutions() {
-		$institutions = $this->Project->Institution->find('list', array(
-			'order' => 'Institution.name ASC',
-			'conditions' => array(
-				'OR' => array(
-					'AND' => array(
-						'Institution.country_id' => 1,	// the Netherlands
-						'Institution.parent_id' => null
-					),
-					/*
-					'AND' => array(
-						'Institution.parent_id' => null,
-						'Institution.id >=' => 1000
-					)
-					*/
-				)
-			)
+		$set = $this->Project->ProjectsInstitution->find('all', array(
+			'contain' => array('Institution')
 		));
-		
-		$result = $this->_getInstitutionChildren($institutions);
-		
+		$result = array();
+		foreach($set as $k => $item) {
+			$inst = $item['Institution'];
+			if(empty($inst['parent_id'])) {
+				$result[$inst['id']]['name'] = $inst['name'];
+				unset($set[$k]);
+				$children = $this->_getInstitutionChildren($inst['id'], $set);
+				if(!empty($children)) {
+					$result[$inst['id']]['children'] = $children;
+				}
+			}
+		}
+		$left = array();
+		foreach($set as $k => $item) {
+			$inst = $item['Institution'];
+			// get the parent
+			$children = $this->_getInstitutionChildren($inst['parent_id'], $set);
+			if(!empty($children)) {
+				// get the parent's name & ancestors - parent is yet not present in array
+				$result[$inst['parent_id']]['name'] = 'bogus';
+				$result[$inst['parent_id']]['children'] = $children;
+			}
+		}
 		debug($result);
 		exit;
 	}
 	
-	protected function _getInstitutionChildren($institutions) {
+	protected function _getInstitutionChildren($id, &$set) {
 		$result = array();
-		foreach($institutions as $id => $name) {
-			$children = $this->Project->Institution->find('list', array(
-				'conditions' => array(
-					'Institution.parent_id' => $id
-				),
-				'order' => 'Institution.name ASC'
-			));
-			$result[$id] = array('name' => $name);
-			if(!empty($children)) {
-				$children = $this->_getInstitutionChildren($children);
-				$result[$id]['children'] = $children;
+		foreach($set as $k => $item) {
+			$inst = $item['Institution'];
+			if($inst['parent_id'] === $id) {
+				$result[$inst['id']]['name'] = $inst['name'];
+				unset($set[$k]);
+				$children = $this->_getInstitutionChildren($inst['id'], $set);
+				if(!empty($children)) {
+					$result[$inst['id']]['children'] = $children;
+				}
 			}
 		}
+		
 		return $result;
 	}
 	
