@@ -56,9 +56,7 @@ $this->start('header');
 		<?php //<p>Research and teaching within the Digital Humanities community</p>?>
 		<p>
 			Project-Registry <strong>BETA</strong> |
-			<?php echo $this->Html->link('About', '/pages/projectregistry', array(
-				'style' => 'color: white'
-			)); ?>
+			<?php echo $this->Html->link('About', '/pages/projectregistry'); ?>
 		</p>
 	</div>
 </div>

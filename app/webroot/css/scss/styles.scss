@@ -1,17 +1,25 @@
 
+$ehumBlue: #009fd6;
+$ehumGreen: #a6ce38;
+$ehumPurple: #794c8f;
+
+
+
 $font_color: #666;
 $background_color: #ccc;
 $background_color_2: #f4f4f4;	/* for any kind of accentuation, eg. table rows */
 
 $link_color: #00265a;
-$link_hover_color: #005AD6;
-$menu_main_link_color: #00265a;
-$menu_main_link_hover_color: #005AD6;
+//$link_hover_color: #005AD6;
+$link_hover_color: $ehumPurple;
+$menu_main_link_color: $link_color;
+$menu_main_link_hover_color: $link_hover_color;
 
 $border_color: #ccc;
 
-$header_font_color: #fff;
-$header_background_color: #003564;	/* DARIAH style */
+$header_font_color: #555;
+//$header_background_color: #003564;	/* DARIAH style */
+$header_background_color: #fff;
 
 $content_background_color: #fff;
 $menu_background_color: #fff;
@@ -84,7 +92,10 @@ $menu_width: 236px;
 			}
 			a {
 				text-decoration: underline;
-				color: red;
+				color: $link_color;
+				&:hover {
+					color: $link_hover_color;
+				}
 			}
 		}
 		
@@ -218,7 +229,7 @@ $col_min_height: 400px;
 			align-items: flex-end; // align at bottom
 			
 			.bar {
-				background-color: orange;
+				background-color: $ehumBlue;
 				flex-grow: 1;
 				flex-basis: 0;
 				margin: 10px 2px 2px 0;
@@ -231,6 +242,7 @@ $col_min_height: 400px;
 				text-align: center;
 				min-height: 22px;
 				font-size: 10px;
+				color: #333;
 				
 				.count {
 					color: white;

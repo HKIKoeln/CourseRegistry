@@ -332,15 +332,22 @@ class ProjectsController extends AppController {
 	
 	
 	protected function _setFilterOptions() {
-		$nwoDisciplines = $this->Project->NwoDiscipline->find('all', array('contain' => array()));
+		$nwoDisciplines = $this->Project->NwoDiscipline->find('all', array(
+			'contain' => array(),
+			'order' => 'NwoDiscipline.name ASC'
+		));
 		
 		$institutions = $this->Project->Institution->find('list', array(
-			'contain' => array('Country'),
-			'fields' => array('Institution.id', 'Institution.name', 'Country.name')
+			//'contain' => array('Country'),
+			//'fields' => array('Institution.id', 'Institution.name', 'Country.name'),
+			'order' => 'Institution.name ASC',
+			'conditions' => array(
+				'Institution.id >=' => 1000
+			)
 		));
 		ksort($institutions);
 		
-		$projectTypes = $this->Project->ProjectType->find('list');
+		$projectTypes = $this->Project->ProjectType->find('list', array('order' => 'ProjectType.name ASC'));
 		
 		$this->set(compact(
 			'nwoDisciplines',
