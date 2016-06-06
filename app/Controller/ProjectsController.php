@@ -333,8 +333,6 @@ class ProjectsController extends AppController {
 	
 	public function institutions() {
 		$institutions = $this->Project->Institution->find('list', array(
-			//'contain' => array('Country'),
-			//'fields' => array('Institution.id', 'Institution.name', 'Country.name'),
 			'order' => 'Institution.name ASC',
 			'conditions' => array(
 				'OR' => array(
@@ -354,7 +352,12 @@ class ProjectsController extends AppController {
 	protected function _getInstitutionChildren($institutions) {
 		$result = array();
 		foreach($institutions as $id => $name) {
-			
+			$children = $this->Project->Institution->find('list', array(
+				'conditions' => array(
+					'Institution.parent_id' => $id
+				),
+				'order' => 'Institution.name ASC'
+			));
 		}
 		return $result;
 	}
