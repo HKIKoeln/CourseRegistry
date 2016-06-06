@@ -336,10 +336,15 @@ class ProjectsController extends AppController {
 			'order' => 'Institution.name ASC',
 			'conditions' => array(
 				'OR' => array(
-					'Institution.id >=' => 1000,
-					'Institution.country_id' => 1	// the Netherlands
-				),
-				'Institution.parent_id' => null
+					'AND' => array(
+						'Institution.country_id' => 1,	// the Netherlands
+						'Institution.parent_id' => null
+					),
+					'AND' => array(
+						'Institution.parent_id' => null,
+						'Institution.id >=' => 1000
+					)
+				)
 			)
 		));
 		
