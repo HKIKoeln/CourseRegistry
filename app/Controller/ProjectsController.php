@@ -340,10 +340,12 @@ class ProjectsController extends AppController {
 						'Institution.country_id' => 1,	// the Netherlands
 						'Institution.parent_id' => null
 					),
+					/*
 					'AND' => array(
 						'Institution.parent_id' => null,
 						'Institution.id >=' => 1000
 					)
+					*/
 				)
 			)
 		));
@@ -363,13 +365,11 @@ class ProjectsController extends AppController {
 				),
 				'order' => 'Institution.name ASC'
 			));
+			$result[$id] = array('name' => $name);
 			if(!empty($children)) {
 				$children = $this->_getInstitutionChildren($children);
+				$result[$id]['children'] = $children;
 			}
-			$result[$id] = array(
-				'name' => $name,
-				'children' => $children
-			);
 		}
 		return $result;
 	}
