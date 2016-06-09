@@ -142,11 +142,6 @@ class Institution extends AppModel {
 	
 	
 	public function getHierarchicOptions() {
-		return $tree = $this->getHierarchicInstitutions();
-	}
-	
-	
-	public function getHierarchicInstitutions() {
 		// get only institutions that are linked to projects
 		$set = $this->ProjectsInstitution->find('all', array(
 			'contain' => array('Institution'),
@@ -160,8 +155,8 @@ class Institution extends AppModel {
 		foreach($set as $k => $item) {
 			$inst = $item['Institution'];
 			if(empty($inst['parent_id'])) {
-				$result[$inst['id']]['name'] = $inst['name'];
-				$plain[$inst['id']] = $inst['name'];
+				$result[$inst['id']]['name'] = trim($inst['name']);
+				$plain[$inst['id']] = trim($inst['name']);
 				unset($set[$k]);
 				$children = $this->getInstitutionChildren($inst['id'], $set, $plain, 1);
 				if(!empty($children)) {
@@ -176,7 +171,7 @@ class Institution extends AppModel {
 			// get the parent's name & ancestors - parent is yet not present in array
 			$level = 0;
 			$path = array();
-			$result = $result + $this->getInstitutionAnchestors($inst['parent_id'], $path, $level);
+			$result = $result + $this->getInstitutionAnchestors($inst['parent_id'], $path, $level, $plain);
 			// get the children from the set - including the current record
 			$children = $this->getInstitutionChildren($inst['parent_id'], $set, $plain, $level);
 			if(empty($children)) continue;
@@ -187,11 +182,12 @@ class Institution extends AppModel {
 			$temp = $children;
 			unset($temp);
 		}
-		return $result;
+		//return $result;
+		return $plain;
 	}
 	
 	
-	public function getInstitutionAnchestors($id, &$path, &$level) {
+	public function getInstitutionAnchestors($id, &$path, &$level, &$plain, &$rlevel = null) {
 		$inst = $this->find('first', array(
 			'conditions' => array('Institution.id' => $id)
 		));
@@ -199,23 +195,25 @@ class Institution extends AppModel {
 		if($inst) {
 			$level++;
 			array_unshift($path, $inst['Institution']['id'], 'children');
-			
 			$pre[$inst['Institution']['id']] = array(
-				'name' => $inst['Institution']['name'],
+				'name' => trim($inst['Institution']['name']),
 				'children' => array()
 			);
-			//$this->_getIndentation($level - 1) . 
-			
 			if(!empty($inst['Institution']['parent_id'])) {
-				$result = $this->getInstitutionAnchestors($inst['Institution']['parent_id'], $path, $level);
+				$result = $this->getInstitutionAnchestors($inst['Institution']['parent_id'], $path, $level, $plain, $rlevel);
 				$temp = &$result;
 				if(!empty($path)) foreach($path as $key) {
 					$temp = &$temp[$key];
 				}
 				$temp = $pre;
 				unset($temp);
+				$plain[$inst['Institution']['id']] = $this->_getIndentation($rlevel) . trim($inst['Institution']['name']);
+				$rlevel++;
 			}else{
+				// top level
 				$result = $pre;
+				$plain[$inst['Institution']['id']] = trim($inst['Institution']['name']);
+				$rlevel = 1;
 			}
 			
 		}
@@ -227,8 +225,8 @@ class Institution extends AppModel {
 		foreach($set as $k => $item) {
 			$inst = $item['Institution'];
 			if($inst['parent_id'] === $id) {
-				$plain[$inst['id']] = $this->_getIndentation($level) . $inst['name'];
-				$result[$inst['id']]['name'] = $inst['name'];
+				$plain[$inst['id']] = $this->_getIndentation($level) . trim($inst['name']);
+				$result[$inst['id']]['name'] = trim($inst['name']);
 				unset($set[$k]);
 				$children = $this->getInstitutionChildren($inst['id'], $set, $plain, $level + 1);
 				if(!empty($children)) {
@@ -243,7 +241,7 @@ class Institution extends AppModel {
 	protected function _getIndentation($level = null) {
 		$out = null;
 		while($level > 0) {
-			$out .= '&nbsp;';
+			$out .= ' - ';
 			$level--;
 		}
 		return $out;
