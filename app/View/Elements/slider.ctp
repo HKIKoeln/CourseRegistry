@@ -37,6 +37,7 @@ $this->Html->script('jssor.slider.mini', array('inline' => false));
 			$AutoPlay: true,
 			$Idle: 6000,
 			$SlideDuration: 1000,
+			$FillMode: 1,
 			$BulletNavigatorOptions: {
                 $Class: $JssorBulletNavigator$,
                 $ChanceToShow: 2
@@ -74,7 +75,14 @@ $this->Html->script('jssor.slider.mini', array('inline' => false));
 			<?php echo $this->element('projects/barchart'); ?>
 		</div>
         <div>
-			<?php echo $this->Html->image('logos/logoEhG_small.png', array('u' => 'image')); ?>
+			<?php
+			echo $this->Html->image('logos/logoEhG.png', array(
+				'u' => 'image',
+				'width' => 515,
+				'height' => 125
+			));
+			?>
+			<div></div>
 		</div>
     </div>
 	

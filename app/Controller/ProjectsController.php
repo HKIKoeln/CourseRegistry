@@ -332,14 +332,35 @@ class ProjectsController extends AppController {
 	
 	
 	public function institutions() {
+		Configure::write('debug', 2);
 		$set = $this->Project->ProjectsInstitution->find('all', array(
 			'contain' => array('Institution')
 		));
 		$result = array();
+		$dublettes = array();
 		foreach($set as $k => $item) {
 			$inst = $item['Institution'];
+			// check for dublettes
+			/*
+			$dub = $this->Project->Institution->find('all', array(
+				'conditions' => array(
+					'Institution.id !=' => $inst['id'],
+					'Institution.name LIKE' => $inst['name']
+				),
+				'contain' => array()
+			));
+			if(!empty($dub)) {
+				foreach($dub as $d) {
+					$dublettes[$d['Institution']['id']] = array(
+						'name' => $d['Institution']['name'],
+						'matched' => $inst['id'].' => '.$inst['name']
+					);
+				}
+			}
+			*/
 			if(empty($inst['parent_id'])) {
 				$result[$inst['id']]['name'] = $inst['name'];
+				//debug($inst['id']);
 				unset($set[$k]);
 				$children = $this->_getInstitutionChildren($inst['id'], $set);
 				if(!empty($children)) {
@@ -354,9 +375,11 @@ class ProjectsController extends AppController {
 			$children = $this->_getInstitutionChildren($inst['parent_id'], $set);
 			if(!empty($children)) {
 				// get the parent's name & ancestors - parent is yet not present in array
-				$result = array_merge($result, $this->_getInstitutionAnchestors($inst['parent_id'], $children));
+				$result = $result + $this->_getInstitutionAnchestors($inst['parent_id'], $children);
 			}
 		}
+		//echo 'Dublettes: ';
+		//debug($dublettes);
 		debug($result);
 		exit;
 	}
@@ -367,11 +390,11 @@ class ProjectsController extends AppController {
 		));
 		$result = array();
 		if($inst) {
-			$result = array($inst['Institution']['id'] => array(
+			$result[$inst['Institution']['id']] = array(
 				'name' => $inst['Institution']['name'],
 				'linked_Projects' => 'Nee',
 				'children' => $child
-			));
+			);
 			if(!empty($inst['Institution']['parent_id'])) {
 				$result = $this->_getInstitutionAnchestors($inst['Institution']['parent_id'], $result);
 			}
