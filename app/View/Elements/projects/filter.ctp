@@ -47,7 +47,8 @@ $filter = $this->Session->read('filter');
 		echo $this->element('taxonomy/selector', array(
 			'habtmModel' => 'NwoDiscipline',
 			'label' => 'Disciplines',
-			'dropdown' => true)
+			'dropdown' => true,
+			'buttons' => true)
 		);
 		
 		echo $this->Form->end(array(

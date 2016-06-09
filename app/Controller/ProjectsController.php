@@ -332,6 +332,7 @@ class ProjectsController extends AppController {
 	
 	
 	public function institutions() {
+		Configure::write('debug', 2);
 		$result = $this->Project->Institution->getHierarchicOptions();
 		debug($result);
 		exit;
@@ -344,17 +345,9 @@ class ProjectsController extends AppController {
 			'order' => 'NwoDiscipline.name ASC'
 		));
 		
-		$institutions = $this->Project->Institution->find('list', array(
-			//'contain' => array('Country'),
-			//'fields' => array('Institution.id', 'Institution.name', 'Country.name'),
-			'order' => 'Institution.name ASC',
-			'conditions' => array(
-				'OR' => array(
-					'Institution.id >=' => 1000,
-					'Institution.country_id' => 1	// the Netherlands
-				)
-			)
-		));
+		$bundle = $this->Project->Institution->getHierarchicOptions();
+		$institutions = $bundle['list'];
+		$this->institutionsTree = $bundle['tree'];
 		
 		$projectTypes = $this->Project->ProjectType->find('list', array('order' => 'ProjectType.name ASC'));
 		
@@ -397,6 +390,7 @@ class ProjectsController extends AppController {
 	
 	public function index() {
 		if(empty($this->request->params['ext'])) {
+			$this->_setFilterOptions();
 			$filter = $this->_getFilter();
 			$paginate = array(
 				'Project' => array(
@@ -436,12 +430,14 @@ class ProjectsController extends AppController {
 			}
 			
 			$projectYears = $this->Project->find('all', array(
-				'conditions' => array('Project.active' => 1),
+				//'conditions' => array('Project.active' => 1),
+				'conditions' => array_merge($filter, array('Project.active' => 1, 'Project.start_date !=' => null)),
 				'order' => array('Project.start_date ASC'),
 				'fields' => array('Project.start_date'),
 				'contain' => array()
 			));
-			$years = array(0 => 0);
+			//$years = array(0 => 0);
+			$years = array();
 			if(!empty($projectYears)) {
 				foreach($projectYears as $year) {
 					$year = $year['Project']['start_date'];
@@ -453,18 +449,18 @@ class ProjectsController extends AppController {
 							$years[$year] = $years[$year] + 1;
 						}
 					}else{
-						$years[0] = $years[0] + 1;
+						//$years[0] = $years[0] + 1;
 					}
 				}
 			}
-			$maxCount = max($years);
+			$maxCount = 1;
+			if(!empty($years)) $maxCount = max($years);
 			$chartData = array(
 				'years' => $years,
 				'unitY' => floor(338 / $maxCount)
 			);
 			
 			if($this->Auth->user('is_admin')) $this->set('edit', true);
-			$this->_setFilterOptions();
 			$this->set(compact('records', 'chartData'));
 		}else{
 			// JSON or XML export
@@ -489,7 +485,7 @@ class ProjectsController extends AppController {
 // don't store named and extended filters in the session, but set the named to the form!
 		//$this->_namedFilters();
 		$this->_filterToForm();
-		
+		$this->_extendParentInstitutions();
 		$this->_setJoins();
 		
 		return $this->filter;
@@ -503,8 +499,11 @@ class ProjectsController extends AppController {
 			if(!empty($this->request->data['Project'])) {
 				$form = $this->request->data['Project'];
 				
-				if(empty($form['institution_id'])) unset($this->filter['ProjectsInstitution.institution_id']);
-				else $this->filter['ProjectsInstitution.institution_id'] = $form['institution_id'];
+				if(empty($form['institution_id'])) {
+					unset($this->filter['ProjectsInstitution.institution_id']);
+				}else{
+					$this->filter['ProjectsInstitution.institution_id'] = $form['institution_id'];
+				}
 				
 				if(empty($form['project_type_id'])) unset($this->filter['Project.project_type_id']);
 				else $this->filter['Project.project_type_id'] = $form['project_type_id'];
@@ -516,6 +515,38 @@ class ProjectsController extends AppController {
 				else unset($this->filter['ProjectsNwoDiscipline.nwo_discipline_id']);
 			}
 		}
+	}
+	
+	
+	protected function _extendParentInstitutions($search_id = null, $collection = array(), $addAll = false) {
+		$result = array();
+		if(empty($collection) AND empty($search_id)) {
+			if(!empty($this->request->data['Project'])) {
+				$form = $this->request->data['Project'];
+				if(!empty($form['institution_id'])) {
+					$collection = $this->institutionsTree;
+					$this->filter['ProjectsInstitution.institution_id'] = array_merge(
+						$this->_extendParentInstitutions($form['institution_id'], $collection),
+						array($this->filter['ProjectsInstitution.institution_id']));
+				}
+			}
+			return;
+		}
+		foreach($collection as $id => $set) {
+			if($search_id == $id OR $addAll) {
+				if($search_id != $id) {
+					$result[] = $id;
+				}
+				if(!empty($set['children'])) {
+					$result = array_merge($result, $this->_extendParentInstitutions($search_id, $set['children'], true));
+				}
+			}else{
+				if(!empty($set['children'])) {
+					$result += $this->_extendParentInstitutions($search_id, $set['children']);
+				}
+			}
+		}
+		return $result;
 	}
 	
 	// ... and back from Model.field notation to ['Model']['field'] notation

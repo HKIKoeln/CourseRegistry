@@ -81,8 +81,19 @@ $classes .= (!empty($dropdown)) ? ' dropdown_checklist' : '';
 				name="data[<?php echo $habtmModel . '][' . $habtmModel; ?>]">
 			
 			<?php
-			$varname = Inflector::variable(Inflector::pluralize($habtmModel));
+			if(!empty($buttons)) {
+				echo $this->Form->button('Ok', array(
+					'type' => 'submit',
+					'style' => 'margin-bottom:8px;'
+				));
+				echo $this->Form->button('Cancel', array(
+					'onclick' => "closeList('#".$habtmModel."_checklist');",
+					'type' => 'button',
+					'style' => 'margin-bottom:8px;'
+				));
+			}
 			
+			$varname = Inflector::variable(Inflector::pluralize($habtmModel));
 			foreach($$varname as $pk => $pv) {
 				$level = null;
 				if(!empty($pv['children'])) $level = 'primary';
@@ -149,6 +160,10 @@ if(!empty($dropdown)) {
 			var display = values.join(', ');
 			if(!display) display = '-- none selected --';
 			$(toggle).find('.display').text(display);
+		}
+		
+		function closeList(id) {
+			$(id).toggle();
 		}
 	}
 	</script>

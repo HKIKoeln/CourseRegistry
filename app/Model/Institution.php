@@ -150,17 +150,16 @@ class Institution extends AppModel {
 				'Institution.name' => 'ASC'
 			)
 		));
-		$result = array();
-		$ids = array();
+		$tree = $plain = array();
 		foreach($set as $k => $item) {
 			$inst = $item['Institution'];
 			if(empty($inst['parent_id'])) {
-				$result[$inst['id']]['name'] = trim($inst['name']);
+				$tree[$inst['id']]['name'] = trim($inst['name']);
 				$plain[$inst['id']] = trim($inst['name']);
 				unset($set[$k]);
 				$children = $this->getInstitutionChildren($inst['id'], $set, $plain, 1);
 				if(!empty($children)) {
-					$result[$inst['id']]['children'] = $children;
+					$tree[$inst['id']]['children'] = $children;
 				}
 			}
 		}
@@ -171,19 +170,21 @@ class Institution extends AppModel {
 			// get the parent's name & ancestors - parent is yet not present in array
 			$level = 0;
 			$path = array();
-			$result = $result + $this->getInstitutionAnchestors($inst['parent_id'], $path, $level, $plain);
+			$tree = $tree + $this->getInstitutionAnchestors($inst['parent_id'], $path, $level, $plain);
 			// get the children from the set - including the current record
 			$children = $this->getInstitutionChildren($inst['parent_id'], $set, $plain, $level);
 			if(empty($children)) continue;
-			$temp = &$result;
+			$temp = &$tree;
 			if(!empty($path)) foreach($path as $key) {
 				$temp = &$temp[$key];
 			}
 			$temp = $children;
 			unset($temp);
 		}
-		//return $result;
-		return $plain;
+		return array(
+			'list' => $plain,
+			'tree' => $tree
+		);
 	}
 	
 	
