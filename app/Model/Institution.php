@@ -138,5 +138,115 @@ class Institution extends AppModel {
 			'unique' => 'keepExisting'
 		)
 	);
+	
+	
+	
+	public function getHierarchicOptions() {
+		return $tree = $this->getHierarchicInstitutions();
+	}
+	
+	
+	public function getHierarchicInstitutions() {
+		// get only institutions that are linked to projects
+		$set = $this->ProjectsInstitution->find('all', array(
+			'contain' => array('Institution'),
+			'order' => array(
+				'Institution.parent_id' => 'ASC',
+				'Institution.name' => 'ASC'
+			)
+		));
+		$result = array();
+		$ids = array();
+		foreach($set as $k => $item) {
+			$inst = $item['Institution'];
+			if(empty($inst['parent_id'])) {
+				$result[$inst['id']]['name'] = $inst['name'];
+				$plain[$inst['id']] = $inst['name'];
+				unset($set[$k]);
+				$children = $this->getInstitutionChildren($inst['id'], $set, $plain, 1);
+				if(!empty($children)) {
+					$result[$inst['id']]['children'] = $children;
+				}
+			}
+		}
+		foreach($set as $k => $item) {
+			$inst = $item['Institution'];
+			//$children = $this->getInstitutionChildren($inst['parent_id'], $set, $plain, $level = 7);
+			//if(!empty($children)) { we don't need to check this, as the current is a child itself
+			// get the parent's name & ancestors - parent is yet not present in array
+			$level = 0;
+			$path = array();
+			$result = $result + $this->getInstitutionAnchestors($inst['parent_id'], $path, $level);
+			// get the children from the set - including the current record
+			$children = $this->getInstitutionChildren($inst['parent_id'], $set, $plain, $level);
+			if(empty($children)) continue;
+			$temp = &$result;
+			if(!empty($path)) foreach($path as $key) {
+				$temp = &$temp[$key];
+			}
+			$temp = $children;
+			unset($temp);
+		}
+		return $result;
+	}
+	
+	
+	public function getInstitutionAnchestors($id, &$path, &$level) {
+		$inst = $this->find('first', array(
+			'conditions' => array('Institution.id' => $id)
+		));
+		$result = array();
+		if($inst) {
+			$level++;
+			array_unshift($path, $inst['Institution']['id'], 'children');
+			
+			$pre[$inst['Institution']['id']] = array(
+				'name' => $inst['Institution']['name'],
+				'children' => array()
+			);
+			//$this->_getIndentation($level - 1) . 
+			
+			if(!empty($inst['Institution']['parent_id'])) {
+				$result = $this->getInstitutionAnchestors($inst['Institution']['parent_id'], $path, $level);
+				$temp = &$result;
+				if(!empty($path)) foreach($path as $key) {
+					$temp = &$temp[$key];
+				}
+				$temp = $pre;
+				unset($temp);
+			}else{
+				$result = $pre;
+			}
+			
+		}
+		return $result;
+	}
+	
+	public function getInstitutionChildren($id, &$set, &$plain, $level) {
+		$result = array();
+		foreach($set as $k => $item) {
+			$inst = $item['Institution'];
+			if($inst['parent_id'] === $id) {
+				$plain[$inst['id']] = $this->_getIndentation($level) . $inst['name'];
+				$result[$inst['id']]['name'] = $inst['name'];
+				unset($set[$k]);
+				$children = $this->getInstitutionChildren($inst['id'], $set, $plain, $level + 1);
+				if(!empty($children)) {
+					$result[$inst['id']]['children'] = $children;
+				}
+			}
+		}
+		return $result;
+	}
+	
+	
+	protected function _getIndentation($level = null) {
+		$out = null;
+		while($level > 0) {
+			$out .= '&nbsp;';
+			$level--;
+		}
+		return $out;
+	}
 
 }

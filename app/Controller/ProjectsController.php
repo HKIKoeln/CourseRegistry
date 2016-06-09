@@ -332,94 +332,11 @@ class ProjectsController extends AppController {
 	
 	
 	public function institutions() {
-		Configure::write('debug', 2);
-		$set = $this->Project->ProjectsInstitution->find('all', array(
-			'contain' => array('Institution')
-		));
-		$result = array();
-		$dublettes = array();
-		foreach($set as $k => $item) {
-			$inst = $item['Institution'];
-			// check for dublettes
-			/*
-			$dub = $this->Project->Institution->find('all', array(
-				'conditions' => array(
-					'Institution.id !=' => $inst['id'],
-					'Institution.name LIKE' => $inst['name']
-				),
-				'contain' => array()
-			));
-			if(!empty($dub)) {
-				foreach($dub as $d) {
-					$dublettes[$d['Institution']['id']] = array(
-						'name' => $d['Institution']['name'],
-						'matched' => $inst['id'].' => '.$inst['name']
-					);
-				}
-			}
-			*/
-			if(empty($inst['parent_id'])) {
-				$result[$inst['id']]['name'] = $inst['name'];
-				//debug($inst['id']);
-				unset($set[$k]);
-				$children = $this->_getInstitutionChildren($inst['id'], $set);
-				if(!empty($children)) {
-					$result[$inst['id']]['children'] = $children;
-				}
-			}
-		}
-		
-		foreach($set as $k => $item) {
-			$inst = $item['Institution'];
-			// get the parent
-			$children = $this->_getInstitutionChildren($inst['parent_id'], $set);
-			if(!empty($children)) {
-				// get the parent's name & ancestors - parent is yet not present in array
-				$result = $result + $this->_getInstitutionAnchestors($inst['parent_id'], $children);
-			}
-		}
-		//echo 'Dublettes: ';
-		//debug($dublettes);
+		$result = $this->Project->Institution->getHierarchicOptions();
 		debug($result);
 		exit;
 	}
 	
-	protected function _getInstitutionAnchestors($id, $child) {
-		$inst = $this->Project->Institution->find('first', array(
-			'conditions' => array('Institution.id' => $id)
-		));
-		$result = array();
-		if($inst) {
-			$result[$inst['Institution']['id']] = array(
-				'name' => $inst['Institution']['name'],
-				'linked_Projects' => 'Nee',
-				'children' => $child
-			);
-			if(!empty($inst['Institution']['parent_id'])) {
-				$result = $this->_getInstitutionAnchestors($inst['Institution']['parent_id'], $result);
-			}
-		}else{
-			return array('name' => 'RECORD DOES NOT EXIST!');
-		}
-		return $result;
-	}
-	
-	protected function _getInstitutionChildren($id, &$set) {
-		$result = array();
-		foreach($set as $k => $item) {
-			$inst = $item['Institution'];
-			if($inst['parent_id'] === $id) {
-				$result[$inst['id']]['name'] = $inst['name'];
-				unset($set[$k]);
-				$children = $this->_getInstitutionChildren($inst['id'], $set);
-				if(!empty($children)) {
-					$result[$inst['id']]['children'] = $children;
-				}
-			}
-		}
-		
-		return $result;
-	}
 	
 	protected function _setFilterOptions() {
 		$nwoDisciplines = $this->Project->NwoDiscipline->find('all', array(

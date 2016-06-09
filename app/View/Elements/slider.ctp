@@ -74,15 +74,23 @@ $this->Html->script('jssor.slider.mini', array('inline' => false));
         <div>
 			<?php echo $this->element('projects/barchart'); ?>
 		</div>
+		<div>
+			<?php
+			echo $this->Html->image('dhpr_slideshow/00002.jpg', array(
+				'u' => 'image',
+				'width' => 565,
+				'height' => 400
+			));
+			?>
+		</div>
         <div>
 			<?php
-			echo $this->Html->image('logos/logoEhG.png', array(
+			echo $this->Html->image('dhpr_slideshow/logoEhG.png', array(
 				'u' => 'image',
 				'width' => 515,
 				'height' => 125
 			));
 			?>
-			<div></div>
 		</div>
     </div>
 	

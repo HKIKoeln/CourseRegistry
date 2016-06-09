@@ -6,3 +6,4 @@ logs
 sessions
 tests
 /app/Config.template/Schema/dh-registry_datamodel.mwb.bak
+/app/webroot/info.php
