@@ -31,11 +31,11 @@ $this->start('header');
 	);
 	//if($this->request->params['controller'] == 'projects') 
 	$logo = array(
-		'file' => 'logoEhG_small.png',
+		'file' => 'eHumanities_small.png',
 		'alt' => 'The eHumanities Group',
 		'url' => 'https://www.knaw.nl/en/institutes/e-humanities-group',
 		'width' => 236,
-		'height' => 57
+		'height' => 46
 	);	
 	echo $this->Html->image('/img/logos/' . $logo['file'], array(
 		'alt' => $logo['alt'],

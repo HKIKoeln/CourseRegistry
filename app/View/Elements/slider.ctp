@@ -83,12 +83,39 @@ $this->Html->script('jssor.slider.mini', array('inline' => false));
 			));
 			?>
 		</div>
+		<div>
+			<?php
+			echo $this->Html->image('dhpr_slideshow/first slide DODH.jpg', array(
+				'u' => 'image',
+				'width' => 467,
+				'height' => 349
+			));
+			?>
+		</div>
+		<div>
+			<?php
+			echo $this->Html->image('dhpr_slideshow/treemap.jpg', array(
+				'u' => 'image',
+				'width' => 646,
+				'height' => 400
+			));
+			?>
+		</div>
+		<div>
+			<?php
+			echo $this->Html->image('dhpr_slideshow/_disciplines.png', array(
+				'u' => 'image',
+				'width' => 618,
+				'height' => 400
+			));
+			?>
+		</div>
         <div>
 			<?php
-			echo $this->Html->image('dhpr_slideshow/logoEhG.png', array(
+			echo $this->Html->image('dhpr_slideshow/eHumanities.png', array(
 				'u' => 'image',
-				'width' => 515,
-				'height' => 125
+				'width' => 428,
+				'height' => 85
 			));
 			?>
 		</div>
